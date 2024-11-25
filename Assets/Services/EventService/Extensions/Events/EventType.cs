@@ -9,5 +9,7 @@ namespace Services.EventService
         Common = 1,
         Service = 2,
         View = 4,
+        Back = 8,
+        
     }
 }
