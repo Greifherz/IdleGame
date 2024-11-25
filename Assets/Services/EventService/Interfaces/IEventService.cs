@@ -6,6 +6,6 @@ namespace Services.EventService
 {
     public interface IEventService : IGeneralEventService, IEventPipelineService
     {
-        void Initialize();
+        
     }
 }

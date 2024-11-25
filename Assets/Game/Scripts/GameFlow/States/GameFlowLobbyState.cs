@@ -29,7 +29,7 @@ namespace Game.GameFlow
         
         public void StateEnter()
         {
-            
+            Debug.Log($"Entered {Type} state");
         }
     }
 }

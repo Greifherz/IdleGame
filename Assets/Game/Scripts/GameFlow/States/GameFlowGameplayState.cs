@@ -4,7 +4,7 @@ namespace Game.GameFlow
 {
     public class GameFlowGameplayState : IGameFlowState
     {
-        public GameFlowStateType Type { get; }
+        public GameFlowStateType Type => GameFlowStateType.Gameplay;
 
         public bool CanTransitionTo(GameFlowStateType type)
         {
@@ -29,7 +29,7 @@ namespace Game.GameFlow
         
         public void StateEnter()
         {
-            
+            Debug.Log($"Entered {Type} state");
         }
     }
 }

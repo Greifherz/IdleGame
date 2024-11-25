@@ -1,4 +1,5 @@
-﻿using Services.EventService;
+﻿using Game.GameFlow;
+using Services.EventService;
 using Services.PersistenceService;
 using Services.TickService;
 using ServiceLocator;
@@ -11,6 +12,8 @@ namespace Bootstrap
     //This way there's no need to rely on Unity events for startup and MonoBehaviours can be kept at minimum, especially for logic
     public class BootstrapService
     {
+        private static GameFlow _gameFlowObject;
+        
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void Initialize()
         {
@@ -43,6 +46,10 @@ namespace Bootstrap
             eventService.Initialize();
             tickService.Initialize();
             scheduler.Initialize();
+            
+            //Initialize Game-related services, controllers and objects
+            _gameFlowObject = new GameFlow(); //I don't want to hold references to it but rather communicate with it only through events.
+            _gameFlowObject.Initialize();
         }
     }
 }

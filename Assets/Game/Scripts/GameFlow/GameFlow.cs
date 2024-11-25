@@ -10,27 +10,25 @@ namespace Game.GameFlow
     public class GameFlow
     {
         private IGameFlowState _currentState;
-        private ITickService _tickService;
-        private ISchedulerService _schedulerService;
         private IEventService _eventService;
 
         private TransitionEventHandler _transitionEventHandler;
 
         public GameFlow()
         {
-            _tickService = Locator.Current.Get<ITickService>();
-            _schedulerService = Locator.Current.Get<ISchedulerService>();
             _eventService = Locator.Current.Get<IEventService>();
         }
 
         public void Initialize()
         {
             _currentState = new GameStartState();
+            _currentState.StateEnter();
             
             _transitionEventHandler = new TransitionEventHandler(OnTransition);
+            _eventService.RegisterListener(_transitionEventHandler);
         }
 
-        public void TransitionStateTo(GameFlowStateType type)
+        private void TransitionStateTo(GameFlowStateType type)
         {
             _currentState = _currentState.TransitionTo(type);
             _currentState.StateEnter();
@@ -38,6 +36,7 @@ namespace Game.GameFlow
 
         private void OnTransition(ITransitionEvent transitionEvent)
         {
+            // Debug.Log($"Transition Event received - {transitionEvent.Target}");
             TransitionStateTo(TransitionTargetToStateType(transitionEvent.Target));
         }
 
