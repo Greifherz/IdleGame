@@ -10,6 +10,8 @@
         float HealthPercentage { get; }
         
         void TakeDamage(int damage);
-        
+        void RestoreHealth();
+        void Die();
+
     }
 }

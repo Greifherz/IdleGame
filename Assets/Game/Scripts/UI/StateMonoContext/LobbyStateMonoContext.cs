@@ -1,3 +1,4 @@
+using Game.GameFlow;
 using ServiceLocator;
 using Services.EventService;
 using UnityEngine;
@@ -8,6 +9,7 @@ using UnityEngine.UI;
 public class LobbyStateMonoContext : MonoBehaviour
 {
     private IEventService _eventService;
+    private IEventHandler _stateChangeEventHandler;
 
     //As a personal guideline I never configure buttons through Unity's interface. It's harder to track. 
     //Instead I hold reference to the button (I might need it to enable/disable or change things about it anyway) and assign it.
@@ -17,6 +19,8 @@ public class LobbyStateMonoContext : MonoBehaviour
     void Start()
     {
         _eventService = Locator.Current.Get<IEventService>();
+        _stateChangeEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
+        _eventService.RegisterListener(_stateChangeEventHandler);
         
         //As it's undefined what will finish the "Start" state, I'll start by having the start of the Lobby Mono Context do that
         _eventService.Raise(new TransitionEvent(TransitionTarget.Lobby));
@@ -27,5 +31,10 @@ public class LobbyStateMonoContext : MonoBehaviour
     public void TransitionToGameplay()
     {
         _eventService.Raise(new TransitionEvent(TransitionTarget.Gameplay));
+    }
+
+    private void OnGameFlowStateEvent(IGameFlowStateEvent gameFlowStateEvent)
+    {
+        gameObject.SetActive(gameFlowStateEvent.GameFlowStateType == GameFlowStateType.Lobby);
     }
 }

@@ -15,17 +15,17 @@ namespace Services.EventService
             _generalEventService = new GeneralEventService();
         }
         
-        public void RegisterListener(IEventHandler eventHandler, EventPipelineType eventPipelineType = EventPipelineType.Common)
+        public void RegisterListener(IEventHandler eventHandler, EventPipelineType eventPipelineType = EventPipelineType.CommonPipeline)
         {
             _pipelineService.RegisterListener(eventHandler, eventPipelineType);
         }
 
-        public void UnregisterListener(IEventHandler eventHandler, EventPipelineType eventPipelineType = EventPipelineType.Common)
+        public void UnregisterListener(IEventHandler eventHandler, EventPipelineType eventPipelineType = EventPipelineType.CommonPipeline)
         {
             _pipelineService.UnregisterListener(eventHandler, eventPipelineType);
         }
 
-        public void Raise(IEvent raisedEvent, EventPipelineType eventPipelineType = EventPipelineType.Common)
+        public void Raise(IEvent raisedEvent, EventPipelineType eventPipelineType = EventPipelineType.CommonPipeline)
         {
             _pipelineService.Raise(raisedEvent, eventPipelineType);
         }

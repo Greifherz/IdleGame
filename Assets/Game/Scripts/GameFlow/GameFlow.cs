@@ -21,7 +21,7 @@ namespace Game.GameFlow
 
         public void Initialize()
         {
-            _currentState = new GameStartState();
+            _currentState = new GameStartState(_eventService);
             _currentState.StateEnter();
             
             _transitionEventHandler = new TransitionEventHandler(OnTransition);

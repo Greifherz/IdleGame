@@ -10,6 +10,9 @@ namespace Services.EventService
         Service = 2,
         View = 4,
         Back = 8,
+        Transition = 16,
+        GameFlowState = 32,
+        
         
     }
 }

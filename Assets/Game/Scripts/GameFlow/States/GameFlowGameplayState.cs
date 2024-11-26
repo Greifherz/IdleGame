@@ -1,10 +1,20 @@
-﻿using UnityEngine;
+﻿using Game.Scripts.GameLogic;
+using Services.EventService;
+using UnityEngine;
 
 namespace Game.GameFlow
 {
     public class GameFlowGameplayState : IGameFlowState
     {
         public GameFlowStateType Type => GameFlowStateType.Gameplay;
+        private IEventService _eventService;
+
+        private GameplayLogic _gameplayLogic;
+
+        public GameFlowGameplayState(IEventService eventService)
+        {
+            _eventService = eventService;
+        }
 
         public bool CanTransitionTo(GameFlowStateType type)
         {
@@ -15,7 +25,7 @@ namespace Game.GameFlow
         {
             if (CanTransitionTo(type))
             {
-                return new GameFlowLobbyState();
+                return new GameFlowLobbyState(_eventService);
             }
             
             Debug.LogError($"Tried to transition from {Type} to {type} and it's not allowed");
@@ -29,7 +39,9 @@ namespace Game.GameFlow
         
         public void StateEnter()
         {
-            Debug.Log($"Entered {Type} state");
+            _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Gameplay));
+            
+            _gameplayLogic = new GameplayLogic(_eventService);
         }
     }
 }

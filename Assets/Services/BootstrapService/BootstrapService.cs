@@ -23,11 +23,11 @@ namespace Bootstrap
             //Create Services
             
             //Create TickService
-            var tickService = new AsyncTickService();
-            Locator.Current.Register<ITickService>(tickService); 
+            // var tickService = new AsyncTickService();
+            // Locator.Current.Register<ITickService>(tickService); 
             
-            // ITickService TickService = new GameObject("TickService").AddComponent<UnityCoroutineTickService>();
-            // Locator.Current.Register<ITickService>(TickService);
+            var tickService = new GameObject("TickService").AddComponent<UnityCoroutineTickService>();
+            Locator.Current.Register<ITickService>(tickService);
             
             //Create Persistence Service
             IPersistenceService PersistenceService = new PlayerPrefsPersistenceService();

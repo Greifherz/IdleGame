@@ -1,8 +1,9 @@
 ﻿namespace Game.Data
 {
-    public class EnemyCharacter : ICharacter
+    public class EnemyCharacter : IEnemyCharacter
     {
         private ICharacter _characterImplementation;
+        private IEnemyCharacter _enemyCharacterImplementation;
         public string Name => _characterImplementation.Name;
 
         public int HealthPoints => _characterImplementation.HealthPoints;
@@ -25,6 +26,17 @@
         public void TakeDamage(int damage)
         {
             _characterImplementation.TakeDamage(damage);
+        }
+
+        public void RestoreHealth()
+        {
+            _characterImplementation.RestoreHealth();
+        }
+
+        public void Die()
+        {
+            _enemyCharacterImplementation.Die();
+            //Enemy Death event
         }
     }
 }

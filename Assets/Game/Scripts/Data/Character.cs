@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Game.Data
 {
     public class Character : ICharacter
@@ -43,9 +45,16 @@ namespace Game.Data
             }
         }
 
-        private void Die()
+        public void RestoreHealth()
         {
-            //Death event
+            CurrentHealthPoints = HealthPoints;
+        }
+
+        public void Die()
+        {
+            Debug.Log($"Character {Name} just died.");
+            RestoreHealth();
+            //Character death event
         }
     }
 }

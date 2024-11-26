@@ -10,6 +10,8 @@ public class IdleItem : MonoBehaviour
     [SerializeField] private RectTransform FillBackground;
     [SerializeField] private RectTransform InnerFill;
 
+    public Button ActionButton;
+
     private float maxFillSize = 0;
     
     private void Start()
