@@ -10,7 +10,7 @@ namespace Game.Data
         public int ArmorPoints { get; private set; }
         public int AttackPoints { get; private set; }
         
-        public float HealthPercentage => CurrentHealthPoints / HealthPoints;
+        public float HealthPercentage => (float)CurrentHealthPoints / HealthPoints;
 
         public Character(string name,int healthPoints, int armorPoints, int attackPoints)
         {

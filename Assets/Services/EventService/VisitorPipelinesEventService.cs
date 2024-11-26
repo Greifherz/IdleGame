@@ -61,7 +61,7 @@ namespace Services.EventService
             }
         }
 
-        public void OnTick() //It should go Services > Common > View > Attack
+        public void OnTick() //It should go Services > Common > Gameplay > View
         {
             var poolSize = ServicesEventPool.Count;
             for (; poolSize > 0; poolSize-- )
@@ -76,19 +76,19 @@ namespace Services.EventService
                 var CommonEvent = CommonEventPool.Dequeue();
                 EventPipelines[EventPipelineType.CommonPipeline](CommonEvent);
             }
-            
-            poolSize = ViewEventPool.Count;
-            for (; poolSize > 0; poolSize-- )
-            {
-                var ViewEvent = ViewEventPool.Dequeue();
-                EventPipelines[EventPipelineType.ViewPipeline](ViewEvent);
-            }
 
             poolSize = GameplayEventPool.Count;
             for (; poolSize > 0; poolSize-- )
             {
                 var GameplayEvent = GameplayEventPool.Dequeue();
                 EventPipelines[EventPipelineType.GameplayPipeline](GameplayEvent);
+            }
+            
+            poolSize = ViewEventPool.Count;
+            for (; poolSize > 0; poolSize-- )
+            {
+                var ViewEvent = ViewEventPool.Dequeue();
+                EventPipelines[EventPipelineType.ViewPipeline](ViewEvent);
             }
         }
     }

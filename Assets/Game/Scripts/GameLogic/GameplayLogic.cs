@@ -19,6 +19,9 @@ namespace Game.Scripts.GameLogic
             _eventService.RegisterListener(_attackEventHandler,EventPipelineType.GameplayPipeline);
 
             GetCharacters();
+            
+            _eventService.Raise(new IdleItemUpdateViewEvent(0,1,_enemyCharacter.Name),EventPipelineType.ViewPipeline);
+            _eventService.Raise(new PlayerHealthUpdateViewEvent(1,$"{_playerCharacter.CurrentHealthPoints}/{_playerCharacter.HealthPoints}"),EventPipelineType.ViewPipeline);
         }
 
         private void GetCharacters()
@@ -30,10 +33,10 @@ namespace Game.Scripts.GameLogic
         //For now and FTUE most likely this will be called through an event fired by a button press. Later stages the event will be fired from a Tick/Schedule
         private void AttackAction(IAttackEvent attackEvent)
         {
-            Debug.Log($"Attack event - {_playerCharacter.Name} x {_enemyCharacter.Name}");
-            
             _enemyCharacter.TakeDamage(_playerCharacter.AttackPoints);
             _playerCharacter.TakeDamage(_enemyCharacter.AttackPoints);
+            
+            _eventService.Raise(new IdleItemUpdateViewEvent(0,_enemyCharacter.HealthPercentage,_enemyCharacter.Name),EventPipelineType.ViewPipeline);
         }
     }
 }

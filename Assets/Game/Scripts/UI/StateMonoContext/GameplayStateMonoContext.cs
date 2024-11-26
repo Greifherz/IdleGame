@@ -4,50 +4,76 @@ using Services.EventService;
 using UnityEngine;
 using UnityEngine.UI;
 
-//Mono context classes are classes that don't do much. They hold references to the scene gameObjects and other view-related scripts and helpers.
-//They are the touching point between logic and view
-public class GameplayStateMonoContext : MonoBehaviour
+namespace Game.UI
 {
-    private IEventService _eventService;
-    private IEventHandler _gameFlowEventHandler;
-
-    [SerializeField] private IdleItem[] IdleItems;
-    [SerializeField] private Button BackButton;
-    
-    void Start()
+    //Mono context classes are classes that don't do much. They hold references to the scene gameObjects and other view-related scripts and helpers.
+    //They are the touching point between logic and view
+    public class GameplayStateMonoContext : MonoBehaviour
     {
-        _eventService = Locator.Current.Get<IEventService>();
-        _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
-        _eventService.RegisterListener(_gameFlowEventHandler);
-        gameObject.SetActive(false);
+        private IEventService _eventService;
+        private IEventHandler _gameFlowEventHandler;
+        private IEventHandler _gameplayViewEventHandler;
+
+        [SerializeField] private PlayerHealth PlayerHealth;
+        [SerializeField] private IdleItem[] IdleItems;
+        [SerializeField] private Button BackButton;
         
-        SetupButtons();
-    }
-
-    private void SetupButtons()
-    {
-        for (var Index = 0; Index < IdleItems.Length; Index++)
+        void Start()
         {
-            var IdleItem = IdleItems[Index];
-            var CurrentIndex = Index;
-            IdleItem.ActionButton.onClick.AddListener(() => { OnItemClicked(CurrentIndex); });
+            _eventService = Locator.Current.Get<IEventService>();
+            _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
+            _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
+            _eventService.RegisterListener(_gameFlowEventHandler);
+            _eventService.RegisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
+            gameObject.SetActive(false);
+            
+            SetupButtons();
         }
 
-        BackButton.onClick.AddListener(TransitionBack);
-    }
+        private void SetupButtons()
+        {
+            for (var Index = 0; Index < IdleItems.Length; Index++)
+            {
+                var IdleItem = IdleItems[Index];
+                var CurrentIndex = Index;
+                IdleItem.ActionButton.onClick.AddListener(() => { OnItemClicked(CurrentIndex); });
+            }
 
-    private void OnItemClicked(int idleItemIndex)
-    {
-        _eventService.Raise(new AttackEvent(idleItemIndex),EventPipelineType.GameplayPipeline);
-    }
+            BackButton.onClick.AddListener(TransitionBack);
+        }
 
-    private void TransitionBack()
-    {
-        _eventService.Raise(new TransitionEvent(TransitionTarget.Back));
-    }
+        private void OnGameplayViewUpdated(IViewEvent viewEvent)
+        {
+            if (viewEvent.ViewEventType.HasFlag(ViewEventType.IdleItem))
+            {
+                var concrete = viewEvent.GetIdleItemUpdateViewEvent();
+                var IdleItem = IdleItems[concrete.IdleItemIndex];
+                IdleItem.SetFill(concrete.FillPercentage);
+                IdleItem.SetText(concrete.Name);
+            }
 
-    private void OnGameFlowStateEvent(IGameFlowStateEvent gameFlowStateEvent)
-    {
-        gameObject.SetActive(gameFlowStateEvent.GameFlowStateType == GameFlowStateType.Gameplay);
+            if (viewEvent.ViewEventType.HasFlag(ViewEventType.PlayerHealth))
+            {
+                var concrete = viewEvent.GetPlayerHealthUpdateViewEvent();
+                PlayerHealth.SetFill(concrete.FillPercentage);
+                PlayerHealth.SetHealthText(concrete.HealthText);
+            }
+        }
+
+        private void OnItemClicked(int idleItemIndex)
+        {
+            _eventService.Raise(new AttackEvent(idleItemIndex),EventPipelineType.GameplayPipeline);
+        }
+
+        private void TransitionBack()
+        {
+            _eventService.Raise(new TransitionEvent(TransitionTarget.Back));
+        }
+
+        private void OnGameFlowStateEvent(IGameFlowStateEvent gameFlowStateEvent)
+        {
+            gameObject.SetActive(gameFlowStateEvent.GameFlowStateType == GameFlowStateType.Gameplay);
+        }
     }
+    
 }

@@ -1,7 +1,9 @@
 ﻿namespace Services.EventService
 {
-    public class ViewEvent : IViewEvent
+    public class GenericViewEvent : IViewEvent
     {
+        public ViewEventType ViewEventType => ViewEventType.None;
+        
         public void Visit(IEventHandler handler)
         {
             handler.Handle(this);

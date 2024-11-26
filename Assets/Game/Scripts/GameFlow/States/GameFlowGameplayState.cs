@@ -40,7 +40,6 @@ namespace Game.GameFlow
         public void StateEnter()
         {
             _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Gameplay));
-            
             _gameplayLogic = new GameplayLogic(_eventService);
         }
     }
