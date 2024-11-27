@@ -1,6 +1,6 @@
 ﻿namespace Game.Data.GameplayData
 {
-    public class EnemyData
+    public struct EnemyData
     {
         public int EnemyId;
         public string EnemyName;

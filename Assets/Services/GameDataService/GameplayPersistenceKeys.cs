@@ -5,6 +5,7 @@
         public const string PERSISTENCE_COUNT_MARKUP = "-&-";
         
         public const string GAMEPLAY_DATA_KEY = "GameplayDataKey01";
+        public const string GAMEPLAY_DATA_PLAYER_NAME_MOD = "Name";
         public const string GAMEPLAY_DATA_PLAYER_LEVEL_MOD = "Level";
         public const string GAMEPLAY_DATA_PLAYER_XP_MOD = "Experience";
         public const string GAMEPLAY_DATA_PLAYER_HP_MOD = "HealthPoints";

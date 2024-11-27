@@ -30,6 +30,15 @@ namespace Game.Data
             ExperiencePoints = experiencePoints;
             _characterImplementation = new Character(name,healthPoints,armorPoints,attackPoints,onCharacterDeath);
         }
+
+        public void SetOnDeathCallback(Action<IPlayerCharacter> onDeath)
+        {
+            Action<ICharacter> onCharacterDeath = (character) =>
+            {
+                onDeath((IPlayerCharacter)character);
+            };
+            _characterImplementation = new Character(Name,HealthPoints,ArmorPoints,AttackPoints,onCharacterDeath);
+        }
         
         public void TakeDamage(int damage)
         {
