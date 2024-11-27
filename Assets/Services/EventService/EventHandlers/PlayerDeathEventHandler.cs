@@ -15,7 +15,7 @@ namespace Services.EventService
         public PlayerDeathEventHandler(Action<IPlayerDeathEvent> onPlayerDeathEvent,IEventHandler decoratee)
         {
             Decoratee = decoratee;
-            _onPlayerDeathEvent = onPlayerDeathEvent;git
+            _onPlayerDeathEvent = onPlayerDeathEvent;
         }
         
         public override void Handle(IPlayerDeathEvent commonEvent)
