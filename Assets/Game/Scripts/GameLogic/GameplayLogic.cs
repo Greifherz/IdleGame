@@ -8,6 +8,7 @@ namespace Game.Scripts.GameLogic
     {
         private IEventService _eventService;
         private IEventHandler _attackEventHandler;
+        private IEventHandler _deathEventHandler;
         
         private IEnemyCharacter _enemyCharacter;
         private IPlayerCharacter _playerCharacter;

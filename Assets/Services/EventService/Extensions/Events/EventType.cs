@@ -12,7 +12,7 @@ namespace Services.EventService
         Back = 8,
         Transition = 16,
         GameFlowState = 32,
-        
-        
+        Death = 64,
+        PlayerDeath = 128,
     }
 }
