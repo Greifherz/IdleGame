@@ -27,8 +27,18 @@ namespace Game.Scripts.GameLogic
 
         private void GetCharacters()
         {
-            _enemyCharacter = new EnemyCharacter("Dummy",1,5,0,0);
-            _playerCharacter = new PlayerCharacter(new Character("Player",10,0,1),1,0);
+            _enemyCharacter = new EnemyCharacter("Dummy",1,5,0,0,OnEnemyDeath);
+            _playerCharacter = new PlayerCharacter("Player",1,0,10,1,0,OnPlayerDeath);
+        }
+
+        private void OnPlayerDeath(IPlayerCharacter deadPlayer)
+        {
+            _eventService.Raise(new PlayerDeathEvent(),EventPipelineType.GameplayPipeline);
+        }
+
+        private void OnEnemyDeath(IEnemyCharacter deadCharacter)
+        {
+            _eventService.Raise(new DeathEvent(deadCharacter),EventPipelineType.GameplayPipeline);
         }
 
         //For now and FTUE most likely this will be called through an event fired by a button press. Later stages the event will be fired from a Tick/Schedule

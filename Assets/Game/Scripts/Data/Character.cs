@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Game.Data
@@ -12,19 +13,23 @@ namespace Game.Data
         
         public float HealthPercentage => (float)CurrentHealthPoints / HealthPoints;
 
-        public Character(string name,int healthPoints, int armorPoints, int attackPoints)
+        private Action<ICharacter> OnCharacterDeath;
+
+        public Character(string name,int healthPoints, int armorPoints, int attackPoints,Action<ICharacter> onCharacterDeath)
         {
             Name = name;
             CurrentHealthPoints = HealthPoints = healthPoints;
             ArmorPoints = armorPoints;
             AttackPoints = attackPoints;
+            OnCharacterDeath = onCharacterDeath;
         }
     
-        public Character(int healthPoints, int armorPoints, int attackPoints)
+        public Character(int healthPoints, int armorPoints, int attackPoints,Action<ICharacter> onCharacterDeath)
         {
             CurrentHealthPoints = HealthPoints = healthPoints;
             ArmorPoints = armorPoints;
             AttackPoints = attackPoints;
+            OnCharacterDeath = onCharacterDeath;
         }
 
         public void TakeDamage(int damage)
@@ -39,10 +44,6 @@ namespace Game.Data
             {
                 Die();
             }
-            else
-            {
-                //DamageTaken Event
-            }
         }
 
         public void RestoreHealth()
@@ -52,9 +53,8 @@ namespace Game.Data
 
         public void Die()
         {
-            Debug.Log($"Character {Name} just died.");
+            OnCharacterDeath(this);
             RestoreHealth();
-            //Character death event
         }
     }
 }

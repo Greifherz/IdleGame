@@ -1,7 +1,16 @@
-﻿namespace Services.EventService
+﻿using Game.Data;
+
+namespace Services.EventService
 {
     public class DeathEvent : IDeathEvent
     {
+        public IEnemyCharacter DeadCharacter { get; }
+
+        public DeathEvent(IEnemyCharacter deadCharacter)
+        {
+            DeadCharacter = deadCharacter;
+        }
+        
         public void Visit(IEventHandler handler)
         {
             handler.Handle(this);

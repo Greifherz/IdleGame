@@ -1,4 +1,6 @@
-﻿namespace Game.Data
+﻿using System;
+
+namespace Game.Data
 {
     public class EnemyCharacter : IEnemyCharacter
     {
@@ -17,10 +19,14 @@
 
         public int XpReward { get; private set; }
 
-        public EnemyCharacter(string name,int xpReward,int healthPoints, int armorPoints, int attackPoints)
+        public EnemyCharacter(string name,int xpReward,int healthPoints, int armorPoints, int attackPoints,Action<IEnemyCharacter> onDeath)
         {
+            Action<ICharacter> onCharacterDeath = (character) =>
+            {
+                onDeath((IEnemyCharacter)character);
+            }; 
             XpReward = xpReward;
-            _characterImplementation = new Character(name,healthPoints,armorPoints,attackPoints);
+            _characterImplementation = new Character(name,healthPoints,armorPoints,attackPoints,onCharacterDeath);
         }
         
         public void TakeDamage(int damage)
@@ -36,7 +42,6 @@
         public void Die()
         {
             _enemyCharacterImplementation.Die();
-            //Enemy Death event
         }
     }
 }

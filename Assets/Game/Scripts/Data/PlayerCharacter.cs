@@ -1,4 +1,6 @@
-﻿namespace Game.Data
+﻿using System;
+
+namespace Game.Data
 {
     public class PlayerCharacter : IPlayerCharacter
     {
@@ -17,12 +19,16 @@
         public int Level { get; private set; }
         public int ExperiencePoints { get; private set; }
         
-        public PlayerCharacter(ICharacter characterImplementation, int level, int experiencePoints)
+        public PlayerCharacter(string name, int level, int experiencePoints,int healthPoints, int armorPoints, int attackPoints,Action<IPlayerCharacter> onDeath)
         {
-            _characterImplementation = characterImplementation;
-            Name = characterImplementation.Name;
+            Action<ICharacter> onCharacterDeath = (character) =>
+            {
+                onDeath((IPlayerCharacter)character);
+            };
+            Name = name;
             Level = level;
             ExperiencePoints = experiencePoints;
+            _characterImplementation = new Character(name,healthPoints,armorPoints,attackPoints,onCharacterDeath);
         }
         
         public void TakeDamage(int damage)
