@@ -4,7 +4,7 @@ namespace Services.EventService
 {
     public class PlayerDeathEvent : IPlayerDeathEvent
     {
-        public IPlayerCharacter PlayerCharacter;
+        public IPlayerCharacter PlayerCharacter { get; }
 
         public PlayerDeathEvent(IPlayerCharacter playerCharacter)
         {

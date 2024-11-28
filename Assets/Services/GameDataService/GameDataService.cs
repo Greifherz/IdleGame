@@ -5,6 +5,7 @@ using Game.Data.GameplayData;
 using ServiceLocator;
 using Services.EventService;
 using Services.PersistenceService;
+using UnityEngine;
 
 namespace Services.GameDataService
 {
@@ -105,6 +106,7 @@ namespace Services.GameDataService
             }
             catch (Exception e)
             {
+                Debug.LogError($"Thrown an exception while persisting GameplayData: {e.Message}");
                 return false;
             }
         }
@@ -118,14 +120,34 @@ namespace Services.GameDataService
             _eventService.RegisterListener(_playerDeathEventHandler,EventPipelineType.GameplayPipeline);
         }
 
-        private void OnPlayerDeath(IPlayerDeathEvent obj)
+        private void OnPlayerDeath(IPlayerDeathEvent playerDeathEvent)
         {
-            
+            GameplayData = new GameplayData
+            {
+                EnemyData = GameplayData.EnemyData,
+                PlayerCharacter = playerDeathEvent.PlayerCharacter.GetConcrete()
+            };
+            //GameplayData updated - A specific type for player data updated
         }
 
-        private void OnDeath(IDeathEvent obj)
+        private void OnDeath(IDeathEvent deathEvent)
         {
-            throw new System.NotImplementedException();
+            for (var Index = 0; Index < GameplayData.EnemyData.Length; Index++)
+            {
+                var EnemyData = GameplayData.EnemyData[Index];
+                var DeadEnemy = deathEvent.DeadCharacter;
+                if (EnemyData.EnemyId == DeadEnemy.Id)
+                {
+                    GameplayData.EnemyData[Index] = new EnemyData
+                    {
+                        EnemyId = DeadEnemy.Id,
+                        EnemyName = DeadEnemy.Name,
+                        KillCount = DeadEnemy.KillCount
+                    };
+                }
+            }
+
+            //GameplayData updated - A specific type for enemy data updated
         }
     }
 }

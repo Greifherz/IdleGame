@@ -1,0 +1,7 @@
+﻿namespace Services.EventService
+{
+    public interface I%%Event : IEvent
+    {
+        int Property { get; }
+    }
+}

@@ -8,5 +8,7 @@
 
         void EarnExperience(int quantity);
         void LevelUp();
+
+        PlayerCharacter GetConcrete();
     }
 }

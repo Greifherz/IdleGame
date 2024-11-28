@@ -62,6 +62,11 @@ namespace Game.Data
             Level++;
         }
 
+        public PlayerCharacter GetConcrete()
+        {
+            return this;
+        }
+
         public void Die()
         {
             DeathCount++;

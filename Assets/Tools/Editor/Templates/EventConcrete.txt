@@ -1,0 +1,30 @@
+﻿namespace Services.EventService
+{
+    public class %%Event : I%%Event
+    {
+        public int Property { get; }
+
+        public DeathEvent(int property)
+        {
+            Property = property;
+        }
+        
+        public void Visit(IEventHandler handler)
+        {
+            handler.Handle(this);
+        }
+    }
+    
+    public partial interface IEventHandler
+    {
+        void Handle(I%%Event &&Event);
+    }
+    
+    public partial class BaseEventHandler : IEventHandler
+    {
+        public virtual void Handle(I%%Event &&Event)
+        {
+            Decoratee?.Handle(&&Event);
+        }
+    }
+}

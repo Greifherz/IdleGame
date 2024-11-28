@@ -1,0 +1,26 @@
+﻿using System;
+
+namespace Services.EventService
+{
+    public class %%EventHandler : BaseEventHandler
+    {
+        public override EventType HandleType => EventType.%%;
+        private Action<I%%Event> On%%Event;
+
+        public %%EventHandler(Action<I%%Event> on%%Event)
+        {
+            On%%Event = on%%Event;
+        }
+
+        public %%EventHandler(Action<I%%Event> on%%Event,IEventHandler decoratee)
+        {
+            Decoratee = decoratee;
+            On%%Event = on%%Event;
+        }
+        
+        public override void Handle(I%%Event &&Event)
+        {
+            On%%Event(&&Event);
+        }
+    }
+}

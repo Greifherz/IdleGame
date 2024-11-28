@@ -12,6 +12,5 @@
         void TakeDamage(int damage);
         void RestoreHealth();
         void Die();
-
     }
 }
