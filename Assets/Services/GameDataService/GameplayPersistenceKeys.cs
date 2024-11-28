@@ -11,6 +11,7 @@
         public const string GAMEPLAY_DATA_PLAYER_HP_MOD = "HealthPoints";
         public const string GAMEPLAY_DATA_PLAYER_ATK_MOD = "Attack";
         public const string GAMEPLAY_DATA_PLAYER_ARMOR_MOD = "Armor";
+        public const string GAMEPLAY_DATA_PLAYER_DEATH_MOD = "Deaths";
         
         public const string GAMEPLAY_DATA_ENEMY_COUNT_MOD = "EnemyCount";
         public const string GAMEPLAY_DATA_ENEMY_ID_MOD = PERSISTENCE_COUNT_MARKUP + "ID"; //Use interpolation instead of this markup

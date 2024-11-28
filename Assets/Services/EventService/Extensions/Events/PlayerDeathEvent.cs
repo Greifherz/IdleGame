@@ -1,7 +1,16 @@
-﻿namespace Services.EventService
+﻿using Game.Data;
+
+namespace Services.EventService
 {
     public class PlayerDeathEvent : IPlayerDeathEvent
     {
+        public IPlayerCharacter PlayerCharacter;
+
+        public PlayerDeathEvent(IPlayerCharacter playerCharacter)
+        {
+            PlayerCharacter = playerCharacter;
+        }
+        
         public void Visit(IEventHandler handler)
         {
             handler.Handle(this);

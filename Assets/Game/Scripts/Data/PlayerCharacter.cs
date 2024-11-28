@@ -18,13 +18,15 @@ namespace Game.Data
 
         public int Level { get; private set; }
         public int ExperiencePoints { get; private set; }
-        
-        public PlayerCharacter(string name, int level, int experiencePoints,int healthPoints, int armorPoints, int attackPoints,Action<IPlayerCharacter> onDeath)
+        public int DeathCount { get; private set; }
+
+        public PlayerCharacter(string name, int level, int experiencePoints,int healthPoints, int armorPoints, int attackPoints,Action<IPlayerCharacter> onDeath,int deathCount = 0)
         {
             Action<ICharacter> onCharacterDeath = (character) =>
             {
                 onDeath((IPlayerCharacter)character);
             };
+            DeathCount = deathCount;
             Name = name;
             Level = level;
             ExperiencePoints = experiencePoints;
@@ -50,9 +52,19 @@ namespace Game.Data
             _characterImplementation.RestoreHealth();
         }
 
+        public void EarnExperience(int quantity)
+        {
+            ExperiencePoints += quantity;
+        }
+
+        public void LevelUp()
+        {
+            Level++;
+        }
+
         public void Die()
         {
-            //PlayerDeath event
+            DeathCount++;
         }
     }
 }

@@ -8,7 +8,7 @@ using Services.PersistenceService;
 
 namespace Services.GameDataService
 {
-    public class GameDataService : IGameService
+    public class GameDataService : IGameDataService
     {
         private IPersistenceService _persistenceService;
         private IEventService _eventService;
@@ -47,8 +47,10 @@ namespace Services.GameDataService
                     $"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_PLAYER_HP_MOD}");
                 var PlayerArmor = _persistenceService.RetrieveInt(
                     $"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_PLAYER_ARMOR_MOD}");
+                var PlayerDeaths = _persistenceService.RetrieveInt(
+                    $"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_PLAYER_DEATH_MOD}");
                 var PlayerCharacter = new PlayerCharacter(PlayerName,PlayerLevel,PlayerXp,PlayerHp,PlayerArmor,PlayerAttack,
-                    (pchar) => { });
+                    (pchar) => { },PlayerDeaths);
 
                 var EnemyCount = _persistenceService.RetrieveInt(
                     $"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_ENEMY_COUNT_MOD}");
@@ -90,6 +92,7 @@ namespace Services.GameDataService
                 _persistenceService.Persist(GameplayData.PlayerCharacter.AttackPoints,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_PLAYER_ATK_MOD}");
                 _persistenceService.Persist(GameplayData.PlayerCharacter.HealthPoints,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_PLAYER_HP_MOD}");
                 _persistenceService.Persist(GameplayData.PlayerCharacter.ArmorPoints,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_PLAYER_ARMOR_MOD}");
+                _persistenceService.Persist(GameplayData.PlayerCharacter.DeathCount,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_PLAYER_DEATH_MOD}");
 
                 var EnemyCount = GameplayData.EnemyData.Length;
                 for (var i = 0; i < EnemyCount; i++)
@@ -117,7 +120,7 @@ namespace Services.GameDataService
 
         private void OnPlayerDeath(IPlayerDeathEvent obj)
         {
-            throw new System.NotImplementedException();
+            
         }
 
         private void OnDeath(IDeathEvent obj)

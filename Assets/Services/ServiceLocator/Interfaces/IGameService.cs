@@ -2,6 +2,6 @@
 {
     public interface IGameService
     {
-        void Initialize();
+        public void Initialize();
     }
 }

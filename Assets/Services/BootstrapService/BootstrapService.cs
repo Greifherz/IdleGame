@@ -3,6 +3,7 @@ using Services.EventService;
 using Services.PersistenceService;
 using Services.TickService;
 using ServiceLocator;
+using Services.GameDataService;
 using Services.Scheduler;
 using UnityEngine;
 
@@ -50,6 +51,10 @@ namespace Bootstrap
             //Initialize Game-related services, controllers and objects
             _gameFlowObject = new GameFlow(); //I don't want to hold references to it but rather communicate with it only through events.
             _gameFlowObject.Initialize();
+            
+            var gameDataService = new GameDataService();
+            Locator.Current.Register<IGameDataService>(gameDataService);
+            gameDataService.Initialize();
         }
     }
 }

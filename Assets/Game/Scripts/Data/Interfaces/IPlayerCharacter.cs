@@ -4,5 +4,9 @@
     {
         int Level { get; }
         int ExperiencePoints { get; }
+        int DeathCount { get; }
+
+        void EarnExperience(int quantity);
+        void LevelUp();
     }
 }

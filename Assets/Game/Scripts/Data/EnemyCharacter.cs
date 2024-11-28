@@ -17,14 +17,17 @@ namespace Game.Data
         public int AttackPoints => _characterImplementation.AttackPoints;
         public float HealthPercentage => _characterImplementation.HealthPercentage;
 
+        public int Id { get; }
+        public int KillCount { get; private set; }
         public int XpReward { get; private set; }
 
-        public EnemyCharacter(string name,int xpReward,int healthPoints, int armorPoints, int attackPoints,Action<IEnemyCharacter> onDeath)
+        public EnemyCharacter(int id,string name,int xpReward,int healthPoints, int armorPoints, int attackPoints,Action<IEnemyCharacter> onDeath)
         {
             Action<ICharacter> onCharacterDeath = (character) =>
             {
                 onDeath((IEnemyCharacter)character);
-            }; 
+            };
+            Id = id;
             XpReward = xpReward;
             _characterImplementation = new Character(name,healthPoints,armorPoints,attackPoints,onCharacterDeath);
         }
@@ -41,6 +44,7 @@ namespace Game.Data
 
         public void Die()
         {
+            KillCount++;
             _enemyCharacterImplementation.Die();
         }
     }

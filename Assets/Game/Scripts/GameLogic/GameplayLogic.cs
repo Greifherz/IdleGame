@@ -27,13 +27,13 @@ namespace Game.Scripts.GameLogic
 
         private void GetCharacters()
         {
-            _enemyCharacter = new EnemyCharacter("Dummy",1,5,0,0,OnEnemyDeath);
+            _enemyCharacter = new EnemyCharacter(1,"Dummy",1,5,0,0,OnEnemyDeath);
             _playerCharacter = new PlayerCharacter("Player",1,0,10,1,0,OnPlayerDeath);
         }
 
         private void OnPlayerDeath(IPlayerCharacter deadPlayer)
         {
-            _eventService.Raise(new PlayerDeathEvent(),EventPipelineType.GameplayPipeline);
+            _eventService.Raise(new PlayerDeathEvent(deadPlayer),EventPipelineType.GameplayPipeline);
         }
 
         private void OnEnemyDeath(IEnemyCharacter deadCharacter)
