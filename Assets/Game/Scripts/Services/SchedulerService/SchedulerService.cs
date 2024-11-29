@@ -18,61 +18,61 @@ namespace Services.Scheduler
         
         public ISchedulerHandle Schedule(float timeInSecsFromNow)
         {
-            var data = new ScheduleData();
-            data.TargetTime = timeInSecsFromNow;
+            var Data = new ScheduleData();
+            Data.TargetTime = timeInSecsFromNow;
             
-            var handle = new ScheduleHandle();
-            data.Handle = handle;
+            var Handle = new ScheduleHandle();
+            Data.Handle = Handle;
             
             if (_scheduledData == null)
             {
-                _scheduledData = data;
+                _scheduledData = Data;
             }
             else
             {
                 if (timeInSecsFromNow < _scheduledData.TargetTime)
                 {
-                    data.Next = _scheduledData;
-                    _scheduledData = data;
+                    Data.Next = _scheduledData;
+                    _scheduledData = Data;
                 }
                 else if(_scheduledData.Next == null)
                 {
-                    _scheduledData.Next = data;
+                    _scheduledData.Next = Data;
                 }
                 else
                 {
-                    FitInSchedule(data);
+                    FitInSchedule(Data);
                 }
             }
 
-            return handle;
+            return Handle;
         }
 
         public ISchedulerHandle Schedule(DateTime time)
         {
-            var diff = Time.time + (float)(time - DateTime.UtcNow).TotalSeconds;
-            return Schedule(diff);
+            var Diff = Time.time + (float)(time - DateTime.UtcNow).TotalSeconds;
+            return Schedule(Diff);
         }
 
         private void FitInSchedule(ScheduleData data)
         {
-            var currentScheduleData = _scheduledData;
-            var fit = false;
-            while (!fit)
+            var CurrentScheduleData = _scheduledData;
+            var Fit = false;
+            while (!Fit)
             {
-                if (data.TargetTime < currentScheduleData.TargetTime)
+                if (data.TargetTime < CurrentScheduleData.TargetTime)
                 {
-                    data.Next = currentScheduleData;
-                    fit = true;
+                    data.Next = CurrentScheduleData;
+                    Fit = true;
                 }
-                else if(currentScheduleData.Next == null)
+                else if(CurrentScheduleData.Next == null)
                 {
-                    currentScheduleData.Next = data;
-                    fit = true;
+                    CurrentScheduleData.Next = data;
+                    Fit = true;
                 }
                 else
                 {
-                    currentScheduleData = currentScheduleData.Next;
+                    CurrentScheduleData = CurrentScheduleData.Next;
                 }
             }
         }
@@ -91,10 +91,10 @@ namespace Services.Scheduler
             
             if (_scheduledData.TargetTime < Time.time)
             {
-                var data = _scheduledData;
+                var Data = _scheduledData;
                 _scheduledData = _scheduledData.Next;
-                data.Next = null;
-                data.Handle.Tick(this);
+                Data.Next = null;
+                Data.Handle.Tick(this);
                 Tick();
             }
         }

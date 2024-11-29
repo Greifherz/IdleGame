@@ -4,10 +4,10 @@
     {
         private IPersistenceService _persistenceServiceImplementation;
 
-        private const string INT_PREFIX = "INT_";
-        private const string STRING_PREFIX = "STRING_";
-        private const string BOOL_PREFIX = "BOOL_";
-        private const string FLOAT_PREFIX = "FLOAT_";
+        private const string IntPrefix = "INT_";
+        private const string StringPrefix = "STRING_";
+        private const string BoolPrefix = "BOOL_";
+        private const string FloatPrefix = "FLOAT_";
 
         public void Initialize()
         {
@@ -21,50 +21,50 @@
         
         public void Persist(int intData, string id)
         {
-            var newId = INT_PREFIX + id;
-            _persistenceServiceImplementation.Persist(intData, newId);
+            var NewId = IntPrefix + id;
+            _persistenceServiceImplementation.Persist(intData, NewId);
         }
 
         public void Persist(string stringData, string id)
         {
-            var newId = STRING_PREFIX + id;
-            _persistenceServiceImplementation.Persist(stringData, newId);
+            var NewId = StringPrefix + id;
+            _persistenceServiceImplementation.Persist(stringData, NewId);
         }
 
         public void Persist(bool boolData, string id)
         {
-            var newId = BOOL_PREFIX + id;
-            _persistenceServiceImplementation.Persist(boolData, newId);
+            var NewId = BoolPrefix + id;
+            _persistenceServiceImplementation.Persist(boolData, NewId);
         }
 
         public void Persist(float floatData, string id)
         {
-            var newId = FLOAT_PREFIX + id;
-            _persistenceServiceImplementation.Persist(floatData, newId);
+            var NewId = FloatPrefix + id;
+            _persistenceServiceImplementation.Persist(floatData, NewId);
         }
 
         public int RetrieveInt(string id)
         {
-            var newId = INT_PREFIX + id;
-            return _persistenceServiceImplementation.RetrieveInt(newId);
+            var NewId = IntPrefix + id;
+            return _persistenceServiceImplementation.RetrieveInt(NewId);
         }
 
         public string RetrieveString(string id)
         {
-            var newId = STRING_PREFIX + id;
-            return _persistenceServiceImplementation.RetrieveString(newId);
+            var NewId = StringPrefix + id;
+            return _persistenceServiceImplementation.RetrieveString(NewId);
         }
 
         public bool RetrieveBool(string id)
         {
-            var newId = BOOL_PREFIX + id;
-            return _persistenceServiceImplementation.RetrieveBool(newId);
+            var NewId = BoolPrefix + id;
+            return _persistenceServiceImplementation.RetrieveBool(NewId);
         }
 
         public float RetrieveFloat(string id)
         {
-            var newId = FLOAT_PREFIX + id;
-            return _persistenceServiceImplementation.RetrieveFloat(newId);
+            var NewId = FloatPrefix + id;
+            return _persistenceServiceImplementation.RetrieveFloat(NewId);
         }
     }
 }

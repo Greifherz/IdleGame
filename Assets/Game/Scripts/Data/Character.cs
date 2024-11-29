@@ -13,7 +13,7 @@ namespace Game.Data
         
         public float HealthPercentage => (float)CurrentHealthPoints / HealthPoints;
 
-        private Action<ICharacter> OnCharacterDeath;
+        private Action<ICharacter> _onCharacterDeath;
 
         public Character(string name,int healthPoints, int armorPoints, int attackPoints,Action<ICharacter> onCharacterDeath)
         {
@@ -21,7 +21,7 @@ namespace Game.Data
             CurrentHealthPoints = HealthPoints = healthPoints;
             ArmorPoints = armorPoints;
             AttackPoints = attackPoints;
-            OnCharacterDeath = onCharacterDeath;
+            _onCharacterDeath = onCharacterDeath;
         }
     
         public Character(int healthPoints, int armorPoints, int attackPoints,Action<ICharacter> onCharacterDeath)
@@ -29,16 +29,16 @@ namespace Game.Data
             CurrentHealthPoints = HealthPoints = healthPoints;
             ArmorPoints = armorPoints;
             AttackPoints = attackPoints;
-            OnCharacterDeath = onCharacterDeath;
+            _onCharacterDeath = onCharacterDeath;
         }
 
         public void TakeDamage(int damage)
         {
-            var damageToTake = damage - ArmorPoints;
-            if (damageToTake < 0)
-                damageToTake = 0;
+            var DamageToTake = damage - ArmorPoints;
+            if (DamageToTake < 0)
+                DamageToTake = 0;
         
-            CurrentHealthPoints -= damageToTake;
+            CurrentHealthPoints -= DamageToTake;
         
             if (CurrentHealthPoints == 0)
             {
@@ -53,7 +53,7 @@ namespace Game.Data
 
         public void Die()
         {
-            OnCharacterDeath(this);
+            _onCharacterDeath(this);
             RestoreHealth();
         }
     }

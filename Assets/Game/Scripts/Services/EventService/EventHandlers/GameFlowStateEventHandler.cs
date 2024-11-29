@@ -5,22 +5,22 @@ namespace Services.EventService
     public class GameFlowStateEventHandle : BaseEventHandler
     {
         public override EventType HandleType => EventType.GameFlowState;
-        private Action<IGameFlowStateEvent> OnGameFlowStateEvent;
+        private Action<IGameFlowStateEvent> _onGameFlowStateEvent;
 
         public GameFlowStateEventHandle(Action<IGameFlowStateEvent> onGameFlowStateEvent)
         {
-            OnGameFlowStateEvent = onGameFlowStateEvent;
+            _onGameFlowStateEvent = onGameFlowStateEvent;
         }
 
         public GameFlowStateEventHandle(Action<IGameFlowStateEvent> onGameFlowStateEvent,IEventHandler decoratee)
         {
             Decoratee = decoratee;
-            OnGameFlowStateEvent = onGameFlowStateEvent;
+            _onGameFlowStateEvent = onGameFlowStateEvent;
         }
         
         public override void Handle(IGameFlowStateEvent gameFlowStateEvent)
         {
-            OnGameFlowStateEvent(gameFlowStateEvent);
+            _onGameFlowStateEvent(gameFlowStateEvent);
         }
     }
 }

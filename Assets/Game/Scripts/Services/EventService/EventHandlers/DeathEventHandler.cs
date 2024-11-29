@@ -5,22 +5,22 @@ namespace Services.EventService
     public class DeathEventHandler : BaseEventHandler
     {
         public override EventType HandleType => EventType.Death;
-        private Action<IDeathEvent> OnDeathEvent;
+        private Action<IDeathEvent> _onDeathEvent;
 
         public DeathEventHandler(Action<IDeathEvent> onDeathEvent)
         {
-            OnDeathEvent = onDeathEvent;
+            _onDeathEvent = onDeathEvent;
         }
 
         public DeathEventHandler(Action<IDeathEvent> onDeathEvent,IEventHandler decoratee)
         {
             Decoratee = decoratee;
-            OnDeathEvent = onDeathEvent;
+            _onDeathEvent = onDeathEvent;
         }
         
         public override void Handle(IDeathEvent commonEvent)
         {
-            OnDeathEvent(commonEvent);
+            _onDeathEvent(commonEvent);
         }
     }
 }

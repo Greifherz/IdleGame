@@ -9,11 +9,11 @@ namespace Services.TickService
         private event Action OnFixedTick = () => { };
         private event Action OnLateTick = () => { };
         
-        private bool Running = false;
+        private bool _running = false;
 
         public void Initialize()
         {
-            Running = true;
+            _running = true;
         }
 
         public void RegisterTick(Action tickAction)
@@ -28,13 +28,13 @@ namespace Services.TickService
 
         public void RunOnMainThread(Action mainThreadAction)
         {
-            Action wrapper = () => { };
-            wrapper = () =>
+            Action Wrapper = () => { };
+            Wrapper = () =>
             {
                 mainThreadAction();
-                OnTick -= wrapper;
+                OnTick -= Wrapper;
             };
-            OnTick += wrapper;
+            OnTick += Wrapper;
         }
 
         public void RunOnLateMainThread(Action lateMainThreadAction)
@@ -49,29 +49,29 @@ namespace Services.TickService
 
         public void Disable()
         {
-            Running = false;
+            _running = false;
         }
         
         private void OnDestroy()
         {
-            Running = false;
+            _running = false;
         }
 
         private void Update()
         {
-            if (Running) OnTick();
+            if (_running) OnTick();
         }
 
         private void LateUpdate()
         {
-            if (!Running) return;
+            if (!_running) return;
             OnLateTick();
             OnLateTick = () => { };
         }
 
         private void FixedUpdate()
         {
-            if (!Running) return;
+            if (!_running) return;
             OnFixedTick();
             OnFixedTick = () => { };
         }

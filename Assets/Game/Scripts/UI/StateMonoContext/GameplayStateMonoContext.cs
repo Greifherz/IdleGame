@@ -46,17 +46,17 @@ namespace Game.UI
         {
             if (viewEvent.ViewEventType.HasFlag(ViewEventType.IdleItem))
             {
-                var concrete = viewEvent.GetIdleItemUpdateViewEvent();
-                var IdleItem = IdleItems[concrete.IdleItemIndex];
-                IdleItem.SetFill(concrete.FillPercentage);
-                IdleItem.SetText(concrete.Name);
+                var Concrete = viewEvent.GetIdleItemUpdateViewEvent();
+                var IdleItem = IdleItems[Concrete.IdleItemIndex];
+                IdleItem.SetFill(Concrete.FillPercentage);
+                IdleItem.SetText(Concrete.Name);
             }
 
             if (viewEvent.ViewEventType.HasFlag(ViewEventType.PlayerHealth))
             {
-                var concrete = viewEvent.GetPlayerHealthUpdateViewEvent();
-                PlayerHealth.SetFill(concrete.FillPercentage);
-                PlayerHealth.SetHealthText(concrete.HealthText);
+                var Concrete = viewEvent.GetPlayerHealthUpdateViewEvent();
+                PlayerHealth.SetFill(Concrete.FillPercentage);
+                PlayerHealth.SetHealthText(Concrete.HealthText);
             }
         }
 

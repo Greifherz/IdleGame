@@ -9,9 +9,9 @@ namespace Services.EventService
 
         public void Initialize()
         {
-            var pipelineService = new VisitorPipelinesEventService();
-            pipelineService.Initialize();
-            _pipelineService = pipelineService;
+            var PipelineService = new VisitorPipelinesEventService();
+            PipelineService.Initialize();
+            _pipelineService = PipelineService;
             _generalEventService = new GeneralEventService();
         }
         

@@ -22,7 +22,7 @@ namespace Game.Data
 
         public PlayerCharacter(string name, int level, int experiencePoints,int healthPoints, int armorPoints, int attackPoints,Action<IPlayerCharacter> onDeath,int deathCount = 0)
         {
-            Action<ICharacter> onCharacterDeath = (character) =>
+            Action<ICharacter> OnCharacterDeath = (character) =>
             {
                 onDeath((IPlayerCharacter)character);
             };
@@ -30,16 +30,16 @@ namespace Game.Data
             Name = name;
             Level = level;
             ExperiencePoints = experiencePoints;
-            _characterImplementation = new Character(name,healthPoints,armorPoints,attackPoints,onCharacterDeath);
+            _characterImplementation = new Character(name,healthPoints,armorPoints,attackPoints,OnCharacterDeath);
         }
 
         public void SetOnDeathCallback(Action<IPlayerCharacter> onDeath)
         {
-            Action<ICharacter> onCharacterDeath = (character) =>
+            Action<ICharacter> OnCharacterDeath = (character) =>
             {
                 onDeath((IPlayerCharacter)character);
             };
-            _characterImplementation = new Character(Name,HealthPoints,ArmorPoints,AttackPoints,onCharacterDeath);
+            _characterImplementation = new Character(Name,HealthPoints,ArmorPoints,AttackPoints,OnCharacterDeath);
         }
         
         public void TakeDamage(int damage)

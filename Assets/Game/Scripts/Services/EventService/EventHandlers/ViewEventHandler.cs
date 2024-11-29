@@ -4,22 +4,22 @@ namespace Services.EventService
 {
     public class ViewEventHandler : BaseEventHandler
     {
-        private Action<IViewEvent> OnViewEvent;
+        private Action<IViewEvent> _onViewEvent;
 
         public ViewEventHandler(Action<IViewEvent> onViewEvent)
         {
-            OnViewEvent = onViewEvent;
+            _onViewEvent = onViewEvent;
         }
 
         public ViewEventHandler(Action<IViewEvent> onViewEvent,IEventHandler decoratee)
         {
             Decoratee = decoratee;
-            OnViewEvent = onViewEvent;
+            _onViewEvent = onViewEvent;
         }
         
         public override void Handle(IViewEvent viewEvent)
         {
-            OnViewEvent(viewEvent);
+            _onViewEvent(viewEvent);
         }
     }
 }

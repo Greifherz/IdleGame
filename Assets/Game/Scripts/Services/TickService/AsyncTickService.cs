@@ -13,17 +13,17 @@ namespace Services.TickService
     // Another issue with this is that some things need Unity's main thread. While using this tick service we're not running in it, so this error might show up.
     public class AsyncTickService : ITickService
     {
-        private const int TICK_DELTA_TIME_MILISSECONDS = 1000 / 60; 
+        private const int TickDeltaTimeMilisseconds = 1000 / 60; 
         
         private event Action OnTick = () => { };
 
-        private bool Running = false;
+        private bool _running = false;
 
-        private UnityMainThreadProcessor MainThreadProcessor;
+        private UnityMainThreadProcessor _mainThreadProcessor;
 
         public AsyncTickService()
         {
-            MainThreadProcessor = new GameObject("MainThreadProcessor").AddComponent<UnityMainThreadProcessor>();
+            _mainThreadProcessor = new GameObject("MainThreadProcessor").AddComponent<UnityMainThreadProcessor>();
         }
 
         public void Initialize()
@@ -36,10 +36,10 @@ namespace Services.TickService
 #if UNITY_EDITOR
             EditorApplication.playModeStateChanged += change =>
             {
-                if (change == PlayModeStateChange.ExitingPlayMode) Running = false;
+                if (change == PlayModeStateChange.ExitingPlayMode) _running = false;
             }; 
 #endif
-            Running = true;
+            _running = true;
             await Clock();
         }
 
@@ -55,33 +55,33 @@ namespace Services.TickService
 
         public void RunOnMainThread(Action mainThreadAction)
         {
-            MainThreadProcessor.OnMainThread += mainThreadAction;
+            _mainThreadProcessor.OnMainThread += mainThreadAction;
         }
 
         public void RunOnLateMainThread(Action lateMainThreadAction)
         {
-            MainThreadProcessor.OnLateMainThread += lateMainThreadAction;
+            _mainThreadProcessor.OnLateMainThread += lateMainThreadAction;
         }
 
         public void RunOnFixedMainThread(Action fixedMainThreadAction)
         {
-            MainThreadProcessor.OnFixedMainThread += fixedMainThreadAction;
+            _mainThreadProcessor.OnFixedMainThread += fixedMainThreadAction;
         }
 
         public void Disable()
         {
-            Running = false;
+            _running = false;
         }
 
         private async Task Clock()
         {
-            Running = true;
+            _running = true;
             await Task.Run(() =>
             {
-                while (Running)
+                while (_running)
                 {
                     OnTick();
-                    Task.Delay(TICK_DELTA_TIME_MILISSECONDS).Wait();
+                    Task.Delay(TickDeltaTimeMilisseconds).Wait();
                 }
             });
         }

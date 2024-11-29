@@ -5,22 +5,22 @@ namespace Services.EventService
     public class CommonEventHandler : BaseEventHandler
     {
         public override EventType HandleType => EventType.Common;
-        private Action<ICommonEvent> OnCommonEvent;
+        private Action<ICommonEvent> _onCommonEvent;
 
         public CommonEventHandler(Action<ICommonEvent> onCommonEvent)
         {
-            OnCommonEvent = onCommonEvent;
+            _onCommonEvent = onCommonEvent;
         }
 
         public CommonEventHandler(Action<ICommonEvent> onCommonEvent,IEventHandler decoratee)
         {
             Decoratee = decoratee;
-            OnCommonEvent = onCommonEvent;
+            _onCommonEvent = onCommonEvent;
         }
         
         public override void Handle(ICommonEvent commonEvent)
         {
-            OnCommonEvent(commonEvent);
+            _onCommonEvent(commonEvent);
         }
     }
 }

@@ -11,19 +11,20 @@ namespace Services.EventService
         //It's useful to have multiple pipelines, so we don't have a handling overhead as the project gets bigger
         //The number 3 there is the capacity, important for memory managing. It shouldn't be hardcoded but instead the number of entries in the PipelineType enum.
         //The reason it's hardcoded is that it's faster than having a reflection call just to get that number, so if you're creating more PipelineTypes, increase it
-        private Dictionary<EventPipelineType,Action<IEvent>> EventPipelines = new Dictionary<EventPipelineType, Action<IEvent>>(3);
+        private Dictionary<EventPipelineType,Action<IEvent>> _eventPipelines = new Dictionary<EventPipelineType, Action<IEvent>>(4);
         
-        private Queue<IEvent> CommonEventPool = new Queue<IEvent>(10);
-        private Queue<IEvent> ViewEventPool = new Queue<IEvent>(10);
-        private Queue<IEvent> ServicesEventPool = new Queue<IEvent>(10);
-        private Queue<IEvent> GameplayEventPool = new Queue<IEvent>(10);
+        //Again hardcoded capacity, but this time it's justified. If you ever get to queue up more than 10 in a frame, start thinking on making more pipelines
+        private Queue<IEvent> _commonEventPool = new Queue<IEvent>(10);
+        private Queue<IEvent> _viewEventPool = new Queue<IEvent>(10);
+        private Queue<IEvent> _servicesEventPool = new Queue<IEvent>(10);
+        private Queue<IEvent> _gameplayEventPool = new Queue<IEvent>(10);
 
         public VisitorPipelinesEventService()
         {
-            EventPipelines.Add(EventPipelineType.CommonPipeline, (raisedEvent) => { });
-            EventPipelines.Add(EventPipelineType.ViewPipeline, (raisedEvent) => { });
-            EventPipelines.Add(EventPipelineType.ServicesPipeline, (raisedEvent) => { });
-            EventPipelines.Add(EventPipelineType.GameplayPipeline, (raisedEvent) => { });
+            _eventPipelines.Add(EventPipelineType.CommonPipeline, (raisedEvent) => { });
+            _eventPipelines.Add(EventPipelineType.ViewPipeline, (raisedEvent) => { });
+            _eventPipelines.Add(EventPipelineType.ServicesPipeline, (raisedEvent) => { });
+            _eventPipelines.Add(EventPipelineType.GameplayPipeline, (raisedEvent) => { });
         }
 
         public void Initialize()
@@ -34,12 +35,12 @@ namespace Services.EventService
 
         public void RegisterListener(IEventHandler eventHandler, EventPipelineType eventPipelineType = EventPipelineType.CommonPipeline)
         {
-            EventPipelines[eventPipelineType] += eventHandler.VisitHandle;
+            _eventPipelines[eventPipelineType] += eventHandler.VisitHandle;
         }
 
         public void UnregisterListener(IEventHandler eventHandler, EventPipelineType eventPipelineType = EventPipelineType.CommonPipeline)
         {
-            EventPipelines[eventPipelineType] -= eventHandler.VisitHandle;
+            _eventPipelines[eventPipelineType] -= eventHandler.VisitHandle;
         }
 
         public void Raise(IEvent raisedEvent,EventPipelineType eventPipelineType = EventPipelineType.CommonPipeline)
@@ -47,48 +48,48 @@ namespace Services.EventService
             switch (eventPipelineType)
             {
                 case EventPipelineType.CommonPipeline:
-                    CommonEventPool.Enqueue(raisedEvent);
+                    _commonEventPool.Enqueue(raisedEvent);
                     break;
                 case EventPipelineType.ViewPipeline:
-                    ViewEventPool.Enqueue(raisedEvent);
+                    _viewEventPool.Enqueue(raisedEvent);
                     break;
                 case EventPipelineType.ServicesPipeline:
-                    ServicesEventPool.Enqueue(raisedEvent);
+                    _servicesEventPool.Enqueue(raisedEvent);
                     break;
                 default:
-                    GameplayEventPool.Enqueue(raisedEvent);
+                    _gameplayEventPool.Enqueue(raisedEvent);
                     break;
             }
         }
 
-        public void OnTick() //It should go Services > Common > Gameplay > View
+        private void OnTick() //It should go Services > Common > Gameplay > View
         {
-            var poolSize = ServicesEventPool.Count;
-            for (; poolSize > 0; poolSize-- )
+            var PoolSize = _servicesEventPool.Count;
+            for (; PoolSize > 0; PoolSize-- )
             {
-                var ServiceEvent = ServicesEventPool.Dequeue();
-                EventPipelines[EventPipelineType.ServicesPipeline](ServiceEvent);
+                var ServiceEvent = _servicesEventPool.Dequeue();
+                _eventPipelines[EventPipelineType.ServicesPipeline](ServiceEvent);
             }
             
-            poolSize = CommonEventPool.Count;
-            for (; poolSize > 0; poolSize-- )
+            PoolSize = _commonEventPool.Count;
+            for (; PoolSize > 0; PoolSize-- )
             {
-                var CommonEvent = CommonEventPool.Dequeue();
-                EventPipelines[EventPipelineType.CommonPipeline](CommonEvent);
+                var CommonEvent = _commonEventPool.Dequeue();
+                _eventPipelines[EventPipelineType.CommonPipeline](CommonEvent);
             }
 
-            poolSize = GameplayEventPool.Count;
-            for (; poolSize > 0; poolSize-- )
+            PoolSize = _gameplayEventPool.Count;
+            for (; PoolSize > 0; PoolSize-- )
             {
-                var GameplayEvent = GameplayEventPool.Dequeue();
-                EventPipelines[EventPipelineType.GameplayPipeline](GameplayEvent);
+                var GameplayEvent = _gameplayEventPool.Dequeue();
+                _eventPipelines[EventPipelineType.GameplayPipeline](GameplayEvent);
             }
             
-            poolSize = ViewEventPool.Count;
-            for (; poolSize > 0; poolSize-- )
+            PoolSize = _viewEventPool.Count;
+            for (; PoolSize > 0; PoolSize-- )
             {
-                var ViewEvent = ViewEventPool.Dequeue();
-                EventPipelines[EventPipelineType.ViewPipeline](ViewEvent);
+                var ViewEvent = _viewEventPool.Dequeue();
+                _eventPipelines[EventPipelineType.ViewPipeline](ViewEvent);
             }
         }
     }

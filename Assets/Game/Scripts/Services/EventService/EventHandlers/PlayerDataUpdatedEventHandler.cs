@@ -5,22 +5,22 @@ namespace Services.EventService
     public class PlayerDataUpdatedEventHandler : BaseEventHandler
     {
         public override EventType HandleType => EventType.PlayerDataUpdated;
-        private Action<IPlayerDataUpdatedEvent> OnPlayerDataUpdatedEvent;
+        private Action<IPlayerDataUpdatedEvent> _onPlayerDataUpdatedEvent;
 
         public PlayerDataUpdatedEventHandler(Action<IPlayerDataUpdatedEvent> onPlayerDataUpdatedEvent)
         {
-            OnPlayerDataUpdatedEvent = onPlayerDataUpdatedEvent;
+            _onPlayerDataUpdatedEvent = onPlayerDataUpdatedEvent;
         }
 
         public PlayerDataUpdatedEventHandler(Action<IPlayerDataUpdatedEvent> onPlayerDataUpdatedEvent,IEventHandler decoratee)
         {
             Decoratee = decoratee;
-            OnPlayerDataUpdatedEvent = onPlayerDataUpdatedEvent;
+            _onPlayerDataUpdatedEvent = onPlayerDataUpdatedEvent;
         }
         
         public override void Handle(IPlayerDataUpdatedEvent playerDataUpdatedEvent)
         {
-            OnPlayerDataUpdatedEvent(playerDataUpdatedEvent);
+            _onPlayerDataUpdatedEvent(playerDataUpdatedEvent);
         }
     }
 }

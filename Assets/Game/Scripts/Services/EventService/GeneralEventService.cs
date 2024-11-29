@@ -11,7 +11,7 @@ namespace Services.EventService
             
         }
         
-        private Dictionary<Type,object> GeneralListeners = new Dictionary<Type, object>();
+        private Dictionary<Type,object> _generalListeners = new Dictionary<Type, object>();
 
         public void RegisterGeneralListener<T>(Action<T> onEvent)
         {
@@ -21,37 +21,37 @@ namespace Services.EventService
                 return;
             }
 
-            Type type = typeof(T);
-            if (GeneralListeners.TryGetValue(type, out object objAction))
+            var Type = typeof(T);
+            if (_generalListeners.TryGetValue(Type, out object ObjAction))
             {
-                Action<T> action = (Action<T>) objAction;
-                action += onEvent;
-                GeneralListeners[type] = action;
+                Action<T> Action = (Action<T>) ObjAction;
+                Action += onEvent;
+                _generalListeners[Type] = Action;
             }
             else
             {
-                GeneralListeners.Add(type,onEvent);
+                _generalListeners.Add(Type,onEvent);
             }
         }
 
         public void UnregisterGeneralListener<T>(Action<T> removedEvent)
         {
-            Type type = typeof(T);
-            if (GeneralListeners.TryGetValue(type, out var listener))
+            Type Type = typeof(T);
+            if (_generalListeners.TryGetValue(Type, out var Listener))
             {
-                Action<T> action = (Action<T>) listener;
-                action -= removedEvent;
-                GeneralListeners[type] = action;
+                Action<T> Action = (Action<T>) Listener;
+                Action -= removedEvent;
+                _generalListeners[Type] = Action;
             }
         }
 
         public void RaiseGeneralEvent<T>(T sentEvent)
         {
-            Type type = typeof(T);
-            if (GeneralListeners.TryGetValue(type, out var listener))
+            Type Type = typeof(T);
+            if (_generalListeners.TryGetValue(Type, out var Listener))
             {
-                Action<T> action = (Action<T>) listener;
-                action?.Invoke(sentEvent);
+                Action<T> Action = (Action<T>) Listener;
+                Action?.Invoke(sentEvent);
             }
         }
     }

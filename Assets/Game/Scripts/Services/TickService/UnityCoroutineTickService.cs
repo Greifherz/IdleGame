@@ -9,13 +9,13 @@ namespace Services.TickService
     {
         private event Action OnTick = () => { };
 
-        private bool Running = false;
-        private UnityMainThreadProcessor MainThreadProcessor;
+        private bool _running = false;
+        private UnityMainThreadProcessor _mainThreadProcessor;
 
         public void Initialize()
         {
-            MainThreadProcessor = new GameObject("MainThreadProcessor").AddComponent<UnityMainThreadProcessor>();
-            Running = true;
+            _mainThreadProcessor = new GameObject("MainThreadProcessor").AddComponent<UnityMainThreadProcessor>();
+            _running = true;
             StartCoroutine(Clock());
         }
 
@@ -31,31 +31,31 @@ namespace Services.TickService
 
         public void RunOnMainThread(Action mainThreadAction)
         {
-            MainThreadProcessor.OnMainThread += mainThreadAction;
+            _mainThreadProcessor.OnMainThread += mainThreadAction;
         }
 
         public void RunOnLateMainThread(Action lateMainThreadAction)
         {
-            MainThreadProcessor.OnLateMainThread += lateMainThreadAction;
+            _mainThreadProcessor.OnLateMainThread += lateMainThreadAction;
         }
 
         public void RunOnFixedMainThread(Action fixedMainThreadAction)
         {
-            MainThreadProcessor.OnFixedMainThread += fixedMainThreadAction;
+            _mainThreadProcessor.OnFixedMainThread += fixedMainThreadAction;
         }
         
         public void Disable()
         {
-            Running = false;
+            _running = false;
         }
         private void OnDestroy()
         {
-            Running = false;
+            _running = false;
         }
 
         private IEnumerator Clock()
         {
-            while (Running)
+            while (_running)
             {
                 OnTick();
                 yield return null;

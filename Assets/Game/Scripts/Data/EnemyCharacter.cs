@@ -23,13 +23,13 @@ namespace Game.Data
 
         public EnemyCharacter(int id,string name,int xpReward,int healthPoints, int armorPoints, int attackPoints,Action<IEnemyCharacter> onDeath)
         {
-            Action<ICharacter> onCharacterDeath = (character) =>
+            Action<ICharacter> OnCharacterDeath = (character) =>
             {
                 onDeath((IEnemyCharacter)character);
             };
             Id = id;
             XpReward = xpReward;
-            _characterImplementation = new Character(name,healthPoints,armorPoints,attackPoints,onCharacterDeath);
+            _characterImplementation = new Character(name,healthPoints,armorPoints,attackPoints,OnCharacterDeath);
         }
         
         public void TakeDamage(int damage)
