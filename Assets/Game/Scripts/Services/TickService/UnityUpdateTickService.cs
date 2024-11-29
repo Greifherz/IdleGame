@@ -75,5 +75,12 @@ namespace Services.TickService
             OnFixedTick();
             OnFixedTick = () => { };
         }
+        
+#if UNITY_EDITOR
+        public void ManualClock()
+        {
+            OnTick();
+        }
+#endif
     }
 }

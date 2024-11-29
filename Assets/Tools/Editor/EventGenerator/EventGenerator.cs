@@ -13,11 +13,11 @@ namespace Tools.EventGenerator
         private const string ConcreteTemplatePath = @"Assets\Tools\Editor\Templates\EventConcrete.txt";
         private const string HandlerTemplatePath = @"Assets\Tools\Editor\Templates\EventHandler.txt";
 
-        private const string InterfacePath = @"Assets\Services\EventService\Extensions\Events\Interfaces";
-        private const string ConcretePath = @"Assets\Services\EventService\Extensions\Events";
-        private const string HandlerPath = @"Assets\Services\EventService\EventHandlers";
+        private const string InterfacePath = @"Assets\Game\Scripts\Services\EventService\Extensions\Events\Interfaces";
+        private const string ConcretePath = @"Assets\Game\Scripts\Services\EventService\Extensions\Events";
+        private const string HandlerPath = @"Assets\Game\Scripts\Services\EventService\EventHandlers";
 
-        private const string EnumPath = @"Assets\Services\EventService\Extensions\Events\EventType.cs";
+        private const string EnumPath = @"Assets\Game\Scripts\Services\EventService\Extensions\Events\EventType.cs";
 
         private static string InputClassName;
 

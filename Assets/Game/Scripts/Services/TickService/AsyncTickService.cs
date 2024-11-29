@@ -85,5 +85,12 @@ namespace Services.TickService
                 }
             });
         }
+        
+#if UNITY_EDITOR
+        public void ManualClock()
+        {
+            OnTick();
+        }
+#endif
     }
 }

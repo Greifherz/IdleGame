@@ -13,5 +13,8 @@ namespace Services.TickService
         void RunOnFixedMainThread(Action fixedMainThreadAction);
 
         void Disable();
+#if UNITY_EDITOR
+        void ManualClock();
+#endif
     }
 }

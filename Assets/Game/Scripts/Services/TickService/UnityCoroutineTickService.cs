@@ -61,5 +61,12 @@ namespace Services.TickService
                 yield return null;
             }
         }
+        
+#if UNITY_EDITOR
+        public void ManualClock()
+        {
+            OnTick();
+        }
+#endif
     }
 }
