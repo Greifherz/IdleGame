@@ -1,10 +1,10 @@
-﻿namespace Services.EventService
+namespace Services.EventService
 {
-    public class %%Event : I%%Event
+    public class PlayerDataUpdatedEvent : IPlayerDataUpdatedEvent
     {
         public int Property { get; }
 
-        public %%Event(int property)
+        public PlayerDataUpdatedEvent(int property)
         {
             Property = property;
         }
@@ -17,14 +17,14 @@
     
     public partial interface IEventHandler
     {
-        void Handle(I%%Event $$Event);
+        void Handle(IPlayerDataUpdatedEvent playerDataUpdatedEvent);
     }
     
     public partial class BaseEventHandler : IEventHandler
     {
-        public virtual void Handle(I%%Event $$Event)
+        public virtual void Handle(IPlayerDataUpdatedEvent playerDataUpdatedEvent)
         {
-            Decoratee?.Handle($$Event);
+            Decoratee?.Handle(playerDataUpdatedEvent);
         }
     }
 }

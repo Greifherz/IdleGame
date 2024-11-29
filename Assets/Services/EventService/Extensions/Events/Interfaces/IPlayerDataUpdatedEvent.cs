@@ -1,6 +1,6 @@
 namespace Services.EventService
 {
-    public interface IPlayerCharacterDataUpdateEvent : IEvent
+    public interface IPlayerDataUpdatedEvent : IEvent
     {
         int Property { get; }
     }

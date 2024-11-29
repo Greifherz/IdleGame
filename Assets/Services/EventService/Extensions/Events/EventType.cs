@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Services.EventService
 {
@@ -14,5 +14,8 @@ namespace Services.EventService
         GameFlowState = 32,
         Death = 64,
         PlayerDeath = 128,
+        PlayerDataUpdated = 256,
+        EnemyDataUpdated = 512,
+        //##512##//
     }
 }

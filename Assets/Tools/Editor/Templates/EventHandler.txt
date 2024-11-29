@@ -18,9 +18,9 @@ namespace Services.EventService
             On%%Event = on%%Event;
         }
         
-        public override void Handle(I%%Event &&Event)
+        public override void Handle(I%%Event $$Event)
         {
-            On%%Event(&&Event);
+            On%%Event($$Event);
         }
     }
 }
