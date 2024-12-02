@@ -6,6 +6,8 @@ It could have some improvements on that at the time of writing as not all projec
 
 --------- Architecture ----------
 
+![alt text](https://github.com/Greifherz/IdleGame/blob/main/Assets/Game/Scripts/Services/Docs/IdleGameArchitecture.drawio.png?raw=true)
+
 The idea started off simple, making it most adherent to SOLID and have everything decoupled so it can easily be ported to other projects and/or extended. There's another project in a private repo with only the ported part but there's only so much I can see in terms of improvement without putting it to use, so the game project is needed so I can see these points of improvement, apply them then port it back to the boilerplate project.
 
 With use and trying to approach a real project the EventService became the main service, providing decoupled communication to and from services to game logic and view. Services can have reference between themselves but must do so through the Service Locator so get all benefits from a DI and help on integration and unit tests with mocked classes in the future if need be. 
