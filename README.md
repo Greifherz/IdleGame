@@ -4,7 +4,7 @@ This is a boilerplate game project. The game itself isn't important but the unde
 
 It could have some improvements on that at the time of writing as not all project-specific code is whithin the Game folder.
 
---------- Architecture ----------
+## Architecture
 
 ![alt text](https://github.com/Greifherz/IdleGame/blob/main/Assets/Game/Scripts/Services/Docs/IdleGameArchitecture.drawio.png?raw=true)
 
@@ -20,7 +20,10 @@ And also updates EventType enum.
 
 When registering the listeners or raising the event, you need to specify in which pipeline, if none is provided the default is the CommonEventPipeline. 
 
-- Event Service
-    There are two event services implemented and being used. VisitorPipelineEventService and a GeneralEventService. They are abstracted by their own interface and served into a unified facade ( https://refactoring.guru/design-patterns/facade ). 
-    The VisitorPipelineEventService, as in the name, uses the Visitor Design Pattern ( https://refactoring.guru/design-patterns/visitor ) so we don't cast the class in an expensive way, while supporting a lot of flexibility in the events(I've made the Events have flags of type, so aggregated events can exist or decorated events can exist as well). The downside of it is that it's very boilerplatey, every events needs a bit of code for itself and it's handler. The usage of the event flexibility is yet to be seen. It's separated in pipelines so, as the project grows, we don't have a single huge list of events being raised and a lot of listeners that will end up doing nothing with these events. With multiple pipelines we can ensure we keep listeners lean and the events in each of them in check. Future recommended use is to have one pipeline per feature or something, this way communication is also addressed in a way it's easier to follow as it's not generic.
-    The GeneralEventService is a lot more simple, but it doesn't support event layering, it's a single pipeline and it's easy to misuse. You can listen for any class as event and raise any object as event. Using it a lot overtime may bloat and cause unexpected collisions on the dictionary and since it's very generic it would be harder to follow. As project grows and more events are fired it would be a bottleneck. Still, having this kind of implementation is worth having, especially if dealing with external libraries (none implemented so far) or modules.
+### Event Service
+
+  There are two event services implemented and being used. VisitorPipelineEventService and a GeneralEventService. They are abstracted by their own interface and served into a unified facade ( https://refactoring.guru/design-patterns/facade ). 
+
+  The VisitorPipelineEventService, as in the name, uses the Visitor Design Pattern ( https://refactoring.guru/design-patterns/visitor ) so we don't cast the class in an expensive way, while supporting a lot of flexibility in the events(I've made the Events have flags of type, so aggregated events can exist or decorated events can exist as well). The downside of it is that it's very boilerplatey, every events needs a bit of code for itself and it's handler. The usage of the event flexibility is yet to be seen. It's separated in pipelines so, as the project grows, we don't have a single huge list of events being raised and a lot of listeners that will end up doing nothing with these events. With multiple pipelines we can ensure we keep listeners lean and the events in each of them in check. Future recommended use is to have one pipeline per feature or something, this way communication is also addressed in a way it's easier to follow as it's not generic.
+    
+  The GeneralEventService is a lot more simple, but it doesn't support event layering, it's a single pipeline and it's easy to misuse. You can listen for any class as event and raise any object as event. Using it a lot overtime may bloat and cause unexpected collisions on the dictionary and since it's very generic it would be harder to follow. As project grows and more events are fired it would be a bottleneck. Still, having this kind of implementation is worth having, especially if dealing with external libraries (none implemented so far) or modules.
