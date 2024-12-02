@@ -75,7 +75,7 @@ namespace Services.GameDataService
 
                 Data = new GameplayData
                 {
-                    EnemyData = EnemyDataList.ToArray(),
+                    EnemyData = EnemyDataList,
                     PlayerCharacter = PlayerCharacter
                 };
             }
@@ -95,7 +95,7 @@ namespace Services.GameDataService
                 _persistenceService.Persist(GameplayData.PlayerCharacter.ArmorPoints,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_PLAYER_ARMOR_MOD}");
                 _persistenceService.Persist(GameplayData.PlayerCharacter.DeathCount,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_PLAYER_DEATH_MOD}");
 
-                var EnemyCount = GameplayData.EnemyData.Length;
+                var EnemyCount = GameplayData.EnemyData.Count;
                 for (var i = 0; i < EnemyCount; i++)
                 {
                     _persistenceService.Persist(GameplayData.EnemyData[i].EnemyId,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_ENEMY_ID_MOD.Replace(GameplayPersistenceKeys.PERSISTENCE_COUNT_MARKUP, i.ToString())}");
@@ -130,12 +130,29 @@ namespace Services.GameDataService
             //GameplayData updated - A specific type for player data updated
         }
 
-        private void OnDeath(IDeathEvent deathEvent)
+        private void OnDeath(IDeathEvent deathEvent)//TODO - Death shoulnd't be the only responsible for adding this. There should be an event to set this right
         {
-            for (var Index = 0; Index < GameplayData.EnemyData.Length; Index++)
+            var DeadEnemy = deathEvent.DeadCharacter;
+            if (GameplayData.EnemyData == null)
+            {
+                GameplayData = new GameplayData
+                {
+                    EnemyData = new List<EnemyData>
+                    {
+                        new EnemyData
+                        {
+                            EnemyId = DeadEnemy.Id,
+                            EnemyName = DeadEnemy.Name,
+                            KillCount = DeadEnemy.KillCount
+                        }
+                    },
+                    PlayerCharacter = GameplayData.PlayerCharacter
+                };
+                return;
+            }
+            for (var Index = 0; Index < GameplayData.EnemyData.Count; Index++)
             {
                 var EnemyData = GameplayData.EnemyData[Index];
-                var DeadEnemy = deathEvent.DeadCharacter;
                 if (EnemyData.EnemyId == DeadEnemy.Id)
                 {
                     GameplayData.EnemyData[Index] = new EnemyData

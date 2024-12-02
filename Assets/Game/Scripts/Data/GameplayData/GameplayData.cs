@@ -1,8 +1,10 @@
-﻿namespace Game.Data.GameplayData
+﻿using System.Collections.Generic;
+
+namespace Game.Data.GameplayData
 {
     public struct GameplayData
     {
         public PlayerCharacter PlayerCharacter;
-        public EnemyData[] EnemyData;
+        public List<EnemyData> EnemyData;
     }
 }

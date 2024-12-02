@@ -24,7 +24,7 @@ namespace Game.Data
         {
             Action<ICharacter> OnCharacterDeath = (character) =>
             {
-                onDeath((IPlayerCharacter)character);
+                onDeath(this);
             };
             DeathCount = deathCount;
             Name = name;

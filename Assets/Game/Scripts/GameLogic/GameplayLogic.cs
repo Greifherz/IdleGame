@@ -1,6 +1,5 @@
 ﻿using Game.Data;
 using Services.EventService;
-using UnityEngine;
 
 namespace Game.Scripts.GameLogic
 {
@@ -28,7 +27,7 @@ namespace Game.Scripts.GameLogic
         private void GetCharacters()
         {
             _enemyCharacter = new EnemyCharacter(1,"Dummy",1,5,0,0,OnEnemyDeath);
-            _playerCharacter = new PlayerCharacter("Player",1,0,10,1,0,OnPlayerDeath);
+            _playerCharacter = new PlayerCharacter("Player",1,0,10,0,1,OnPlayerDeath);
         }
 
         private void OnPlayerDeath(IPlayerCharacter deadPlayer)

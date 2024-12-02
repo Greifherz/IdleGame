@@ -25,7 +25,7 @@ namespace Game.Data
         {
             Action<ICharacter> OnCharacterDeath = (character) =>
             {
-                onDeath((IEnemyCharacter)character);
+                onDeath(this);
             };
             Id = id;
             XpReward = xpReward;

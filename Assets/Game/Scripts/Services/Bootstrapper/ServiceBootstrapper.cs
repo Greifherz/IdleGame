@@ -11,11 +11,9 @@ namespace Bootstrap
 {
     //This is the non-Unity startup. Here the services are created, decorated and assigned to the service locator (Dependency injection in the future!) so it's available throughout the code.
     //This way there's no need to rely on Unity events for startup and MonoBehaviours can be kept at minimum, especially for logic
-    public class BootstrapService
+    public class ServiceBootstrapper
     {
-        private static GameFlow _GameFlowObject;
-        
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Initialize()
         {
             //Initialize Service Locator //TODO - Make bootstrap phases + it's not a service + maybe decouple game-related initialization from services initialization?
@@ -44,14 +42,6 @@ namespace Bootstrap
             EventService.Initialize();
             TickService.Initialize();
             Scheduler.Initialize();
-            
-            //Initialize Game-related services, controllers and objects
-            _GameFlowObject = new GameFlow(); //I don't want to hold references to it but rather communicate with it only through events.
-            _GameFlowObject.Initialize();
-            
-            var GameDataService = new GameDataService();
-            Locator.Current.Register<IGameDataService>(GameDataService);
-            GameDataService.Initialize();
         }
     }
 }
