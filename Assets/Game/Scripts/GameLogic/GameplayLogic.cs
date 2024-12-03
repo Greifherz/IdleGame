@@ -1,11 +1,15 @@
 ﻿using Game.Data;
+using ServiceLocator;
 using Services.EventService;
+using Services.Scheduler;
+using UnityEngine;
 
 namespace Game.Scripts.GameLogic
 {
     public class GameplayLogic
     {
         private IEventService _eventService;
+        private ISchedulerService _schedulerService;
         private IEventHandler _attackEventHandler;
         private IEventHandler _deathEventHandler;
         
@@ -15,6 +19,7 @@ namespace Game.Scripts.GameLogic
         public GameplayLogic(IEventService eventService)
         {
             _eventService = eventService;
+            _schedulerService = Locator.Current.Get<ISchedulerService>();
             _attackEventHandler = new AttackEventHandler(AttackAction);
             _eventService.RegisterListener(_attackEventHandler,EventPipelineType.GameplayPipeline);
 
@@ -22,6 +27,22 @@ namespace Game.Scripts.GameLogic
             
             _eventService.Raise(new IdleItemUpdateViewEvent(0,1,_enemyCharacter.Name),EventPipelineType.ViewPipeline);
             _eventService.Raise(new PlayerHealthUpdateViewEvent(1,$"{_playerCharacter.CurrentHealthPoints}/{_playerCharacter.HealthPoints}"),EventPipelineType.ViewPipeline);
+
+            
+        }
+
+        private void SetAuto()
+        {
+            var Handle = _schedulerService.Schedule(1);
+            Handle.OnScheduleTick += OnAuto;
+        }
+
+        private void OnAuto()
+        {
+            var Handle = _schedulerService.Schedule(1);
+            Handle.OnScheduleTick += OnAuto;
+            
+            _eventService.Raise(new AttackEvent(0),EventPipelineType.GameplayPipeline);
         }
 
         private void GetCharacters()

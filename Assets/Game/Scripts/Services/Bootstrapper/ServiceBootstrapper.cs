@@ -16,7 +16,7 @@ namespace Bootstrap
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Initialize()
         {
-            //Initialize Service Locator //TODO - Make bootstrap phases + it's not a service + maybe decouple game-related initialization from services initialization?
+            //Initialize Service Locator 
             Locator.Initialize();
 
             //Create Services

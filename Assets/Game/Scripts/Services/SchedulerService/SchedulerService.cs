@@ -19,7 +19,7 @@ namespace Services.Scheduler
         public ISchedulerHandle Schedule(float timeInSecsFromNow)
         {
             var Data = new ScheduleData();
-            Data.TargetTime = timeInSecsFromNow;
+            Data.TargetTime = Time.time + timeInSecsFromNow;
             
             var Handle = new ScheduleHandle();
             Data.Handle = Handle;
