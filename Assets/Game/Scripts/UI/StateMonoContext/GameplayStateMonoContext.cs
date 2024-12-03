@@ -51,6 +51,7 @@ namespace Game.UI
                     return;
                 
                 var IdleItem = IdleItems[Concrete.IdleItemIndex];
+                IdleItem.gameObject.SetActive(true);
                 IdleItem.SetFill(Concrete.FillPercentage);
                 IdleItem.SetText(Concrete.Name);
             }
