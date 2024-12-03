@@ -47,6 +47,9 @@ namespace Game.UI
             if (viewEvent.ViewEventType.HasFlag(ViewEventType.IdleItem))
             {
                 var Concrete = viewEvent.GetIdleItemUpdateViewEvent();
+                if(Concrete.IdleItemIndex >= IdleItems.Length) 
+                    return;
+                
                 var IdleItem = IdleItems[Concrete.IdleItemIndex];
                 IdleItem.SetFill(Concrete.FillPercentage);
                 IdleItem.SetText(Concrete.Name);

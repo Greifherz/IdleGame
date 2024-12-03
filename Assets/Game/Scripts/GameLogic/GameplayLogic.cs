@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Data;
+using Game.Data.GameplayData;
 using ServiceLocator;
 using Services.EventService;
 using Services.Scheduler;
@@ -9,9 +10,13 @@ namespace Game.GameLogic
     public class GameplayLogic
     {
         //Dependencies
+            //Services
         private IEventService _eventService;
         private ISchedulerService _schedulerService;
         
+            //Game
+        private IGameplayDataService _gameplayDataService;
+            
         //Components
         private IEventHandler _attackEventHandler;
         private IEventHandler _deathEventHandler;
@@ -24,13 +29,12 @@ namespace Game.GameLogic
         {
             _eventService = eventService;
             _schedulerService = Locator.Current.Get<ISchedulerService>();
+            _gameplayDataService = Locator.Current.Get<IGameplayDataService>();
+            
             _attackEventHandler = new AttackEventHandler(AttackAction);
             _eventService.RegisterListener(_attackEventHandler,EventPipelineType.GameplayPipeline);
 
             GetCharacters();
-            
-            _eventService.Raise(new IdleItemUpdateViewEvent(0,1,_enemyCharacter[0].Name),EventPipelineType.ViewPipeline);
-            _eventService.Raise(new PlayerHealthUpdateViewEvent(1,$"{_playerCharacter.CurrentHealthPoints}/{_playerCharacter.HealthPoints}"),EventPipelineType.ViewPipeline);
         }
 
         private void SetAuto()
@@ -50,8 +54,17 @@ namespace Game.GameLogic
         private void GetCharacters()
         {
             //TODO - Move this to a proper class that will populate this
-            _enemyCharacter.Add(new EnemyCharacter(1,"Dummy",1,5,0,0,OnEnemyDeath));
+            var EnemyCount = _gameplayDataService.EnemyCount;
+            for (int i = 0; i < EnemyCount; i++)
+            {
+                var Enemy = _gameplayDataService.GetEnemyData(i);
+                var EnemyCharacterObject = Enemy.ToEnemyCharacter(OnEnemyDeath);
+                _enemyCharacter.Add(EnemyCharacterObject);
+                _eventService.Raise(new IdleItemUpdateViewEvent(i,EnemyCharacterObject.HealthPercentage,EnemyCharacterObject.Name),EventPipelineType.ViewPipeline);
+            }
+            
             _playerCharacter = new PlayerCharacter("Player",1,0,10,0,1,OnPlayerDeath);
+            _eventService.Raise(new PlayerHealthUpdateViewEvent(1,$"{_playerCharacter.CurrentHealthPoints}/{_playerCharacter.HealthPoints}"),EventPipelineType.ViewPipeline);
         }
 
         private void OnPlayerDeath(IPlayerCharacter deadPlayer)

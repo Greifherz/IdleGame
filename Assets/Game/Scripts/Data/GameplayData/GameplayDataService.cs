@@ -11,6 +11,7 @@ namespace Game.Data.GameplayData
         private IAssetLoaderService _assetLoaderService;
 
         public bool IsReady => _enemyDatabase != null;
+        public int EnemyCount => _enemyDatabase.Enemies.Length;
 
         public void Initialize()
         {
