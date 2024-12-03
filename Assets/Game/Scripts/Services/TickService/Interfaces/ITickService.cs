@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using ServiceLocator;
+using UnityEngine;
 
 namespace Services.TickService
 {
@@ -11,6 +13,9 @@ namespace Services.TickService
         void RunOnMainThread(Action mainThreadAction);
         void RunOnLateMainThread(Action lateMainThreadAction);
         void RunOnFixedMainThread(Action fixedMainThreadAction);
+
+        Coroutine RunCoroutine(IEnumerator coroutine);
+        void HaltCoroutine(IEnumerator coroutine);
 
         void Disable();
 #if UNITY_EDITOR

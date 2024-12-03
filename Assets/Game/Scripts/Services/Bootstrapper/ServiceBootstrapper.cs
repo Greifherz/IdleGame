@@ -1,4 +1,5 @@
 ﻿using Game.GameFlow;
+using Game.Services.AssetLoaderService;
 using Services.EventService;
 using Services.PersistenceService;
 using Services.TickService;
@@ -38,10 +39,15 @@ namespace Bootstrap
             var Scheduler = new SchedulerService();
             Locator.Current.Register<ISchedulerService>(Scheduler);
             
+            //Create AssetLoaderService
+            var AssetLoader = new AssetLoaderService();
+            Locator.Current.Register<IAssetLoaderService>(AssetLoader);
+            
             //Initialize Services
             EventService.Initialize();
             TickService.Initialize();
             Scheduler.Initialize();
+            AssetLoader.Initialize();
         }
     }
 }

@@ -1,19 +1,23 @@
-﻿using Game.Data;
+﻿using System.Collections.Generic;
+using Game.Data;
 using ServiceLocator;
 using Services.EventService;
 using Services.Scheduler;
-using UnityEngine;
 
-namespace Game.Scripts.GameLogic
+namespace Game.GameLogic
 {
     public class GameplayLogic
     {
+        //Dependencies
         private IEventService _eventService;
         private ISchedulerService _schedulerService;
+        
+        //Components
         private IEventHandler _attackEventHandler;
         private IEventHandler _deathEventHandler;
         
-        private IEnemyCharacter _enemyCharacter;
+        //Properties
+        private List<IEnemyCharacter> _enemyCharacter = new List<IEnemyCharacter>(10);//Hardcoded 10 for now
         private IPlayerCharacter _playerCharacter;
 
         public GameplayLogic(IEventService eventService)
@@ -25,10 +29,8 @@ namespace Game.Scripts.GameLogic
 
             GetCharacters();
             
-            _eventService.Raise(new IdleItemUpdateViewEvent(0,1,_enemyCharacter.Name),EventPipelineType.ViewPipeline);
+            _eventService.Raise(new IdleItemUpdateViewEvent(0,1,_enemyCharacter[0].Name),EventPipelineType.ViewPipeline);
             _eventService.Raise(new PlayerHealthUpdateViewEvent(1,$"{_playerCharacter.CurrentHealthPoints}/{_playerCharacter.HealthPoints}"),EventPipelineType.ViewPipeline);
-
-            
         }
 
         private void SetAuto()
@@ -47,7 +49,8 @@ namespace Game.Scripts.GameLogic
 
         private void GetCharacters()
         {
-            _enemyCharacter = new EnemyCharacter(1,"Dummy",1,5,0,0,OnEnemyDeath);
+            //TODO - Move this to a proper class that will populate this
+            _enemyCharacter.Add(new EnemyCharacter(1,"Dummy",1,5,0,0,OnEnemyDeath));
             _playerCharacter = new PlayerCharacter("Player",1,0,10,0,1,OnPlayerDeath);
         }
 
@@ -64,10 +67,11 @@ namespace Game.Scripts.GameLogic
         //For now and FTUE most likely this will be called through an event fired by a button press. Later stages the event will be fired from a Tick/Schedule
         private void AttackAction(IAttackEvent attackEvent)
         {
-            _enemyCharacter.TakeDamage(_playerCharacter.AttackPoints);
-            _playerCharacter.TakeDamage(_enemyCharacter.AttackPoints);
+            var EnemyIndex = attackEvent.EnemyIndex;
+            _enemyCharacter[EnemyIndex].TakeDamage(_playerCharacter.AttackPoints);
+            _playerCharacter.TakeDamage(_enemyCharacter[EnemyIndex].AttackPoints);
             
-            _eventService.Raise(new IdleItemUpdateViewEvent(0,_enemyCharacter.HealthPercentage,_enemyCharacter.Name),EventPipelineType.ViewPipeline);
+            _eventService.Raise(new IdleItemUpdateViewEvent(EnemyIndex,_enemyCharacter[EnemyIndex].HealthPercentage,_enemyCharacter[EnemyIndex].Name),EventPipelineType.ViewPipeline);
         }
     }
 }

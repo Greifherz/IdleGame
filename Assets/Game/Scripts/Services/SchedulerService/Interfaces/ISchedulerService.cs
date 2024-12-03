@@ -7,5 +7,6 @@ namespace Services.Scheduler
     {
         ISchedulerHandle Schedule(float timeFromNow);
         ISchedulerHandle Schedule(DateTime time);
+        ISchedulerHandle Schedule(Func<bool> conditionCheck);
     }
 }

@@ -1,5 +1,8 @@
-﻿using Game.Scripts.GameLogic;
+﻿using Game.Data.GameplayData;
+using Game.GameLogic;
+using ServiceLocator;
 using Services.EventService;
+using Services.Scheduler;
 using UnityEngine;
 
 namespace Game.GameFlow
@@ -8,12 +11,18 @@ namespace Game.GameFlow
     {
         public GameFlowStateType Type => GameFlowStateType.Gameplay;
         private IEventService _eventService;
+        private ISchedulerService _schedulerService;
+        private IGameplayDataService _gameplayDataService;
 
         private GameplayLogic _gameplayLogic;
 
         public GameFlowGameplayState(IEventService eventService)
         {
             _eventService = eventService;
+            _schedulerService = Locator.Current.Get<ISchedulerService>();
+            _gameplayDataService = Locator.Current.Get<IGameplayDataService>();
+            
+            _gameplayDataService.Initialize();
         }
 
         public bool CanTransitionTo(GameFlowStateType type)
@@ -39,8 +48,12 @@ namespace Game.GameFlow
         
         public void StateEnter()
         {
-            _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Gameplay));
-            _gameplayLogic = new GameplayLogic(_eventService);
+            var Handle = _schedulerService.Schedule(() => _gameplayDataService.IsReady);
+            Handle.OnScheduleTick += () =>
+            {
+                _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Gameplay));
+                _gameplayLogic = new GameplayLogic(_eventService);
+            };
         }
     }
 }

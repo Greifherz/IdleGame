@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Services.TickService
@@ -46,7 +47,17 @@ namespace Services.TickService
         {
             OnFixedTick += fixedMainThreadAction;
         }
+        
+        public Coroutine RunCoroutine(IEnumerator coroutine)
+        {
+            return StartCoroutine(coroutine);
+        }
 
+        public void HaltCoroutine(IEnumerator coroutine)
+        {
+            StopCoroutine(coroutine);
+        }
+        
         public void Disable()
         {
             _running = false;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ServiceLocator;
 using Services.TickService;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace Services.Scheduler
     {
         private ITickService _tickService;
         private ScheduleData _scheduledData = null;
+        private List<ScheduleData> _conditionScheduledData = new List<ScheduleData>(10);
         
         public void Initialize()
         {
@@ -54,6 +56,18 @@ namespace Services.Scheduler
             return Schedule(Diff);
         }
 
+        public ISchedulerHandle Schedule(Func<bool> conditionCheck)
+        {
+            var Handle = new ScheduleHandle();
+            var data = new ScheduleData
+            {
+                Handle = Handle,
+                ConditionCheck = conditionCheck
+            };
+            _conditionScheduledData.Add(data);
+            return Handle;
+        }
+
         private void FitInSchedule(ScheduleData data)
         {
             var CurrentScheduleData = _scheduledData;
@@ -84,6 +98,18 @@ namespace Services.Scheduler
 
         private void Tick()
         {
+            if (_conditionScheduledData.Count > 0)
+            {
+                for (var Index = 0; Index < _conditionScheduledData.Count; Index++)
+                {
+                    var Data = _conditionScheduledData[Index];
+                    if (!Data.ConditionCheck()) continue;
+                    _conditionScheduledData.RemoveAt(Index);
+                    Index--;
+                    Data.Handle.Tick(this);
+                }
+            }
+            
             if (_scheduledData == null)
             {
                 return;
@@ -104,6 +130,7 @@ namespace Services.Scheduler
             public float TargetTime;
             public ScheduleHandle Handle;
             public ScheduleData Next = null;
+            public Func<bool> ConditionCheck = null;
         }
     }
 }

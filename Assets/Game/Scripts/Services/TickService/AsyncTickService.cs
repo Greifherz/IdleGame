@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -66,6 +67,16 @@ namespace Services.TickService
         public void RunOnFixedMainThread(Action fixedMainThreadAction)
         {
             _mainThreadProcessor.OnFixedMainThread += fixedMainThreadAction;
+        }
+
+        public Coroutine RunCoroutine(IEnumerator coroutine)
+        {
+            return _mainThreadProcessor.StartCoroutine(coroutine);
+        }
+
+        public void HaltCoroutine(IEnumerator coroutine)
+        {
+            _mainThreadProcessor.StopCoroutine(coroutine);
         }
 
         public void Disable()

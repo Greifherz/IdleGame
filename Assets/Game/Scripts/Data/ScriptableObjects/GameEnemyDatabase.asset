@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cab6f48932a439791f6be914a51870c, type: 3}
+  m_Name: GameEnemyDatabase
+  m_EditorClassIdentifier: 
+  Enemies:
+  - EnemyId: 0
+    KillCount: 0
+    EnemyName: Dummy
+    HealthPoints: 5
+    AttackPoints: 0
+    ArmorPoints: 0
+    XpReward: 1
+  - EnemyId: 0
+    KillCount: 0
+    EnemyName: Cockroach
+    HealthPoints: 8
+    AttackPoints: 1
+    ArmorPoints: 0
+    XpReward: 2
+  - EnemyId: 0
+    KillCount: 0
+    EnemyName: Malformed Rat
+    HealthPoints: 10
+    AttackPoints: 1
+    ArmorPoints: 0
+    XpReward: 3
+  - EnemyId: 0
+    KillCount: 0
+    EnemyName: Sewer Rat
+    HealthPoints: 20
+    AttackPoints: 2
+    ArmorPoints: 0
+    XpReward: 5
+  - EnemyId: 0
+    KillCount: 0
+    EnemyName: Bee
+    HealthPoints: 2
+    AttackPoints: 4
+    ArmorPoints: 0
+    XpReward: 5
+  - EnemyId: 0
+    KillCount: 0
+    EnemyName: Wooden Dummy
+    HealthPoints: 100
+    AttackPoints: 0
+    ArmorPoints: 0
+    XpReward: 8
