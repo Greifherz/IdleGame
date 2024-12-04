@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Data.PersistentData;
 using UnityEngine;
 
 namespace Game.Data.GameplayData
@@ -7,12 +8,13 @@ namespace Game.Data.GameplayData
     public struct EnemyData
     {//TODO - separate this data from persisted data
         [HideInInspector] public int EnemyId;  //The ID is the index on this database
-        [HideInInspector] public int KillCount;
         public string EnemyName;
         public int HealthPoints;
         public int AttackPoints;
         public int ArmorPoints;
         public int XpReward;
+        
+        public EnemyPersistentData PersistentData;
 
         public IEnemyCharacter ToEnemyCharacter(Action<IEnemyCharacter> onDeath = null)
         {

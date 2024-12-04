@@ -18,8 +18,8 @@ namespace Bootstrap
             
             _GameFlowObject.Initialize();
             
-            var GameDataService = new GameDataService();
-            Locator.Current.Register<IGameDataService>(GameDataService);
+            var GameDataService = new GamePersistenceDataService();
+            Locator.Current.Register<IGamePersistenceDataService>(GameDataService);
             var GameplayDataService = new GameplayDataService();
             
             Locator.Current.Register<IGameplayDataService>(GameplayDataService);

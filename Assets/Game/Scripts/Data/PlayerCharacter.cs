@@ -60,6 +60,7 @@ namespace Game.Data
         public void LevelUp()
         {
             Level++;
+            ExperiencePoints = 0;
         }
 
         public PlayerCharacter GetConcrete()
