@@ -31,7 +31,7 @@ namespace Services.GameDataService
 
         public GameplayPersistentData LoadPersistentGameplayData()
         {
-            var Data = new GameplayPersistentData();
+            var Data = GameplayPersistentData.CreateDefaultPersistentData();
             if (!_persistenceService.RetrieveBool(GameplayPersistenceKeys.GAMEPLAY_DATA_KEY)) return Data;
             
             var PlayerData = LoadPlayerData();

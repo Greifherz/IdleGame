@@ -10,5 +10,10 @@
             PlayerPersistentData = playerPersistentData;
             EnemyPersistentDatas = enemyPersistentDatas;
         }
+
+        public static GameplayPersistentData CreateDefaultPersistentData()
+        {
+            return new GameplayPersistentData(PersistentData.PlayerPersistentData.CreateDefaultPlayerData(),EnemyPersistentData.CreateDefaultEnemyData());
+        }
     }
 }

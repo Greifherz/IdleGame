@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Data.PersistentData;
 
 namespace Game.Data
 {
@@ -33,7 +34,20 @@ namespace Game.Data
             _characterImplementation = new Character(name,healthPoints,armorPoints,attackPoints,OnCharacterDeath);
         }
 
-        public void SetOnDeathCallback(Action<IPlayerCharacter> onDeath)
+        public PlayerCharacter(PlayerPersistentData data, Action<IPlayerCharacter> onDeath)
+        {
+            Action<ICharacter> OnCharacterDeath = (character) =>
+            {
+                onDeath(this);
+            };
+            DeathCount = data.DeathCount;
+            Name = data.Name;
+            Level = data.Level;
+            ExperiencePoints = data.ExperiencePoints;
+            _characterImplementation = new Character(Name,data.HealthPoints,data.CurrentHealthPoints,data.ArmorPoints,data.AttackPoints,OnCharacterDeath);
+        }
+
+        public void SetOnDeathCallback(Action<IPlayerCharacter> onDeath)//Might remove this
         {
             Action<ICharacter> OnCharacterDeath = (character) =>
             {

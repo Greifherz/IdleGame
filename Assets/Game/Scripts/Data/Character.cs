@@ -23,12 +23,14 @@ namespace Game.Data
             AttackPoints = attackPoints;
             _onCharacterDeath = onCharacterDeath;
         }
-    
-        public Character(int healthPoints, int armorPoints, int attackPoints,Action<ICharacter> onCharacterDeath)
+        
+        public Character(string name,int healthPoints,int currentHealthPoints, int armorPoints, int attackPoints,Action<ICharacter> onCharacterDeath)
         {
+            Name = name;
             CurrentHealthPoints = HealthPoints = healthPoints;
             ArmorPoints = armorPoints;
             AttackPoints = attackPoints;
+            CurrentHealthPoints = currentHealthPoints;
             _onCharacterDeath = onCharacterDeath;
         }
 

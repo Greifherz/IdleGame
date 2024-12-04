@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using Game.Data;
 using Game.Data.GameplayData;
+using Game.Data.PersistentData;
 using ServiceLocator;
 using Services.EventService;
+using Services.GameDataService;
 using Services.Scheduler;
 
 namespace Game.GameLogic
@@ -16,6 +18,7 @@ namespace Game.GameLogic
         
             //Game
         private IGameplayDataService _gameplayDataService;
+        private IGamePersistenceDataService _gamePersistenceDataService;
             
         //Components
         private IEventHandler _attackEventHandler;
@@ -30,11 +33,14 @@ namespace Game.GameLogic
             _eventService = eventService;
             _schedulerService = Locator.Current.Get<ISchedulerService>();
             _gameplayDataService = Locator.Current.Get<IGameplayDataService>();
+            _gamePersistenceDataService = Locator.Current.Get<IGamePersistenceDataService>();
             
             _attackEventHandler = new AttackEventHandler(AttackAction);
             _eventService.RegisterListener(_attackEventHandler,EventPipelineType.GameplayPipeline);
 
-            GetCharacters();
+            var PersistentData = _gamePersistenceDataService.LoadPersistentGameplayData();
+
+            GetCharacters(PersistentData);
         }
 
         private void SetAuto()
@@ -51,19 +57,28 @@ namespace Game.GameLogic
             _eventService.Raise(new AttackEvent(0),EventPipelineType.GameplayPipeline);
         }
 
-        private void GetCharacters()
+        private void GetCharacters(GameplayPersistentData data)
         {
             //TODO - Move this to a proper class that will populate this
             var EnemyCount = _gameplayDataService.EnemyCount;
             for (int i = 0; i < EnemyCount; i++)
             {
                 var Enemy = _gameplayDataService.GetEnemyData(i);
-                var EnemyCharacterObject = Enemy.ToEnemyCharacter(OnEnemyDeath);
+                IEnemyCharacter EnemyCharacterObject;
+                if (data.EnemyPersistentDatas.Length > i)
+                {
+                    var EnemyPersistentData = data.EnemyPersistentDatas[i];//TODO - Needs a lookup in the future - For now order is assured, but in the future we might not have persisted data for every enemy sequentially
+                    EnemyCharacterObject = Enemy.ToEnemyCharacter(EnemyPersistentData.CurrentHealthPoints,OnEnemyDeath);
+                }
+                else
+                {
+                    EnemyCharacterObject = Enemy.ToEnemyCharacter(Enemy.HealthPoints,OnEnemyDeath);
+                }
                 _enemyCharacter.Add(EnemyCharacterObject);
                 _eventService.Raise(new IdleItemUpdateViewEvent(i,EnemyCharacterObject.HealthPercentage,EnemyCharacterObject.Name),EventPipelineType.ViewPipeline);
             }
-            
-            _playerCharacter = new PlayerCharacter("Player",1,0,10,0,1,OnPlayerDeath);
+
+            _playerCharacter = new PlayerCharacter(data.PlayerPersistentData,OnPlayerDeath);
             _eventService.Raise(new PlayerHealthUpdateViewEvent(1,$"{_playerCharacter.CurrentHealthPoints}/{_playerCharacter.HealthPoints}"),EventPipelineType.ViewPipeline);
         }
 

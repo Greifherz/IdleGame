@@ -32,6 +32,17 @@ namespace Game.Data
             _characterImplementation = new Character(name,healthPoints,armorPoints,attackPoints,OnCharacterDeath);
         }
         
+        public EnemyCharacter(int id,string name,int xpReward,int healthPoints,int currentHealthPoints, int armorPoints, int attackPoints,Action<IEnemyCharacter> onDeath)
+        {
+            Action<ICharacter> OnCharacterDeath = (character) =>
+            {
+                onDeath(this);
+            };
+            Id = id;
+            XpReward = xpReward;
+            _characterImplementation = new Character(name,healthPoints,currentHealthPoints,armorPoints,attackPoints,OnCharacterDeath);
+        }
+        
         public void TakeDamage(int damage)
         {
             _characterImplementation.TakeDamage(damage);

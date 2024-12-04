@@ -25,5 +25,10 @@
             ExperiencePoints = experiencePoints;
             DeathCount = deathCount;
         }
+
+        public static PlayerPersistentData CreateDefaultPlayerData()
+        {
+            return new PlayerPersistentData("Player",10,10,0,1,1,0,0);
+        }
     }
 }
