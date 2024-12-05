@@ -8,6 +8,7 @@ namespace Game.UI
     public class IdleItem : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI DescriptionText;
+        [SerializeField] private TextMeshProUGUI KillCountText;
         [SerializeField] private Image IconImage;
         [SerializeField] private RectTransform FillBackground;
         [SerializeField] private RectTransform InnerFill;
@@ -19,12 +20,20 @@ namespace Game.UI
             InnerFill.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,FillBackground.rect.xMax*fill);
         }
 
-        public void SetText(string textValue)
+        public void SetNameText(string textValue)
         {
             if(string.IsNullOrEmpty(textValue))
                 return;
             
             DescriptionText.text = textValue;
+        }
+        
+        public void SetKillCountText(string textValue)
+        {
+            if(string.IsNullOrEmpty(textValue))
+                return;
+            
+            KillCountText.text = textValue;
         }
 
         // private int Count = 0;

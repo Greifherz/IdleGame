@@ -53,7 +53,8 @@ namespace Game.UI
                 var IdleItem = IdleItems[Concrete.IdleItemIndex];
                 IdleItem.gameObject.SetActive(true);
                 IdleItem.SetFill(Concrete.FillPercentage);
-                IdleItem.SetText(Concrete.Name);
+                IdleItem.SetNameText(Concrete.Name);
+                IdleItem.SetKillCountText($"Times Defeated - {Concrete.KillCount}");
             }
 
             if (viewEvent.ViewEventType.HasFlag(ViewEventType.PlayerHealth))

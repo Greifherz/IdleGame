@@ -62,25 +62,17 @@ namespace Game.GameLogic
         {
             //TODO - Move this to a proper class that will populate this
             var EnemyCount = _gameplayDataService.EnemyCount;
-            for (int i = 0; i < EnemyCount; i++)
+            for (var Index = 0; Index < EnemyCount; Index++)
             {
-                var Enemy = _gameplayDataService.GetEnemyData(i);
-                IEnemyCharacter EnemyCharacterObject;
-                if (data.EnemyPersistentDatas.Length > i)
-                {
-                    var EnemyPersistentData = data.EnemyPersistentDatas[i];//TODO - Needs a lookup in the future - For now order is assured, but in the future we might not have persisted data for every enemy sequentially
-                    EnemyCharacterObject = Enemy.ToEnemyCharacter(EnemyPersistentData.CurrentHealthPoints,OnEnemyDeath);
-                }
-                else
-                {
-                    EnemyCharacterObject = Enemy.ToEnemyCharacter(Enemy.HealthPoints,OnEnemyDeath);
-                }
+                var Enemy = _gameplayDataService.GetEnemyData(Index);
+                var EnemyCharacterObject = Enemy.ToEnemyCharacter(OnEnemyDeath);
+                
                 _enemyCharacter.Add(EnemyCharacterObject);
-                _eventService.Raise(new IdleItemUpdateViewEvent(i,EnemyCharacterObject.HealthPercentage,EnemyCharacterObject.Name),EventPipelineType.ViewPipeline);
+                _eventService.Raise(new IdleItemUpdateViewEvent(Index,EnemyCharacterObject.HealthPercentage,EnemyCharacterObject.KillCount,EnemyCharacterObject.Name),EventPipelineType.ViewPipeline);
             }
 
             _playerCharacter = new PlayerCharacter(data.PlayerPersistentData,OnPlayerDeath);
-            _eventService.Raise(new PlayerHealthUpdateViewEvent(1,$"{_playerCharacter.CurrentHealthPoints}/{_playerCharacter.HealthPoints}"),EventPipelineType.ViewPipeline);
+            _eventService.Raise(new PlayerHealthUpdateViewEvent(_playerCharacter.HealthPercentage,$"{_playerCharacter.CurrentHealthPoints}/{_playerCharacter.HealthPoints}"),EventPipelineType.ViewPipeline);
         }
 
         private void OnPlayerDeath(IPlayerCharacter deadPlayer)
@@ -104,16 +96,17 @@ namespace Game.GameLogic
             if (Before != AttackedEnemy.CurrentHealthPoints)
             {
                 _eventService.Raise(new EnemyDataUpdatedEvent(AttackedEnemy),EventPipelineType.GameplayPipeline);
+                _eventService.Raise(new IdleItemUpdateViewEvent(EnemyIndex,AttackedEnemy.HealthPercentage,AttackedEnemy.KillCount,AttackedEnemy.Name),EventPipelineType.ViewPipeline);
             }
 
             Before = _playerCharacter.CurrentHealthPoints;
             _playerCharacter.TakeDamage(_enemyCharacter[EnemyIndex].AttackPoints);
+
             if (Before != _playerCharacter.CurrentHealthPoints)
             {
                 _eventService.Raise(new PlayerDataUpdatedEvent(_playerCharacter),EventPipelineType.GameplayPipeline);
+                _eventService.Raise(new PlayerHealthUpdateViewEvent(_playerCharacter.HealthPercentage,$"{_playerCharacter.CurrentHealthPoints}/{_playerCharacter.HealthPoints}"),EventPipelineType.ViewPipeline);
             }
-            
-            _eventService.Raise(new IdleItemUpdateViewEvent(EnemyIndex,_enemyCharacter[EnemyIndex].HealthPercentage,_enemyCharacter[EnemyIndex].Name),EventPipelineType.ViewPipeline);
         }
     }
 }

@@ -11,8 +11,8 @@ namespace Game.Data.GameplayData
 {
     public class GameplayDataService : IGameplayDataService
     {
-
-        public bool IsReady => _enemyDatabase != null;
+        public bool IsReady => _loadedFromPersistence && _enemyDatabase != null;
+        private bool _loadedFromPersistence = false;
         public int EnemyCount => _enemyDatabase.Enemies.Length;
         public GameplayData GameplayData { get; private set; }
         
@@ -52,8 +52,11 @@ namespace Game.Data.GameplayData
             for (var Index = 0; Index < _enemyDatabase.Enemies.Length; Index++)
             {
                 var EnemyData = _enemyDatabase.Enemies[Index];
-                EnemyData.EnemyId = Index;
                 EnemyData.PersistentData = PersistentData.GetEnemyPersistentData(Index);
+                if (EnemyData.PersistentData.CurrentHealthPoints == 0) //Means couldn't get data from persistence
+                {
+                    EnemyData.PersistentData = new EnemyPersistentData(Index,0,EnemyData.HealthPoints);
+                }
                 EnemyDataList.Add(EnemyData);
             }
 
@@ -62,6 +65,7 @@ namespace Game.Data.GameplayData
                 PlayerCharacter = new PlayerCharacter(PersistentData.PlayerPersistentData, (playerChar) => { }),
                 EnemyData = EnemyDataList
             };
+            _loadedFromPersistence = true;
         }
 
         public EnemyData GetEnemyData(int id)

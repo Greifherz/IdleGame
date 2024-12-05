@@ -16,9 +16,9 @@ namespace Game.Data.GameplayData
         
         public EnemyPersistentData PersistentData;
 
-        public IEnemyCharacter ToEnemyCharacter(int CurrentHealthPoints,Action<IEnemyCharacter> onDeath = null)
+        public IEnemyCharacter ToEnemyCharacter(Action<IEnemyCharacter> onDeath = null)
         {
-            return new EnemyCharacter(EnemyId,EnemyName,XpReward,HealthPoints,CurrentHealthPoints,ArmorPoints,AttackPoints, onDeath);
+            return new EnemyCharacter(EnemyId,EnemyName,XpReward,HealthPoints,PersistentData.CurrentHealthPoints,ArmorPoints,AttackPoints,PersistentData.KillCount, onDeath);
         }
     }
 }

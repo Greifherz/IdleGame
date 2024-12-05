@@ -33,7 +33,7 @@ namespace Game.Data
         
             CurrentHealthPoints -= DamageToTake;
         
-            if (CurrentHealthPoints == 0)
+            if (CurrentHealthPoints <= 0)
             {
                 Die();
             }

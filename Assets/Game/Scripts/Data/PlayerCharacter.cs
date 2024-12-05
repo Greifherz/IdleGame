@@ -25,6 +25,7 @@ namespace Game.Data
         {
             Action<ICharacter> OnCharacterDeath = (character) =>
             {
+                DeathCount++;
                 onDeath(this);
             };
             DeathCount = data.DeathCount;
@@ -62,7 +63,7 @@ namespace Game.Data
 
         public void Die()
         {
-            DeathCount++;
+            _characterImplementation.Die();
         }
     }
 }
