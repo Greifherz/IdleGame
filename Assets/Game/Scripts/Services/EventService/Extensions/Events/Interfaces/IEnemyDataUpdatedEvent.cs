@@ -1,7 +1,9 @@
+using Game.Data;
+
 namespace Services.EventService
 {
     public interface IEnemyDataUpdatedEvent : IEvent
     {
-        int Property { get; }
+        IEnemyCharacter EnemyCharacter { get; }
     }
 }

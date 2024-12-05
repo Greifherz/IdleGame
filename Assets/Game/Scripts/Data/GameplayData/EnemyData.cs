@@ -5,8 +5,8 @@ using UnityEngine;
 namespace Game.Data.GameplayData
 {
     [Serializable]
-    public struct EnemyData
-    {//TODO - separate this data from persisted data
+    public class EnemyData
+    {
         [HideInInspector] public int EnemyId;  //The ID is the index on this database
         public string EnemyName;
         public int HealthPoints;

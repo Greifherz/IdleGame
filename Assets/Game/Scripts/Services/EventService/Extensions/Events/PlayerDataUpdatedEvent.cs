@@ -1,12 +1,14 @@
+using Game.Data;
+
 namespace Services.EventService
 {
     public class PlayerDataUpdatedEvent : IPlayerDataUpdatedEvent
     {
-        public int Property { get; }
+        public IPlayerCharacter PlayerCharacter { get; }
 
-        public PlayerDataUpdatedEvent(int property)
+        public PlayerDataUpdatedEvent(IPlayerCharacter playerCharacter)
         {
-            Property = property;
+            PlayerCharacter = playerCharacter;
         }
         
         public void Visit(IEventHandler handler)

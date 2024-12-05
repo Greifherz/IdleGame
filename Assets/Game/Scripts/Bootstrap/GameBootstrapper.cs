@@ -24,6 +24,7 @@ namespace Bootstrap
             
             Locator.Current.Register<IGameplayDataService>(GameplayDataService);
             
+            
             GameDataService.Initialize();
         }
     }

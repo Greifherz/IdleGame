@@ -6,6 +6,7 @@ using ServiceLocator;
 using Services.EventService;
 using Services.GameDataService;
 using Services.Scheduler;
+using UnityEngine;
 
 namespace Game.GameLogic
 {
@@ -96,8 +97,21 @@ namespace Game.GameLogic
         private void AttackAction(IAttackEvent attackEvent)
         {
             var EnemyIndex = attackEvent.EnemyIndex;
+            var AttackedEnemy = _enemyCharacter[EnemyIndex];
+            
+            var Before = AttackedEnemy.CurrentHealthPoints;
             _enemyCharacter[EnemyIndex].TakeDamage(_playerCharacter.AttackPoints);
+            if (Before != AttackedEnemy.CurrentHealthPoints)
+            {
+                _eventService.Raise(new EnemyDataUpdatedEvent(AttackedEnemy),EventPipelineType.GameplayPipeline);
+            }
+
+            Before = _playerCharacter.CurrentHealthPoints;
             _playerCharacter.TakeDamage(_enemyCharacter[EnemyIndex].AttackPoints);
+            if (Before != _playerCharacter.CurrentHealthPoints)
+            {
+                _eventService.Raise(new PlayerDataUpdatedEvent(_playerCharacter),EventPipelineType.GameplayPipeline);
+            }
             
             _eventService.Raise(new IdleItemUpdateViewEvent(EnemyIndex,_enemyCharacter[EnemyIndex].HealthPercentage,_enemyCharacter[EnemyIndex].Name),EventPipelineType.ViewPipeline);
         }

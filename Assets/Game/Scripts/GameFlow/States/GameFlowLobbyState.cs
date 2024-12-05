@@ -7,11 +7,12 @@ namespace Game.GameFlow
     {
         public GameFlowStateType Type => GameFlowStateType.Lobby;
         private IEventService _eventService;
-
+        
         public GameFlowLobbyState(IEventService eventService)
         {
             _eventService = eventService;
         }
+
 
         public bool CanTransitionTo(GameFlowStateType type)
         {

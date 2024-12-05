@@ -2,7 +2,7 @@
 
 namespace Game.Data.GameplayData
 {
-    public struct GameplayData
+    public class GameplayData
     {
         public PlayerCharacter PlayerCharacter;
         public List<EnemyData> EnemyData;

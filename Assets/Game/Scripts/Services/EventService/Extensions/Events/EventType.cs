@@ -16,6 +16,7 @@ namespace Services.EventService
         PlayerDeath = 128,
         PlayerDataUpdated = 256,
         EnemyDataUpdated = 512,
-        //##512##//
+        GameplayDataPersistence = 1024,
+        //##1024##//
     }
 }

@@ -32,6 +32,7 @@ namespace Game.GameFlow
         {
             _currentState = _currentState.TransitionTo(type);
             _currentState.StateEnter();
+            //System.GC.Collect(); //Not a bad thing to have it here, but it's slowing down things a lot
         }
 
         private void OnTransition(ITransitionEvent transitionEvent)

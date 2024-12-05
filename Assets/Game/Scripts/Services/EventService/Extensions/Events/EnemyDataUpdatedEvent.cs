@@ -1,12 +1,14 @@
+using Game.Data;
+
 namespace Services.EventService
 {
     public class EnemyDataUpdatedEvent : IEnemyDataUpdatedEvent
     {
-        public int Property { get; }
+        public IEnemyCharacter EnemyCharacter { get; }
 
-        public EnemyDataUpdatedEvent(int property)
+        public EnemyDataUpdatedEvent(IEnemyCharacter enemyCharacter)
         {
-            Property = property;
+            EnemyCharacter = enemyCharacter;
         }
         
         public void Visit(IEventHandler handler)

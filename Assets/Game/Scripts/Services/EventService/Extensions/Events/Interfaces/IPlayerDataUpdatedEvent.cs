@@ -1,7 +1,9 @@
+using Game.Data;
+
 namespace Services.EventService
 {
     public interface IPlayerDataUpdatedEvent : IEvent
     {
-        int Property { get; }
+        IPlayerCharacter PlayerCharacter { get; }
     }
 }

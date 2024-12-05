@@ -15,5 +15,12 @@
         {
             return new GameplayPersistentData(PersistentData.PlayerPersistentData.CreateDefaultPlayerData(),EnemyPersistentData.CreateDefaultEnemyData());
         }
+
+        public EnemyPersistentData GetEnemyPersistentData(int enemyDataEnemyId)
+        {
+            if (enemyDataEnemyId >= EnemyPersistentDatas.Length)
+                return new EnemyPersistentData();
+            return EnemyPersistentDatas[enemyDataEnemyId];
+        }
     }
 }

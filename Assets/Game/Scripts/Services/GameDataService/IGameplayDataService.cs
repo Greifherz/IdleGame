@@ -6,6 +6,7 @@ namespace Game.Data.GameplayData
     {
         bool IsReady { get; }
         int EnemyCount { get; }
+        GameplayData GameplayData { get; }
         EnemyData GetEnemyData(int id);
     }
 }

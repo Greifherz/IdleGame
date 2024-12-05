@@ -2,6 +2,7 @@
 using Game.GameLogic;
 using ServiceLocator;
 using Services.EventService;
+using Services.GameDataService;
 using Services.Scheduler;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace Game.GameFlow
         private IEventService _eventService;
         private ISchedulerService _schedulerService;
         private IGameplayDataService _gameplayDataService;
+        private IGamePersistenceDataService _gamePersistenceDataService;
 
         private GameplayLogic _gameplayLogic;
 
@@ -21,6 +23,7 @@ namespace Game.GameFlow
             _eventService = eventService;
             _schedulerService = Locator.Current.Get<ISchedulerService>();
             _gameplayDataService = Locator.Current.Get<IGameplayDataService>();
+            _gamePersistenceDataService = Locator.Current.Get<IGamePersistenceDataService>();
             
             _gameplayDataService.Initialize();
         }
@@ -34,6 +37,7 @@ namespace Game.GameFlow
         {
             if (CanTransitionTo(type))
             {
+                _eventService.Raise(new GameplayDataPersistenceEvent(),EventPipelineType.ServicesPipeline);
                 return new GameFlowLobbyState(_eventService);
             }
             
@@ -52,7 +56,7 @@ namespace Game.GameFlow
             Handle.OnScheduleTick += () =>
             {
                 _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Gameplay));
-                _gameplayLogic = new GameplayLogic(_eventService);
+                _gameplayLogic ??= new GameplayLogic(_eventService);
             };
         }
     }
