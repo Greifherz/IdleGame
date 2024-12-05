@@ -21,19 +21,6 @@ namespace Game.Data
         public int ExperiencePoints { get; private set; }
         public int DeathCount { get; private set; }
 
-        public PlayerCharacter(string name, int level, int experiencePoints,int healthPoints, int armorPoints, int attackPoints,Action<IPlayerCharacter> onDeath,int deathCount = 0)
-        {
-            Action<ICharacter> OnCharacterDeath = (character) =>
-            {
-                onDeath(this);
-            };
-            DeathCount = deathCount;
-            Name = name;
-            Level = level;
-            ExperiencePoints = experiencePoints;
-            _characterImplementation = new Character(name,healthPoints,armorPoints,attackPoints,OnCharacterDeath);
-        }
-
         public PlayerCharacter(PlayerPersistentData data, Action<IPlayerCharacter> onDeath)
         {
             Action<ICharacter> OnCharacterDeath = (character) =>
@@ -45,15 +32,6 @@ namespace Game.Data
             Level = data.Level;
             ExperiencePoints = data.ExperiencePoints;
             _characterImplementation = new Character(Name,data.HealthPoints,data.CurrentHealthPoints,data.ArmorPoints,data.AttackPoints,OnCharacterDeath);
-        }
-
-        public void SetOnDeathCallback(Action<IPlayerCharacter> onDeath)//Might remove this
-        {
-            Action<ICharacter> OnCharacterDeath = (character) =>
-            {
-                onDeath((IPlayerCharacter)character);
-            };
-            _characterImplementation = new Character(Name,HealthPoints,ArmorPoints,AttackPoints,OnCharacterDeath);
         }
         
         public void TakeDamage(int damage)

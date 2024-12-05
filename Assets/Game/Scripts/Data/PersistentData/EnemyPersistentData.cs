@@ -15,7 +15,7 @@
 
         public static EnemyPersistentData[] CreateDefaultEnemyData()
         {
-            return new EnemyPersistentData[]{new EnemyPersistentData(0,0,10)};
+            return new EnemyPersistentData[]{};
         }
     }
 }

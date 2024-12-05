@@ -71,14 +71,12 @@ namespace Game.Data.GameplayData
 
         private void OnEnemyDataUpdated(IEnemyDataUpdatedEvent enemyDataUpdatedEvent)
         {
-            Debug.Log("Enemy data Updated");
             var UpdatedData = GameplayData.EnemyData[enemyDataUpdatedEvent.EnemyCharacter.Id];
             UpdatedData.PersistentData = new EnemyPersistentData(UpdatedData.EnemyId,enemyDataUpdatedEvent.EnemyCharacter.KillCount,enemyDataUpdatedEvent.EnemyCharacter.CurrentHealthPoints);
         }
 
         private void OnPlayerDataUpdated(IPlayerDataUpdatedEvent playerDataUpdatedEvent)
         {
-            Debug.Log("Player data Updated");
             GameplayData.PlayerCharacter = playerDataUpdatedEvent.PlayerCharacter.GetConcrete();
         }
     }

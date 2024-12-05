@@ -94,7 +94,6 @@ namespace Services.GameDataService
 
         private void PersistGameplayData()
         {
-            Debug.Log("Persisting Gameplay data");
             var ToPersist = _gameplayDataService.GameplayData;
             try
             {

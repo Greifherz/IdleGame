@@ -20,17 +20,6 @@ namespace Game.Data
         public int Id { get; }
         public int KillCount { get; private set; }
         public int XpReward { get; private set; }
-
-        public EnemyCharacter(int id,string name,int xpReward,int healthPoints, int armorPoints, int attackPoints,Action<IEnemyCharacter> onDeath)
-        {
-            Action<ICharacter> OnCharacterDeath = (character) =>
-            {
-                onDeath(this);
-            };
-            Id = id;
-            XpReward = xpReward;
-            _characterImplementation = new Character(name,healthPoints,armorPoints,attackPoints,OnCharacterDeath);
-        }
         
         public EnemyCharacter(int id,string name,int xpReward,int healthPoints,int currentHealthPoints, int armorPoints, int attackPoints,Action<IEnemyCharacter> onDeath)
         {

@@ -14,20 +14,11 @@ namespace Game.Data
         public float HealthPercentage => (float)CurrentHealthPoints / HealthPoints;
 
         private Action<ICharacter> _onCharacterDeath;
-
-        public Character(string name,int healthPoints, int armorPoints, int attackPoints,Action<ICharacter> onCharacterDeath)
-        {
-            Name = name;
-            CurrentHealthPoints = HealthPoints = healthPoints;
-            ArmorPoints = armorPoints;
-            AttackPoints = attackPoints;
-            _onCharacterDeath = onCharacterDeath;
-        }
         
         public Character(string name,int healthPoints,int currentHealthPoints, int armorPoints, int attackPoints,Action<ICharacter> onCharacterDeath)
         {
             Name = name;
-            CurrentHealthPoints = HealthPoints = healthPoints;
+            HealthPoints = healthPoints;
             ArmorPoints = armorPoints;
             AttackPoints = attackPoints;
             CurrentHealthPoints = currentHealthPoints;
