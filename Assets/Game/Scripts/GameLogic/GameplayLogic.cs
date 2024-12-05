@@ -29,6 +29,9 @@ namespace Game.GameLogic
         private List<IEnemyCharacter> _enemyCharacter = new List<IEnemyCharacter>(10);//Hardcoded 10 for now
         private IPlayerCharacter _playerCharacter;
 
+        private int[] _enemiesOnAuto = new int[]{};
+        private List<int> _enemiesOnAutoAux;
+
         public GameplayLogic(IEventService eventService)
         {
             _eventService = eventService;
@@ -42,10 +45,12 @@ namespace Game.GameLogic
             var PersistentData = _gamePersistenceDataService.LoadPersistentGameplayData();
 
             GetCharacters(PersistentData);
+            SetAuto();
         }
 
         private void SetAuto()
         {
+            if (_enemiesOnAuto.Length <= 0) return;
             var Handle = _schedulerService.Schedule(1);
             Handle.OnScheduleTick += OnAuto;
         }
@@ -54,18 +59,29 @@ namespace Game.GameLogic
         {
             var Handle = _schedulerService.Schedule(1);
             Handle.OnScheduleTick += OnAuto;
-            
-            _eventService.Raise(new AttackEvent(0),EventPipelineType.GameplayPipeline);
+
+            for (var Index = 0; Index < _enemiesOnAuto.Length; Index++)
+            {
+                _eventService.Raise(new AttackEvent(_enemiesOnAuto[Index]),EventPipelineType.GameplayPipeline);
+            }
         }
 
         private void GetCharacters(GameplayPersistentData data)
         {
             //TODO - Move this to a proper class that will populate this
             var EnemyCount = _gameplayDataService.EnemyCount;
+
+            _enemiesOnAutoAux ??= new List<int>(EnemyCount);
+            _enemiesOnAutoAux.Clear();
+            
             for (var Index = 0; Index < EnemyCount; Index++)
             {
                 var Enemy = _gameplayDataService.GetEnemyData(Index);
                 var EnemyCharacterObject = Enemy.ToEnemyCharacter(OnEnemyDeath);
+                if (EnemyCharacterObject.KillCount >= 10)
+                {
+                    _enemiesOnAutoAux.Add(Index);
+                }
                 
                 _enemyCharacter.Add(EnemyCharacterObject);
                 _eventService.Raise(new IdleItemUpdateViewEvent(Index,EnemyCharacterObject.HealthPercentage,EnemyCharacterObject.KillCount,EnemyCharacterObject.Name),EventPipelineType.ViewPipeline);
@@ -82,6 +98,39 @@ namespace Game.GameLogic
 
         private void OnEnemyDeath(IEnemyCharacter deadCharacter)
         {
+            if (deadCharacter.KillCount >= 10)
+            {
+                var RunAuto = _enemiesOnAuto.Length == 0;
+                if (RunAuto)
+                {
+                    _enemiesOnAuto = new[] {deadCharacter.Id};
+                    SetAuto();    
+                }
+                else
+                {
+                    _enemiesOnAutoAux.Clear();
+                    var Found = false;
+                    for (var Index = 0; Index < _enemiesOnAuto.Length; Index++)
+                    {
+                        _enemiesOnAutoAux.Add(_enemiesOnAuto[Index]);
+                        if (_enemiesOnAuto[Index] != deadCharacter.Id) continue;
+                        Found = true;
+                        break;
+                    }
+
+                    if (!Found)
+                    {
+                        _enemiesOnAutoAux.Add(deadCharacter.Id);
+                        
+                        _enemiesOnAuto = new int[_enemiesOnAutoAux.Count];
+                        for (var Index = 0; Index < _enemiesOnAutoAux.Count; Index++)
+                        {
+                            _enemiesOnAuto[Index] = _enemiesOnAutoAux[Index];
+                        }
+                    }
+                }
+                
+            }
             _eventService.Raise(new DeathEvent(deadCharacter),EventPipelineType.GameplayPipeline);
         }
 
