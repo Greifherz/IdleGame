@@ -17,6 +17,8 @@ namespace Game.Data
         public int AttackPoints => _characterImplementation.AttackPoints;
         public float HealthPercentage => _characterImplementation.HealthPercentage;
 
+        public int PointsToDistribute = 0;
+
         public int Level { get; private set; }
         public int ExperiencePoints { get; private set; }
         public int DeathCount { get; private set; }
@@ -53,7 +55,26 @@ namespace Game.Data
         public void LevelUp()
         {
             Level++;
+            PointsToDistribute += 1;
             ExperiencePoints = 0;
+        }
+
+        public void ModifyAttack(int quantity = 1)
+        {
+            PointsToDistribute -= quantity;
+            _characterImplementation.ModifyAttack(quantity);
+        }
+
+        public void ModifyArmor(int quantity = 1)
+        {
+            PointsToDistribute -= quantity;
+            _characterImplementation.ModifyArmor(quantity);
+        }
+
+        public void ModifyHealthPoints(int quantity = 1)
+        {
+            PointsToDistribute -= quantity;
+            _characterImplementation.ModifyHealthPoints(quantity * 5);
         }
 
         public PlayerCharacter GetConcrete()

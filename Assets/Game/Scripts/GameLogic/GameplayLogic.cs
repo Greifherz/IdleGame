@@ -13,22 +13,23 @@ namespace Game.GameLogic
     public class GameplayLogic
     {
         //Dependencies
-            //Services
+        //Services
         private IEventService _eventService;
         private ISchedulerService _schedulerService;
-        
-            //Game
+
+        //Game
         private IGameplayDataService _gameplayDataService;
         private IGamePersistenceDataService _gamePersistenceDataService;
-            
+
         //Components
         private IEventHandler _attackEventHandler;
         private IEventHandler _deathEventHandler;
-        
+
         //Properties
-        private List<IEnemyCharacter> _enemyCharacter = new List<IEnemyCharacter>(10);//Hardcoded 10 for now
+        private List<IEnemyCharacter> _enemyCharacter = new List<IEnemyCharacter>(10); //Hardcoded 10 for now
         private IPlayerCharacter _playerCharacter;
 
+        private static readonly int[] ENEMY_AUTO_CHECKPOINTS = new []{10,25,100,500,1000};//TODO - create an auto object and service instead of having this here
         private int[] _enemiesOnAuto = new int[]{};
         private List<int> _enemiesOnAutoAux;
 
@@ -132,6 +133,14 @@ namespace Game.GameLogic
                 
             }
             _eventService.Raise(new DeathEvent(deadCharacter),EventPipelineType.GameplayPipeline);
+            _playerCharacter.EarnExperience(deadCharacter.XpReward);
+            if (_playerCharacter.ExperiencePoints >=
+                _gameplayDataService.GetLevelRequirement(_playerCharacter.Level).RequiredXP)
+            {
+                _playerCharacter.LevelUp();
+                //LevelUpEvent
+            }
+            _eventService.Raise(new PlayerDataUpdatedEvent(_playerCharacter),EventPipelineType.GameplayPipeline);
         }
 
         //For now and FTUE most likely this will be called through an event fired by a button press. Later stages the event will be fired from a Tick/Schedule

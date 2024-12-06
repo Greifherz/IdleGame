@@ -49,5 +49,20 @@ namespace Game.Data
             _onCharacterDeath(this);
             RestoreHealth();
         }
+
+        public void ModifyAttack(int quantity)
+        {
+            AttackPoints += quantity;
+        }
+
+        public void ModifyArmor(int quantity)
+        {
+            ArmorPoints += quantity;
+        }
+
+        public void ModifyHealthPoints(int quantity)
+        {
+            HealthPoints += quantity;
+        }
     }
 }

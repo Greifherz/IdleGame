@@ -1,4 +1,5 @@
-﻿using ServiceLocator;
+﻿using Game.Scripts.Data;
+using ServiceLocator;
 
 namespace Game.Data.GameplayData
 {
@@ -8,5 +9,6 @@ namespace Game.Data.GameplayData
         int EnemyCount { get; }
         GameplayData GameplayData { get; }
         EnemyData GetEnemyData(int id);
+        PlayerLevelRequirement GetLevelRequirement(int level);
     }
 }

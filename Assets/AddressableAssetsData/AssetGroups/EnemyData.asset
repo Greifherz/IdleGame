@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: EnemyData
   m_GUID: 608b5c51e2801ee49b417e46db4f21ca
   m_SerializeEntries:
+  - m_GUID: 5fea047fef287874b9ff44e43c42fd8e
+    m_Address: PlayerLevelRequirementDatabase
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - GameplayEssential
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a154cddd584b72b49a50b50a419a3220
     m_Address: GameEnemyDatabase
     m_ReadOnly: 0

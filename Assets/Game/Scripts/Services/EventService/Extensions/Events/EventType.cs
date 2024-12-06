@@ -17,6 +17,8 @@ namespace Services.EventService
         PlayerDataUpdated = 256,
         EnemyDataUpdated = 512,
         GameplayDataPersistence = 1024,
-        //##1024##//
+        PlayerXPGain = 2048,
+        PlayerLevelUp = 4096,
+        //##4096##//
     }
 }

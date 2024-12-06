@@ -17,6 +17,7 @@ namespace Game.Data.GameplayData
         public GameplayData GameplayData { get; private set; }
         
         private GameEnemyDatabase _enemyDatabase;
+        private PlayerLevelRequirementDatabase _levelDatabase;
         
         private IAssetLoaderService _assetLoaderService;
         private IGamePersistenceDataService _gamePersistenceDataService;
@@ -41,6 +42,11 @@ namespace Game.Data.GameplayData
             
                 _eventService.RegisterListener(_enemyDataUpdatedEventHandler,EventPipelineType.GameplayPipeline);
                 _eventService.RegisterListener(_playerDataUpdatedEventHandler,EventPipelineType.GameplayPipeline);
+            });
+            
+            _assetLoaderService.LoadAssetAsync<PlayerLevelRequirementDatabase>("PlayerLevelRequirementDatabase", (database) =>
+            {
+                _levelDatabase = database;
             });
         }
 
@@ -71,6 +77,11 @@ namespace Game.Data.GameplayData
         public EnemyData GetEnemyData(int id)
         {
             return GameplayData.EnemyData[id];
+        }
+
+        public PlayerLevelRequirement GetLevelRequirement(int level)
+        {
+            return _levelDatabase.PlayerLevelRequirements[level];
         }
 
         private void OnEnemyDataUpdated(IEnemyDataUpdatedEvent enemyDataUpdatedEvent)

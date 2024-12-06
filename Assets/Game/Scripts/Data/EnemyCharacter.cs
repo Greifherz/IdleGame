@@ -48,5 +48,20 @@ namespace Game.Data
         {
             _enemyCharacterImplementation.Die();
         }
+
+        public void ModifyAttack(int quantity)
+        {
+            
+        }
+
+        public void ModifyArmor(int quantity)
+        {
+            
+        }
+
+        public void ModifyHealthPoints(int quantity)
+        {
+            
+        }
     }
 }
