@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,7 @@ namespace Game.UI
         [SerializeField] private Image IconImage;
         [SerializeField] private RectTransform FillBackground;
         [SerializeField] private RectTransform InnerFill;
+        [SerializeField] private RectTransform IncreaseAnimation;
 
         public Button ActionButton;
 
@@ -34,6 +36,24 @@ namespace Game.UI
                 return;
             
             KillCountText.text = textValue;
+        }
+
+        public void PlayIncreaseAnimation(Transform temporaryParent)
+        {
+            IncreaseAnimation.gameObject.SetActive(true);
+            
+            var originalParent = IncreaseAnimation.parent;
+            var pos = IncreaseAnimation.transform.position;
+
+            IncreaseAnimation.SetParent(temporaryParent,true);
+            IncreaseAnimation.DOMoveY(pos.y + 50, 0.5f).SetEase(Ease.OutQuad);
+            IncreaseAnimation.DOMoveX(pos.x + 10, 0.5f).OnComplete(() =>
+            {
+                IncreaseAnimation.gameObject.SetActive(false);
+                IncreaseAnimation.SetParent(originalParent,true);
+                IncreaseAnimation.position = pos;
+                
+            });
         }
 
         // private int Count = 0;

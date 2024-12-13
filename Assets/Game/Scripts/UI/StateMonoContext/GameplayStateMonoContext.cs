@@ -13,6 +13,7 @@ namespace Game.UI
         private IEventService _eventService;
         private IEventHandler _gameFlowEventHandler;
         private IEventHandler _gameplayViewEventHandler;
+        private IEventHandler _deathEventHandler;
 
         [SerializeField] private PlayerHealth PlayerHealth;
         [SerializeField] private IdleItem[] IdleItems;
@@ -23,8 +24,10 @@ namespace Game.UI
             _eventService = Locator.Current.Get<IEventService>();
             _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
             _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
+            _deathEventHandler = new DeathEventHandler(OnEnemyDeath);
             _eventService.RegisterListener(_gameFlowEventHandler);
             _eventService.RegisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
+            _eventService.RegisterListener(_deathEventHandler,EventPipelineType.ViewPipeline);
             gameObject.SetActive(false);
             
             SetupButtons();
@@ -63,6 +66,11 @@ namespace Game.UI
                 PlayerHealth.SetFill(Concrete.FillPercentage);
                 PlayerHealth.SetHealthText(Concrete.HealthText);
             }
+        }
+
+        private void OnEnemyDeath(IDeathEvent deathEvent)
+        {
+            IdleItems[deathEvent.DeadCharacter.Id].PlayIncreaseAnimation(transform);
         }
 
         private void OnItemClicked(int idleItemIndex)

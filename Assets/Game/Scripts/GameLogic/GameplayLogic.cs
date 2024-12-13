@@ -78,14 +78,14 @@ namespace Game.GameLogic
             for (var Index = 0; Index < EnemyCount; Index++)
             {
                 var Enemy = _gameplayDataService.GetEnemyData(Index);
-                var EnemyCharacterObject = Enemy.ToEnemyCharacter(OnEnemyDeath);
+                var EnemyCharacterObject = Enemy.ToEnemyCharacter(Index,OnEnemyDeath);
                 if (EnemyCharacterObject.KillCount >= 10)
                 {
                     _enemiesOnAutoAux.Add(Index);
                 }
                 
                 _enemyCharacter.Add(EnemyCharacterObject);
-                _eventService.Raise(new IdleItemUpdateViewEvent(Index,EnemyCharacterObject.HealthPercentage,EnemyCharacterObject.KillCount,EnemyCharacterObject.Name),EventPipelineType.ViewPipeline);
+                _eventService.Raise(new IdleItemUpdateViewEvent(Index,EnemyCharacterObject.HealthPercentage,EnemyCharacterObject.KillCount,false,EnemyCharacterObject.Name),EventPipelineType.ViewPipeline);
             }
 
             _playerCharacter = new PlayerCharacter(data.PlayerPersistentData,OnPlayerDeath);
@@ -132,7 +132,11 @@ namespace Game.GameLogic
                 }
                 
             }
-            _eventService.Raise(new DeathEvent(deadCharacter),EventPipelineType.GameplayPipeline);
+
+            var deathEvent = new DeathEvent(deadCharacter);
+            _eventService.Raise(deathEvent,EventPipelineType.GameplayPipeline);
+            _eventService.Raise(deathEvent,EventPipelineType.ViewPipeline);
+            
             _playerCharacter.EarnExperience(deadCharacter.XpReward);
             if (_playerCharacter.ExperiencePoints >=
                 _gameplayDataService.GetLevelRequirement(_playerCharacter.Level).RequiredXP)
@@ -154,7 +158,7 @@ namespace Game.GameLogic
             if (Before != AttackedEnemy.CurrentHealthPoints)
             {
                 _eventService.Raise(new EnemyDataUpdatedEvent(AttackedEnemy),EventPipelineType.GameplayPipeline);
-                _eventService.Raise(new IdleItemUpdateViewEvent(EnemyIndex,AttackedEnemy.HealthPercentage,AttackedEnemy.KillCount,AttackedEnemy.Name),EventPipelineType.ViewPipeline);
+                _eventService.Raise(new IdleItemUpdateViewEvent(EnemyIndex,AttackedEnemy.HealthPercentage,AttackedEnemy.KillCount,false,AttackedEnemy.Name),EventPipelineType.ViewPipeline);
             }
 
             Before = _playerCharacter.CurrentHealthPoints;
