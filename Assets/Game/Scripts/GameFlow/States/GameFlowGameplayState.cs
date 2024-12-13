@@ -18,6 +18,8 @@ namespace Game.GameFlow
 
         private GameplayLogic _gameplayLogic;
 
+        private bool _statsShown = false;
+
         public GameFlowGameplayState(IEventService eventService)
         {
             _eventService = eventService;
@@ -40,6 +42,14 @@ namespace Game.GameFlow
                 _eventService.Raise(new GameplayDataPersistenceEvent(),EventPipelineType.ServicesPipeline);
                 return new GameFlowLobbyState(_eventService);
             }
+
+            if (type == GameFlowStateType.Gameplay && _statsShown)//TODO - try to remove this if
+            {
+                _statsShown = false;
+                //Raise show/hide stats event
+                _eventService.Raise(new GameplayPlayerStatsVisibilityEvent(false),EventPipelineType.ViewPipeline);
+                return this;
+            }
             
             Debug.LogError($"Tried to transition from {Type} to {type} and it's not allowed");
             return this;
@@ -47,6 +57,10 @@ namespace Game.GameFlow
 
         public GameFlowStateType GetBackState()
         {
+            if (_statsShown)
+            {
+                return GameFlowStateType.Gameplay;
+            }
             return GameFlowStateType.Lobby;
         } 
         

@@ -4125,6 +4125,8 @@ MonoBehaviour:
   - {fileID: 9204082281691693726}
   - {fileID: 2615868790589888312}
   BackButton: {fileID: 616093593021213556}
+  GameplayPanel: {fileID: 2120619482219992890}
+  PlayerStatsPanel: {fileID: 4491402627480475375}
 --- !u!1 &8602270726801306779
 GameObject:
   m_ObjectHideFlags: 0

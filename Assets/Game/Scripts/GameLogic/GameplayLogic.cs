@@ -85,7 +85,7 @@ namespace Game.GameLogic
                 }
                 
                 _enemyCharacter.Add(EnemyCharacterObject);
-                _eventService.Raise(new IdleItemUpdateViewEvent(Index,EnemyCharacterObject.HealthPercentage,EnemyCharacterObject.KillCount,false,EnemyCharacterObject.Name),EventPipelineType.ViewPipeline);
+                _eventService.Raise(new IdleItemUpdateViewEvent(Index,EnemyCharacterObject.HealthPercentage,EnemyCharacterObject.KillCount,EnemyCharacterObject.Name),EventPipelineType.ViewPipeline);
             }
 
             _playerCharacter = new PlayerCharacter(data.PlayerPersistentData,OnPlayerDeath);
@@ -158,7 +158,7 @@ namespace Game.GameLogic
             if (Before != AttackedEnemy.CurrentHealthPoints)
             {
                 _eventService.Raise(new EnemyDataUpdatedEvent(AttackedEnemy),EventPipelineType.GameplayPipeline);
-                _eventService.Raise(new IdleItemUpdateViewEvent(EnemyIndex,AttackedEnemy.HealthPercentage,AttackedEnemy.KillCount,false,AttackedEnemy.Name),EventPipelineType.ViewPipeline);
+                _eventService.Raise(new IdleItemUpdateViewEvent(EnemyIndex,AttackedEnemy.HealthPercentage,AttackedEnemy.KillCount,AttackedEnemy.Name),EventPipelineType.ViewPipeline);
             }
 
             Before = _playerCharacter.CurrentHealthPoints;

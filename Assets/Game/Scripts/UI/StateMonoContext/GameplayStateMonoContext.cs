@@ -14,10 +14,13 @@ namespace Game.UI
         private IEventHandler _gameFlowEventHandler;
         private IEventHandler _gameplayViewEventHandler;
         private IEventHandler _deathEventHandler;
+        private IEventHandler _playerStatsEventHandler;
 
         [SerializeField] private PlayerHealth PlayerHealth;
         [SerializeField] private IdleItem[] IdleItems;
         [SerializeField] private Button BackButton;
+        [SerializeField] private GameObject GameplayPanel;
+        [SerializeField] private GameObject PlayerStatsPanel;
         
         void Start()
         {
@@ -25,9 +28,11 @@ namespace Game.UI
             _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
             _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
             _deathEventHandler = new DeathEventHandler(OnEnemyDeath);
+            _playerStatsEventHandler = new GameplayPlayerStatsVisibilityEventHandler(OnPlayerStatsVisibilityEvent);
             _eventService.RegisterListener(_gameFlowEventHandler);
             _eventService.RegisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
             _eventService.RegisterListener(_deathEventHandler,EventPipelineType.ViewPipeline);
+            _eventService.RegisterListener(_playerStatsEventHandler,EventPipelineType.ViewPipeline);
             gameObject.SetActive(false);
             
             SetupButtons();
@@ -81,6 +86,27 @@ namespace Game.UI
         private void TransitionBack()
         {
             _eventService.Raise(new TransitionEvent(TransitionTarget.Back));
+        }
+
+        private void OnPlayerStatsVisibilityEvent(IGameplayPlayerStatsVisibilityEvent statsEvent)
+        {
+            GameplayPanel.SetActive(!statsEvent.Visibility);
+            GameplayPanel.SetActive(statsEvent.Visibility);
+        }
+
+        private void OpenPlayerStats()
+        {
+            _eventService.Raise(new GameplayPlayerStatsVisibilityEvent(true),EventPipelineType.ViewPipeline);
+        }
+
+        private void UndoStats()
+        {
+            
+        }
+
+        private void ApplyStats()
+        {
+            
         }
 
         private void OnGameFlowStateEvent(IGameFlowStateEvent gameFlowStateEvent)

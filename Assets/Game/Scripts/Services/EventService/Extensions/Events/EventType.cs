@@ -19,6 +19,7 @@ namespace Services.EventService
         GameplayDataPersistence = 1024,
         PlayerXPGain = 2048,
         PlayerLevelUp = 4096,
-        //##4096##//
+        GameplayPlayerStatsVisibility = 8192,
+        //##8192##//
     }
 }
