@@ -17,7 +17,7 @@ namespace Game.Data
         public int AttackPoints => _characterImplementation.AttackPoints;
         public float HealthPercentage => _characterImplementation.HealthPercentage;
 
-        public int PointsToDistribute = 0;
+        public int PointsToDistribute { get; private set; }
 
         public int Level { get; private set; }
         public int ExperiencePoints { get; private set; }
@@ -78,6 +78,11 @@ namespace Game.Data
         }
 
         public PlayerCharacter GetConcrete()
+        {
+            return this;
+        }
+
+        public IPlayerCharacter Undecorate()
         {
             return this;
         }

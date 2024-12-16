@@ -8,7 +8,10 @@
 
         void EarnExperience(int quantity);
         void LevelUp();
+        int PointsToDistribute { get; }
 
         PlayerCharacter GetConcrete();
+
+        IPlayerCharacter Undecorate();
     }
 }

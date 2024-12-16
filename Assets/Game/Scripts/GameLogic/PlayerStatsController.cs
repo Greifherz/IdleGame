@@ -1,4 +1,5 @@
 ﻿using Game.Data;
+using Game.Scripts.Data;
 
 namespace Game.GameLogic
 {
@@ -9,10 +10,19 @@ namespace Game.GameLogic
         public PlayerStatsController(IPlayerCharacter player)
         {
             //Decorate player character to store the temporary changes
-            
-            //Undo redecorates from received player
-            
+            Player = new PlayerCharacterTempStatsDecorator(player);
+
             //Apply creates a new player based on the decorated one
+        }
+
+        public void Undo()
+        {
+            Player = new PlayerCharacterTempStatsDecorator(Player.Undecorate());
+        }
+
+        public void Apply()
+        {
+            
         }
     }
 }
