@@ -19,6 +19,7 @@ namespace Game.UI
         [SerializeField] private PlayerHealth PlayerHealth;
         [SerializeField] private IdleItem[] IdleItems;
         [SerializeField] private Button BackButton;
+        [SerializeField] private Button StatsButton;
         [SerializeField] private GameObject GameplayPanel;
         [SerializeField] private GameObject PlayerStatsPanel;
         
@@ -48,6 +49,7 @@ namespace Game.UI
             }
 
             BackButton.onClick.AddListener(TransitionBack);
+            StatsButton.onClick.AddListener(OpenPlayerStats);
         }
 
         private void OnGameplayViewUpdated(IViewEvent viewEvent)
@@ -90,11 +92,12 @@ namespace Game.UI
 
         private void OnPlayerStatsVisibilityEvent(IGameplayPlayerStatsVisibilityEvent statsEvent)
         {
+            StatsButton.gameObject.SetActive(!statsEvent.Visibility);
             GameplayPanel.SetActive(!statsEvent.Visibility);
-            GameplayPanel.SetActive(statsEvent.Visibility);
+            PlayerStatsPanel.SetActive(statsEvent.Visibility);
         }
 
-        private void OpenPlayerStats()
+        private void OpenPlayerStats()  
         {
             _eventService.Raise(new GameplayPlayerStatsVisibilityEvent(true),EventPipelineType.ViewPipeline);
         }

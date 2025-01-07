@@ -82,11 +82,6 @@ namespace Game.Data
             return this;
         }
 
-        public IPlayerCharacter Undecorate()
-        {
-            return this;
-        }
-
         public void Die()
         {
             _characterImplementation.Die();

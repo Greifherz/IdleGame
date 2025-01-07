@@ -15,6 +15,8 @@ namespace Game.GameFlow
         private ISchedulerService _schedulerService;
         private IGameplayDataService _gameplayDataService;
         private IGamePersistenceDataService _gamePersistenceDataService;
+        
+        private IEventHandler _playerStatsEventHandler;
 
         private GameplayLogic _gameplayLogic;
 
@@ -27,7 +29,15 @@ namespace Game.GameFlow
             _gameplayDataService = Locator.Current.Get<IGameplayDataService>();
             _gamePersistenceDataService = Locator.Current.Get<IGamePersistenceDataService>();
             
+            _playerStatsEventHandler = new GameplayPlayerStatsVisibilityEventHandler(OnPlayerStatsVisibilityEvent);
+            _eventService.RegisterListener(_playerStatsEventHandler,EventPipelineType.ViewPipeline);
+            
             _gameplayDataService.Initialize();
+        }
+
+        private void OnPlayerStatsVisibilityEvent(IGameplayPlayerStatsVisibilityEvent visibilityEvent)
+        {
+            _statsShown = visibilityEvent.Visibility;
         }
 
         public bool CanTransitionTo(GameFlowStateType type)

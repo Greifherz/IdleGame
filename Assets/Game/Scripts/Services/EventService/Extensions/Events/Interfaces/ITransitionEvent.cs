@@ -9,6 +9,6 @@
     {
         Back,
         Lobby,
-        Gameplay
+        Gameplay,
     }
 }

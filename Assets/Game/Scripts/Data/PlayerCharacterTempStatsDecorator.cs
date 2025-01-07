@@ -1,4 +1,5 @@
-﻿using Game.Data;
+﻿using System;
+using Game.Data;
 
 namespace Game.Scripts.Data
 {
@@ -23,10 +24,14 @@ namespace Game.Scripts.Data
         private int attackPoints = 0;
         private int pointsToDistribute = 0;
 
-        public PlayerCharacterTempStatsDecorator(IPlayerCharacter decoratee)
+        public PlayerCharacterTempStatsDecorator(IPlayerCharacter decoratee,ref Func<IPlayerCharacter> undecorateFunc)
         {
             Decoratee = decoratee;
             pointsToDistribute = decoratee.PointsToDistribute;
+            undecorateFunc = () =>
+            {
+                return Decoratee;
+            };
         }
         
         public void EarnExperience(int quantity)

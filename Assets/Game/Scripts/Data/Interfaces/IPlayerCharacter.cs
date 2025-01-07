@@ -11,7 +11,5 @@
         int PointsToDistribute { get; }
 
         PlayerCharacter GetConcrete();
-
-        IPlayerCharacter Undecorate();
     }
 }
