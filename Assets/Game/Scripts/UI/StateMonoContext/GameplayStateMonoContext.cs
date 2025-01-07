@@ -1,4 +1,5 @@
 using Game.GameFlow;
+using Game.UI.Aggregators;
 using ServiceLocator;
 using Services.EventService;
 using UnityEngine;
@@ -22,6 +23,8 @@ namespace Game.UI
         [SerializeField] private Button StatsButton;
         [SerializeField] private GameObject GameplayPanel;
         [SerializeField] private GameObject PlayerStatsPanel;
+        
+        [SerializeField] private StatsAggregatorContext StatsAggregation;
         
         void Start()
         {

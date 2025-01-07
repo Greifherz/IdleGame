@@ -12,8 +12,8 @@
         void TakeDamage(int damage);
         void RestoreHealth();
         void Die();
-        void ModifyAttack(int quantity);
-        void ModifyArmor(int quantity);
-        void ModifyHealthPoints(int quantity);
+        void ModifyAttack(int quantity = 1);
+        void ModifyArmor(int quantity = 1);
+        void ModifyHealthPoints(int quantity = 1);
     }
 }
