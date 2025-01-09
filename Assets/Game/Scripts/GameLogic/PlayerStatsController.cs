@@ -22,16 +22,21 @@ namespace Game.GameLogic
 
         public PlayerStatsController()
         {
+            _EventService = Locator.Current.Get<IEventService>();
             _GameplayDataService = Locator.Current.Get<IGameplayDataService>();
             _AggregatorContext = Locator.Current.Get<IUIRefProviderService>().StatsAggregatorContext;
             
             //Decorate player character to store the temporary changes
-            
+
+            SetupButtons();
+        }
+
+        public void Display()
+        {
             var player = _GameplayDataService.GameplayData.PlayerCharacter;
             
             Player = new PlayerCharacterTempStatsDecorator(player,ref _UndecorateFunc);
-
-            SetupButtons();
+            
             SetupStatValues();
         }
 

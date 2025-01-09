@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerLevelRequirements:
   - RequiredXP: 0
+  - RequiredXP: 5
   - RequiredXP: 10
   - RequiredXP: 20
   - RequiredXP: 50
+  - RequiredXP: 75
   - RequiredXP: 100
+  - RequiredXP: 150
   - RequiredXP: 250
-  - RequiredXP: 500
-  - RequiredXP: 1000
-  - RequiredXP: 2000
-  - RequiredXP: 5000
+  - RequiredXP: 400

@@ -52,7 +52,7 @@ namespace Game.Data
 
         public void EarnExperience(int quantity)
         {
-            Debug.Log($"Gained XP - {quantity}");
+            // Debug.Log($"Gained XP - {quantity}");
             ExperiencePoints += quantity;
         }
 
