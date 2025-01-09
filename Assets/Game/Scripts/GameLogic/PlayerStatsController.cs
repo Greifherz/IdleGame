@@ -1,6 +1,7 @@
 ﻿using System;
 using Game.Data;
 using Game.Scripts.Data;
+using Game.UI;
 using Game.UI.Aggregators;
 using ServiceLocator;
 using Services.EventService;
@@ -8,7 +9,7 @@ using Services.GameDataService;
 
 namespace Game.GameLogic
 {
-    public class PlayerStatsController
+    public class PlayerStatsController : IDisposable
     {
         private IEventService _EventService;
         private IGamePersistenceDataService _gamePersistenceDataService;
@@ -17,16 +18,40 @@ namespace Game.GameLogic
 
         private Func<IPlayerCharacter> _UndecorateFunc;
 
-        public PlayerStatsController(StatsAggregatorContext aggregatorContext)
+        public PlayerStatsController()
         {
             _gamePersistenceDataService = Locator.Current.Get<IGamePersistenceDataService>();
+            _AggregatorContext = Locator.Current.Get<IUIRefProviderService>().StatsAggregatorContext;
             
-            _AggregatorContext = aggregatorContext;
             //Decorate player character to store the temporary changes
             
             var PersistentData = _gamePersistenceDataService.LoadPersistentGameplayData();
             var player = new PlayerCharacter(PersistentData.PlayerPersistentData, (ev) => { });
             Player = new PlayerCharacterTempStatsDecorator(player,ref _UndecorateFunc);
+
+            SetupButtons();
+            SetupStatValues();
+        }
+
+        private void SetupButtons()
+        {
+            _AggregatorContext.ApplyButton.onClick.AddListener(Apply);
+            _AggregatorContext.UndoButton.onClick.AddListener(Undo);
+            _AggregatorContext.UndoButton.onClick.AddListener(SetupStatValues);
+            _AggregatorContext.IncreaseArmorButton.onClick.AddListener(IncreaseArmor);
+            _AggregatorContext.IncreaseArmorButton.onClick.AddListener(SetupStatValues);
+            _AggregatorContext.IncreaseAttackButton.onClick.AddListener(IncreaseAttack);
+            _AggregatorContext.IncreaseAttackButton.onClick.AddListener(SetupStatValues);
+            _AggregatorContext.IncreaseHealthButton.onClick.AddListener(IncreaseHealthPoints);
+            _AggregatorContext.IncreaseHealthButton.onClick.AddListener(SetupStatValues);
+        }
+
+        private void SetupStatValues()
+        {
+            _AggregatorContext.ArmorValue.text = Player.ArmorPoints.ToString();
+            _AggregatorContext.AttackValue.text = Player.AttackPoints.ToString();
+            _AggregatorContext.HealthValue.text = Player.HealthPoints.ToString();
+            _AggregatorContext.PointsLeftValue.text = Player.PointsToDistribute.ToString();
         }
 
         public void IncreaseAttack()
@@ -58,6 +83,15 @@ namespace Game.GameLogic
             undec.ModifyAttack(Player.AttackPoints - undec.AttackPoints);
             undec.ModifyHealthPoints(Player.HealthPoints - undec.HealthPoints);
             _EventService.Raise(new PlayerDataUpdatedEvent(undec));
+        }
+
+        public void Dispose()
+        {
+            _AggregatorContext.ApplyButton.onClick.RemoveAllListeners();
+            _AggregatorContext.UndoButton.onClick.RemoveAllListeners();
+            _AggregatorContext.IncreaseArmorButton.onClick.RemoveAllListeners();
+            _AggregatorContext.IncreaseAttackButton.onClick.RemoveAllListeners();
+            _AggregatorContext.IncreaseHealthButton.onClick.RemoveAllListeners();
         }
     }
 }

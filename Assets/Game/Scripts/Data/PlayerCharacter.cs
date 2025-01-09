@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Data.PersistentData;
+using UnityEngine;
 
 namespace Game.Data
 {
@@ -49,11 +50,13 @@ namespace Game.Data
 
         public void EarnExperience(int quantity)
         {
+            Debug.Log($"Gained XP - {quantity}");
             ExperiencePoints += quantity;
         }
 
         public void LevelUp()
         {
+            Debug.Log("Ding - LevelUp");
             Level++;
             PointsToDistribute += 1;
             ExperiencePoints = 0;

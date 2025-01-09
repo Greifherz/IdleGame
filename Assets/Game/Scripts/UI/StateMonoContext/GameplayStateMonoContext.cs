@@ -29,6 +29,7 @@ namespace Game.UI
         void Start()
         {
             _eventService = Locator.Current.Get<IEventService>();
+            Locator.Current.Get<IUIRefProviderService>().SetStatsAggregator(this,StatsAggregation);
             _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
             _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
             _deathEventHandler = new DeathEventHandler(OnEnemyDeath);

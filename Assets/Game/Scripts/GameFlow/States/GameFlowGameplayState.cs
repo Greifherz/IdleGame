@@ -39,7 +39,7 @@ namespace Game.GameFlow
         private void OnPlayerStatsVisibilityEvent(IGameplayPlayerStatsVisibilityEvent visibilityEvent)
         {
             _statsShown = visibilityEvent.Visibility;
-            // _statsController = new PlayerStatsController(player);
+            _statsController ??= new PlayerStatsController();
         }
 
         public bool CanTransitionTo(GameFlowStateType type)
