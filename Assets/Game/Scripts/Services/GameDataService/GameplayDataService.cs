@@ -68,7 +68,9 @@ namespace Game.Data.GameplayData
 
             GameplayData = new GameplayData
             {
-                PlayerCharacter = new PlayerCharacter(PersistentData.PlayerPersistentData, (playerChar) => { }),
+                PlayerCharacter = new PlayerCharacter(PersistentData.PlayerPersistentData, 
+                    (playerChar) => { },
+                    (playerChar) => { }),
                 EnemyData = EnemyDataList
             };
             _loadedFromPersistence = true;

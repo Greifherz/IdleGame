@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Data;
+using Game.Data.GameplayData;
 using Game.Scripts.Data;
 using Game.UI;
 using Game.UI.Aggregators;
@@ -12,7 +13,8 @@ namespace Game.GameLogic
     public class PlayerStatsController : IDisposable
     {
         private IEventService _EventService;
-        private IGamePersistenceDataService _gamePersistenceDataService;
+        private IGameplayDataService _GameplayDataService;
+        
         private IPlayerCharacter Player;
         private StatsAggregatorContext _AggregatorContext;
 
@@ -20,13 +22,13 @@ namespace Game.GameLogic
 
         public PlayerStatsController()
         {
-            _gamePersistenceDataService = Locator.Current.Get<IGamePersistenceDataService>();
+            _GameplayDataService = Locator.Current.Get<IGameplayDataService>();
             _AggregatorContext = Locator.Current.Get<IUIRefProviderService>().StatsAggregatorContext;
             
             //Decorate player character to store the temporary changes
             
-            var PersistentData = _gamePersistenceDataService.LoadPersistentGameplayData();
-            var player = new PlayerCharacter(PersistentData.PlayerPersistentData, (ev) => { });
+            var player = _GameplayDataService.GameplayData.PlayerCharacter;
+            
             Player = new PlayerCharacterTempStatsDecorator(player,ref _UndecorateFunc);
 
             SetupButtons();

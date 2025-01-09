@@ -40,6 +40,8 @@ namespace Game.UI
 
         public void PlayIncreaseAnimation(Transform temporaryParent)
         {
+            if(!gameObject.activeSelf) return;
+            
             IncreaseAnimation.gameObject.SetActive(true);
             
             var originalParent = IncreaseAnimation.parent;
