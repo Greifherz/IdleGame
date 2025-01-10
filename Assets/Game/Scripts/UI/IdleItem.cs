@@ -40,8 +40,6 @@ namespace Game.UI
 
         public void PlayIncreaseAnimation(Transform temporaryParent)
         {
-            if(!gameObject.activeSelf) return; // Not preventing animation to play when hidden. Need to fix in another way
-            
             IncreaseAnimation.gameObject.SetActive(true);
             
             var originalParent = IncreaseAnimation.parent;

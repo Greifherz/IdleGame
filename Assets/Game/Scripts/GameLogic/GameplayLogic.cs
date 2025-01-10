@@ -89,14 +89,15 @@ namespace Game.GameLogic
             }
 
             _playerCharacter = _gameplayDataService.GameplayData.PlayerCharacter;
-            //Find a way to hook-up both player death and playerLevelUp to this character in an elegant manner
+            _playerCharacter.OnPlayerLevelUp += OnPlayerLevelUp;
+            _playerCharacter.OnPlayerDeath += OnPlayerDeath;   
 
             _eventService.Raise(new PlayerHealthUpdateViewEvent(_playerCharacter.HealthPercentage,$"{_playerCharacter.CurrentHealthPoints}/{_playerCharacter.HealthPoints}"),EventPipelineType.ViewPipeline);
         }
 
         private void OnPlayerLevelUp(IPlayerCharacter obj)
         {
-            //Wrong way send event to persist, it should be on specific triggers: Game sent to background, Game close, Back to lobby and every 10 secs or so
+            //Wrong way send event to persist, it should be on specific triggers: Game sent to background, Stats apply, Game close, Back to lobby and every 10 secs or so
             _eventService.Raise(new GameplayDataPersistenceEvent(),EventPipelineType.ServicesPipeline);
         }
 

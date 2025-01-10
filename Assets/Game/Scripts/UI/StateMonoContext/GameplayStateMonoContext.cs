@@ -81,6 +81,7 @@ namespace Game.UI
 
         private void OnEnemyDeath(IDeathEvent deathEvent)
         {
+            if(!GameplayPanel.activeSelf) return;
             IdleItems[deathEvent.DeadCharacter.Id].PlayIncreaseAnimation(transform);
         }
 

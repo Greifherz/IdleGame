@@ -52,6 +52,8 @@ namespace Game.Data.GameplayData
 
         private void LoadDataFromPersistence()
         {
+            if(_loadedFromPersistence) return;
+            
             var PersistentData = _gamePersistenceDataService.LoadPersistentGameplayData();
             var EnemyDataList = new List<EnemyData>();
 
@@ -68,9 +70,7 @@ namespace Game.Data.GameplayData
 
             GameplayData = new GameplayData
             {
-                PlayerCharacter = new PlayerCharacter(PersistentData.PlayerPersistentData, 
-                    (playerChar) => { },
-                    (playerChar) => { }),
+                PlayerCharacter = new PlayerCharacter(PersistentData.PlayerPersistentData, (playerChar) => { }),
                 EnemyData = EnemyDataList
             };
             _loadedFromPersistence = true;

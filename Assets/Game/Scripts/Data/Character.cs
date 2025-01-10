@@ -63,6 +63,7 @@ namespace Game.Data
         public void ModifyHealthPoints(int quantity)
         {
             HealthPoints += quantity;
+            CurrentHealthPoints += quantity;
         }
     }
 }

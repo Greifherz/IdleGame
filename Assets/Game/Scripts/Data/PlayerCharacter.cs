@@ -8,7 +8,8 @@ namespace Game.Data
     {
         private ICharacter _characterImplementation;
 
-        private Action<IPlayerCharacter> _onLevelUp;
+        public event Action<IPlayerCharacter> OnPlayerLevelUp = character => { }; 
+        public event Action<IPlayerCharacter> OnPlayerDeath = character => { }; 
 
         public string Name { get; private set; }
         public int HealthPoints => _characterImplementation.HealthPoints;
@@ -26,7 +27,7 @@ namespace Game.Data
         public int ExperiencePoints { get; private set; }
         public int DeathCount { get; private set; }
 
-        public PlayerCharacter(PlayerPersistentData data, Action<IPlayerCharacter> onDeath,Action<IPlayerCharacter> onLevelUp)
+        public PlayerCharacter(PlayerPersistentData data, Action<IPlayerCharacter> onDeath)
         {
             Action<ICharacter> OnCharacterDeath = (character) =>
             {
@@ -62,6 +63,7 @@ namespace Game.Data
             Level++;
             PointsToDistribute += 1;
             ExperiencePoints = 0;
+            OnPlayerLevelUp(this);
         }
 
         public void ModifyAttack(int quantity = 1)
@@ -90,6 +92,7 @@ namespace Game.Data
         public void Die()
         {
             _characterImplementation.Die();
+            OnPlayerDeath(this);
         }
     }
 }

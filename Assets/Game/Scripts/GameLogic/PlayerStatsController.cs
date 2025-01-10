@@ -7,6 +7,7 @@ using Game.UI.Aggregators;
 using ServiceLocator;
 using Services.EventService;
 using Services.GameDataService;
+using UnityEngine;
 
 namespace Game.GameLogic
 {
@@ -63,17 +64,20 @@ namespace Game.GameLogic
 
         public void IncreaseAttack()
         {
-            Player.ModifyAttack();
+            if(Player.PointsToDistribute > 0)
+                Player.ModifyAttack();
         }
 
         public void IncreaseArmor()
         {
-            Player.ModifyArmor();
+            if(Player.PointsToDistribute > 0)
+                Player.ModifyArmor();
         }
 
         public void IncreaseHealthPoints()
         {
-            Player.ModifyHealthPoints();
+            if(Player.PointsToDistribute > 0)
+                Player.ModifyHealthPoints();
         }
 
         public void Undo()
@@ -88,8 +92,15 @@ namespace Game.GameLogic
             IPlayerCharacter undec = _UndecorateFunc();
             undec.ModifyArmor(Player.ArmorPoints - undec.ArmorPoints);
             undec.ModifyAttack(Player.AttackPoints - undec.AttackPoints);
-            undec.ModifyHealthPoints(Player.HealthPoints - undec.HealthPoints);
-            _EventService.Raise(new PlayerDataUpdatedEvent(undec));
+            var hpMod = (Player.HealthPoints - undec.HealthPoints) / 5;
+            undec.ModifyHealthPoints(hpMod);
+            Debug.Log($"HPMod -> {hpMod}");
+            if (hpMod > 0)
+            {
+                _EventService.Raise(new PlayerHealthUpdateViewEvent(undec.HealthPercentage,$"{undec.CurrentHealthPoints}/{undec.HealthPoints}"),EventPipelineType.ViewPipeline);
+            }
+                
+            _EventService.Raise(new PlayerDataUpdatedEvent(undec),EventPipelineType.GameplayPipeline);
         }
 
         public void Dispose()

@@ -18,7 +18,9 @@ namespace Game.Scripts.Data
         public int ArmorPoints => Decoratee.ArmorPoints + armorPoints;
         public int AttackPoints => Decoratee.AttackPoints + attackPoints;
         public int PointsToDistribute => pointsToDistribute;
-        
+        public event Action<IPlayerCharacter> OnPlayerLevelUp = character => { };
+        public event Action<IPlayerCharacter> OnPlayerDeath = character => { };
+
         private int healthPoints = 0;
         private int armorPoints = 0;
         private int attackPoints = 0;
