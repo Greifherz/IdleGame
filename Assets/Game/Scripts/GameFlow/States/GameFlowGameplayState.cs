@@ -1,5 +1,4 @@
 ﻿using Game.Data.GameplayData;
-using Game.GameLogic;
 using ServiceLocator;
 using Services.EventService;
 using Services.GameDataService;
@@ -16,10 +15,7 @@ namespace Game.GameFlow
         private IGameplayDataService _gameplayDataService;
         private IGamePersistenceDataService _gamePersistenceDataService;
         
-        private IEventHandler _playerStatsEventHandler;
 
-        private GameplayLogic _gameplayLogic;
-        private PlayerStatsController _statsController;
 
         private bool _statsShown = false;
 
@@ -30,23 +26,9 @@ namespace Game.GameFlow
             _gameplayDataService = Locator.Current.Get<IGameplayDataService>();
             _gamePersistenceDataService = Locator.Current.Get<IGamePersistenceDataService>();
             
-            _playerStatsEventHandler = new GameplayPlayerStatsVisibilityEventHandler(OnPlayerStatsVisibilityEvent);
-            _eventService.RegisterListener(_playerStatsEventHandler,EventPipelineType.ViewPipeline);
-            
             _gameplayDataService.Initialize();
         }
-
-        private void OnPlayerStatsVisibilityEvent(IGameplayPlayerStatsVisibilityEvent visibilityEvent)
-        {
-            _statsShown = visibilityEvent.Visibility;
-            if (_statsController == null)
-            {
-                _statsController = new PlayerStatsController();
-            }
-
-            _statsController.Display();
-        }
-
+        
         public bool CanTransitionTo(GameFlowStateType type)
         {
             return type == GameFlowStateType.Lobby;
@@ -60,14 +42,6 @@ namespace Game.GameFlow
                 return new GameFlowLobbyState(_eventService);
             }
 
-            if (type == GameFlowStateType.Gameplay && _statsShown)//TODO - try to remove this if
-            {
-                _statsShown = false;
-                //Raise show/hide stats event
-                _eventService.Raise(new GameplayPlayerStatsVisibilityEvent(false),EventPipelineType.ViewPipeline);
-                return this;
-            }
-            
             Debug.LogError($"Tried to transition from {Type} to {type} and it's not allowed");
             return this;
         }
@@ -87,7 +61,6 @@ namespace Game.GameFlow
             Handle.OnScheduleTick += () =>
             {
                 _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Gameplay));
-                _gameplayLogic ??= new GameplayLogic(_eventService);
             };
         }
     }

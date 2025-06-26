@@ -11,8 +11,6 @@ namespace Services.EventService
     public enum ViewEventType
     {
         None = 0,
-        IdleItem = 1,
-        PlayerHealth = 2,
         
     }
 }
