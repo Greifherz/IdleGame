@@ -20,6 +20,8 @@ namespace Services.EventService
         PlayerXPGain = 2048,
         PlayerLevelUp = 4096,
         GameplayPlayerStatsVisibility = 8192,
-        //##8192##//
+        MinerGoldCollectEvent = 16384,
+        MinerGoldAccumulated = 32768,
+        //##32768##//
     }
 }

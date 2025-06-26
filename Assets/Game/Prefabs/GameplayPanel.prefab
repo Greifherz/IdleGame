@@ -584,15 +584,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb1af53f5f4bb774ba27129b3b739c53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerHealth: {fileID: 0}
-  IdleItems:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   BackButton: {fileID: 616093593021213556}
-  StatsButton: {fileID: 0}
   GameplayPanel: {fileID: 2120619482219992890}
-  PlayerStatsPanel: {fileID: 0}
