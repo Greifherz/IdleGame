@@ -23,7 +23,6 @@ namespace Game.Data.GameplayData
         private IGamePersistenceDataService _gamePersistenceDataService;
         private IEventService _eventService;
 
-        private IEventHandler _enemyDataUpdatedEventHandler;
         private IEventHandler _playerDataUpdatedEventHandler;
 
         public void Initialize()
@@ -31,7 +30,6 @@ namespace Game.Data.GameplayData
             _eventService = Locator.Current.Get<IEventService>();
             _assetLoaderService = Locator.Current.Get<IAssetLoaderService>();
             _gamePersistenceDataService = Locator.Current.Get<IGamePersistenceDataService>();
-            _enemyDataUpdatedEventHandler = new EnemyDataUpdatedEventHandler(OnEnemyDataUpdated);
             _playerDataUpdatedEventHandler = new PlayerDataUpdatedEventHandler(OnPlayerDataUpdated);
             
             _assetLoaderService.LoadAssetAsync<GameEnemyDatabase>("GameEnemyDatabase", (database) =>
@@ -40,7 +38,6 @@ namespace Game.Data.GameplayData
                 _enemyDatabase = database;
                 LoadDataFromPersistence();
             
-                _eventService.RegisterListener(_enemyDataUpdatedEventHandler,EventPipelineType.GameplayPipeline);
                 _eventService.RegisterListener(_playerDataUpdatedEventHandler,EventPipelineType.GameplayPipeline);
             });
             
@@ -84,12 +81,6 @@ namespace Game.Data.GameplayData
         public PlayerLevelRequirement GetLevelRequirement(int level)
         {
             return _levelDatabase.PlayerLevelRequirements[level];
-        }
-
-        private void OnEnemyDataUpdated(IEnemyDataUpdatedEvent enemyDataUpdatedEvent)
-        {
-            var UpdatedData = GameplayData.EnemyData[enemyDataUpdatedEvent.EnemyCharacter.Id];
-            UpdatedData.PersistentData = new EnemyPersistentData(UpdatedData.EnemyId,enemyDataUpdatedEvent.EnemyCharacter.KillCount,enemyDataUpdatedEvent.EnemyCharacter.CurrentHealthPoints);
         }
 
         private void OnPlayerDataUpdated(IPlayerDataUpdatedEvent playerDataUpdatedEvent)
