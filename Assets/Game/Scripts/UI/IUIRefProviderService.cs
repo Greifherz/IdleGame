@@ -1,11 +1,12 @@
 ﻿using Game.UI.Aggregators;
+using Game.UI.View;
 using ServiceLocator;
 
 namespace Game.UI
 {
     public interface IUIRefProviderService : IGameService
     {
-        GameplayAggregatorContext GameplayAggregatorContext { get; }
-        void SetGameplayAggregator(GameplayStateMonoContext holder, GameplayAggregatorContext aggregator);
+        IMiningView MiningView { get; }
+        void SetMiningView(GameplayStateMonoContext holder, IMiningView miningView);
     }
 }

@@ -1,11 +1,12 @@
 ﻿using Game.UI.Aggregators;
+using Game.UI.View;
 using ServiceLocator;
 
 namespace Game.UI
 {
     public class UIRefProviderService : IUIRefProviderService
     {
-        public GameplayAggregatorContext GameplayAggregatorContext { get; private set; }
+        public IMiningView MiningView { get; private set; }
         
         public void Initialize()
         {
@@ -13,9 +14,9 @@ namespace Game.UI
         }
 
         //Signature asks for the mono context only for "bureaucracy", meaning this is a method only the GameplayStateMonoContext should be cleared to call
-        public void SetGameplayAggregator(GameplayStateMonoContext holder, GameplayAggregatorContext aggregator)
+        public void SetMiningView(GameplayStateMonoContext holder, IMiningView miningView)
         {
-            GameplayAggregatorContext = aggregator;
+            MiningView = miningView;
         }
     }
 }

@@ -22,14 +22,14 @@ namespace Game.Data.GameplayData
 
         private IEventHandler _playerDataUpdatedEventHandler;
 
-        private MinerLogic _minerLogic;
+        private MiningPresenter _miningPresenter;
 
         public void Initialize()
         {
             _eventService = Locator.Current.Get<IEventService>();
             _gamePersistenceDataService = Locator.Current.Get<IGamePersistenceDataService>();
             
-            _minerLogic = new MinerLogic();
+            _miningPresenter = new MiningPresenter();
 
             IsInit = true;
         }
