@@ -30,7 +30,6 @@ namespace Bootstrap
             var UIRefService = new UIRefProviderService();
             Locator.Current.Register<IUIRefProviderService>(UIRefService);
             
-            
             GameDataService.Initialize();
         }
     }

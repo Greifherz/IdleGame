@@ -4,8 +4,9 @@ namespace Game.Scripts.Game
 {
     public class MiningData
     {
-        public DateTime LastCollectedTime;
+        public DateTime LastCollectedTime;//TODO
 
-        public int ActiveMiners;
+        public int ActiveMiners = 1;
+        public int GoldPerMiner = 1;
     }
 }

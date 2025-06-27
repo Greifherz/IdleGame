@@ -5,7 +5,7 @@ namespace Game.UI
 {
     public interface IUIRefProviderService : IGameService
     {
-        StatsAggregatorContext StatsAggregatorContext { get; }
-        void SetStatsAggregator(GameplayStateMonoContext holder, StatsAggregatorContext statsAggregator);
+        GameplayAggregatorContext GameplayAggregatorContext { get; }
+        void SetGameplayAggregator(GameplayStateMonoContext holder, GameplayAggregatorContext aggregator);
     }
 }

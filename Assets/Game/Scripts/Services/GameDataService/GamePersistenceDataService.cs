@@ -40,32 +40,8 @@ namespace Services.GameDataService
             
             var PlayerData = LoadPlayerData();
 
-            var EnemyDataList = LoadEnemyData();
-
-            Data = new GameplayPersistentData(PlayerData, EnemyDataList.ToArray());
+            Data = new GameplayPersistentData(PlayerData);
             return Data;
-        }
-
-        private List<EnemyPersistentData> LoadEnemyData()
-        {
-            var EnemyCount = _persistenceService.RetrieveInt(
-                $"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_ENEMY_COUNT_MOD}");
-
-            var EnemyDataList = new List<EnemyPersistentData>(EnemyCount);
-            for (var i = 0; i < EnemyCount; i++)
-            {
-                var EnemyId = _persistenceService.RetrieveInt(
-                    $"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_ENEMY_ID_MOD.Replace(GameplayPersistenceKeys.PERSISTENCE_COUNT_MARKUP, i.ToString())}");
-                var EnemyKillCount = _persistenceService.RetrieveInt(
-                    $"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_ENEMY_KILLCOUNT_MOD.Replace(GameplayPersistenceKeys.PERSISTENCE_COUNT_MARKUP, i.ToString())}");
-                var EnemyCurrentHp = _persistenceService.RetrieveInt(
-                    $"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_ENEMY_HP_MOD.Replace(GameplayPersistenceKeys.PERSISTENCE_COUNT_MARKUP, i.ToString())}");
-
-                var EnemyData = new EnemyPersistentData(EnemyId, EnemyKillCount, EnemyCurrentHp);
-                EnemyDataList.Add(EnemyData);
-            }
-
-            return EnemyDataList;
         }
 
         private PlayerPersistentData LoadPlayerData()
@@ -106,15 +82,6 @@ namespace Services.GameDataService
                 _persistenceService.Persist(ToPersist.PlayerCharacter.CurrentHealthPoints,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_PLAYER_CURRENTHP_MOD}");
                 _persistenceService.Persist(ToPersist.PlayerCharacter.ArmorPoints,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_PLAYER_ARMOR_MOD}");
                 _persistenceService.Persist(ToPersist.PlayerCharacter.DeathCount,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_PLAYER_DEATH_MOD}");
-            
-                var EnemyCount = ToPersist.EnemyData.Count;
-                _persistenceService.Persist(EnemyCount,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_ENEMY_COUNT_MOD}");
-                for (var i = 0; i < EnemyCount; i++)
-                {
-                    _persistenceService.Persist(ToPersist.EnemyData[i].EnemyId,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_ENEMY_ID_MOD.Replace(GameplayPersistenceKeys.PERSISTENCE_COUNT_MARKUP, i.ToString())}");
-                    _persistenceService.Persist(ToPersist.EnemyData[i].PersistentData.CurrentHealthPoints,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_ENEMY_HP_MOD.Replace(GameplayPersistenceKeys.PERSISTENCE_COUNT_MARKUP, i.ToString())}");
-                    _persistenceService.Persist(ToPersist.EnemyData[i].PersistentData.KillCount,$"{GameplayPersistenceKeys.GAMEPLAY_DATA_KEY}{GameplayPersistenceKeys.GAMEPLAY_DATA_ENEMY_KILLCOUNT_MOD.Replace(GameplayPersistenceKeys.PERSISTENCE_COUNT_MARKUP, i.ToString())}");
-                }
             }
             catch (Exception e)
             {

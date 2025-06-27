@@ -2,6 +2,7 @@ using Game.GameFlow;
 using Game.UI.Aggregators;
 using ServiceLocator;
 using Services.EventService;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,11 +18,18 @@ namespace Game.UI
 
         [SerializeField] private Button BackButton;
         [SerializeField] private GameObject GameplayPanel;
-        
-        
+
+        [SerializeField] private Button CollectButton;
+        [SerializeField] private Button HireButton;
+        [SerializeField] private TextMeshProUGUI AccumulatedGoldText;
+        [SerializeField] private TextMeshProUGUI MinersText;
+
         void Start()
         {
             _eventService = Locator.Current.Get<IEventService>();
+            var UiRefService = Locator.Current.Get<IUIRefProviderService>();
+            UiRefService.SetGameplayAggregator(this,new GameplayAggregatorContext(CollectButton,HireButton,AccumulatedGoldText,MinersText));
+            
             _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
             _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
             _eventService.RegisterListener(_gameFlowEventHandler);

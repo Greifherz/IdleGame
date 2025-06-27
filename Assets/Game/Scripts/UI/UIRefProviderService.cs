@@ -5,7 +5,7 @@ namespace Game.UI
 {
     public class UIRefProviderService : IUIRefProviderService
     {
-        public StatsAggregatorContext StatsAggregatorContext { get; private set; }
+        public GameplayAggregatorContext GameplayAggregatorContext { get; private set; }
         
         public void Initialize()
         {
@@ -13,9 +13,9 @@ namespace Game.UI
         }
 
         //Signature asks for the mono context only for "bureaucracy", meaning this is a method only the GameplayStateMonoContext should be cleared to call
-        public void SetStatsAggregator(GameplayStateMonoContext holder, StatsAggregatorContext statsAggregator)
+        public void SetGameplayAggregator(GameplayStateMonoContext holder, GameplayAggregatorContext aggregator)
         {
-            StatsAggregatorContext = statsAggregator;
+            GameplayAggregatorContext = aggregator;
         }
     }
 }

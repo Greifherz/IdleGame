@@ -1,10 +1,10 @@
 namespace Services.EventService
 {
-    public class MinerGoldCollectEventEvent : IMinerGoldCollectEventEvent
+    public class MinerGoldCollectEvent : IMinerGoldCollectEvent
     {
         public int GoldQuantity { get; }
 
-        public MinerGoldCollectEventEvent(int goldQuantity)
+        public MinerGoldCollectEvent(int goldQuantity)
         {
             GoldQuantity = goldQuantity;
         }
@@ -17,14 +17,14 @@ namespace Services.EventService
     
     public partial interface IEventHandler
     {
-        void Handle(IMinerGoldCollectEventEvent minerGoldCollectEventEvent);
+        void Handle(IMinerGoldCollectEvent minerGoldCollectEvent);
     }
     
     public partial class BaseEventHandler : IEventHandler
     {
-        public virtual void Handle(IMinerGoldCollectEventEvent minerGoldCollectEventEvent)
+        public virtual void Handle(IMinerGoldCollectEvent minerGoldCollectEvent)
         {
-            Decoratee?.Handle(minerGoldCollectEventEvent);
+            Decoratee?.Handle(minerGoldCollectEvent);
         }
     }
 }
