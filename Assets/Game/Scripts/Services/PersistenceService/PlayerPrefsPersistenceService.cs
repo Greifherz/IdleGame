@@ -12,25 +12,26 @@ namespace Services.PersistenceService
         public void Persist(int intData, string id)
         {
             PlayerPrefs.SetInt(id, intData);
-            PlayerPrefs.Save();
         }
 
         public void Persist(string stringData, string id)
         {
             PlayerPrefs.SetString(id, stringData);
-            PlayerPrefs.Save();
         }
 
         public void Persist(bool boolData, string id)
         {
             if(boolData)PlayerPrefs.SetInt(id, 0);
             else PlayerPrefs.DeleteKey(id);
-            PlayerPrefs.Save();
         }
 
         public void Persist(float floatData, string id)
         {
             PlayerPrefs.SetFloat(id, floatData);
+        }
+
+        public void Commit()
+        {
             PlayerPrefs.Save();
         }
 
