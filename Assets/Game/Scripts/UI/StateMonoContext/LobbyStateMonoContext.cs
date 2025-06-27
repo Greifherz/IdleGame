@@ -4,7 +4,7 @@ using Services.EventService;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.UI
+namespace Services.ViewProvider
 {
     //Mono context classes are classes that don't do much. They hold references to the scene gameObjects and other view-related scripts and helpers.
     //They are the touching point between logic and view

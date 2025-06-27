@@ -1,6 +1,6 @@
 ﻿using System;
-using Game.UI;
-using Game.UI.View;
+using Services.ViewProvider;
+using Services.ViewProvider.View;
 using ServiceLocator;
 using Services.EventService;
 using Services.Scheduler;
@@ -29,8 +29,8 @@ namespace Game.Scripts.Game
 
             _schedulerService = Locator.Current.Get<ISchedulerService>();
             _eventService = Locator.Current.Get<IEventService>();
-            var UIRefService = Locator.Current.Get<IUIRefProviderService>();
-            _view = UIRefService.MiningView;
+            var ViewProviderService = Locator.Current.Get<IViewProviderService>();
+            _view = ViewProviderService.MiningView;
         
             _view.OnCollectClicked += Collect;
             _view.OnHireClicked += Hire;

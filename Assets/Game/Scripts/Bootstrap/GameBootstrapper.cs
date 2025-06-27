@@ -1,6 +1,6 @@
 ﻿using Game.Data.GameplayData;
 using Game.GameFlow;
-using Game.UI;
+using Services.ViewProvider;
 using ServiceLocator;
 using Services.GameDataService;
 using UnityEngine;
@@ -27,8 +27,8 @@ namespace Bootstrap
             
             //The game takes place in the UI, basically. So some more intensive systems with many expected changes should hold all their references and encapsulate it's logic within themselves
             //This reduces the load of trafficking events and avoids creating pipelines exclusive to inner services. It's okay to think of some modules as self-contained.
-            var UIRefService = new UIRefProviderService();
-            Locator.Current.Register<IUIRefProviderService>(UIRefService);
+            var UIRefService = new ViewProviderService();
+            Locator.Current.Register<IViewProviderService>(UIRefService);
             
             GameDataService.Initialize();
         }

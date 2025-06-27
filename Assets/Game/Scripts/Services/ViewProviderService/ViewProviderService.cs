@@ -1,10 +1,10 @@
-﻿using Game.UI.Aggregators;
-using Game.UI.View;
+﻿using Services.ViewProvider.Aggregators;
 using ServiceLocator;
+using Services.ViewProvider.View;
 
-namespace Game.UI
+namespace Services.ViewProvider
 {
-    public class UIRefProviderService : IUIRefProviderService
+    public class ViewProviderService : IViewProviderService
     {
         public IMiningView MiningView { get; private set; }
         

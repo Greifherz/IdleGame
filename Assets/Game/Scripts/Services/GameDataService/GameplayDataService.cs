@@ -1,12 +1,7 @@
-﻿using System.Collections.Generic;
-using Game.Data.PersistentData;
-using Game.Scripts.Data;
-using Game.Scripts.Game;
-using Game.Services.AssetLoaderService;
+﻿using Game.Scripts.Game;
 using ServiceLocator;
 using Services.EventService;
 using Services.GameDataService;
-using UnityEngine;
 
 namespace Game.Data.GameplayData
 {

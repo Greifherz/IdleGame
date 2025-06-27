@@ -1,10 +1,10 @@
 ﻿using System;
-using Game.UI.View;
+using Services.ViewProvider.View;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.UI.Aggregators
+namespace Services.ViewProvider.Aggregators
 {
     [Serializable]
     public class GameplayAggregatorContext : IMiningView

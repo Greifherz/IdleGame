@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game.UI.View
+namespace Services.ViewProvider.View
 {
     /// <summary>
     /// The "View" in MVP.
