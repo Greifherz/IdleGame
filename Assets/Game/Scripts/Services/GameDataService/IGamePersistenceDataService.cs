@@ -6,6 +6,6 @@ namespace Services.GameDataService
 {
     public interface IGamePersistenceDataService : IGameService
     {
-        GameplayPersistentData LoadPersistentGameplayData();
+        GameplayData LoadGameplayData();
     }
 }

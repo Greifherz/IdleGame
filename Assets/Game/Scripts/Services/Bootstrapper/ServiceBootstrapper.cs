@@ -1,4 +1,5 @@
 ﻿using Game.GameFlow;
+using Game.Scripts.Services.UnityHookService;
 using Game.Services.AssetLoaderService;
 using Services.EventService;
 using Services.PersistenceService;
@@ -25,10 +26,13 @@ namespace Bootstrap
             //Create TickService
             var TickService = new GameObject("TickService").AddComponent<UnityCoroutineTickService>();
             Locator.Current.Register<ITickService>(TickService);
-            
+
+            TickService.gameObject.AddComponent<UnityHookService>(); //No need to register this on the locator
+
             //Create Persistence Service
             IPersistenceService PersistenceService = new PlayerPrefsPersistenceService();
-            PersistenceService = new NonKeyCollisionDecorator(PersistenceService);
+            PersistenceService = new NonKeyCollisionDecorator(PersistenceService); //Decorating
+            PersistenceService = new PlayerPrefsSaveDecorator(PersistenceService); //Decorating
             Locator.Current.Register<IPersistenceService>(PersistenceService);
             
             //Create EventService

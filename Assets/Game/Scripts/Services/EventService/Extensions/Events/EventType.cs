@@ -22,6 +22,9 @@ namespace Services.EventService
         GameplayPlayerStatsVisibility = 8192,
         MinerGoldCollectEvent = 16384,
         MinerGoldAccumulated = 32768,
-        //##32768##//
+        ApplicationFocusUnity = 65536,
+        ApplicationPauseUnity = 131072,
+        ApplicationQuitUnity = 262144,
+        //##262144##//
     }
 }

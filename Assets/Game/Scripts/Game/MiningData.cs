@@ -2,6 +2,7 @@
 
 namespace Game.Scripts.Game
 {
+    [Serializable]
     public class MiningData
     {
         public DateTime LastCollectedTime;//TODO

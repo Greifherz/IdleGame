@@ -52,10 +52,10 @@ namespace Services.EventService
         
         private void OnTick()
         {
-            ProcessPipeline(EventPipelineType.ServicesPipeline);
-            ProcessPipeline(EventPipelineType.CommonPipeline);
-            ProcessPipeline(EventPipelineType.GameplayPipeline);
-            ProcessPipeline(EventPipelineType.ViewPipeline);
+            foreach (EventPipelineType PipelineType in Enum.GetValues(typeof(EventPipelineType)))
+            {
+                ProcessPipeline(PipelineType);
+            }
         }
 
         private void ProcessPipeline(EventPipelineType pipelineType)
@@ -85,5 +85,6 @@ namespace Services.EventService
         ViewPipeline,
         ServicesPipeline,
         GameplayPipeline,
+        UnityPipeline,
     }
 }

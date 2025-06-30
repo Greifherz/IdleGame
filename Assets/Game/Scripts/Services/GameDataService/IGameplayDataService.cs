@@ -1,4 +1,5 @@
-﻿using ServiceLocator;
+﻿using Game.Scripts.Game;
+using ServiceLocator;
 
 namespace Game.Data.GameplayData
 {

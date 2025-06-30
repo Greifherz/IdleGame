@@ -3,6 +3,7 @@ using Services.ViewProvider;
 using Services.ViewProvider.View;
 using ServiceLocator;
 using Services.EventService;
+using Services.PersistenceService;
 using Services.Scheduler;
 
 // Renamed from MinerLogic
@@ -10,15 +11,16 @@ namespace Game.Scripts.Game
 {
     public class MiningPresenter : IDisposable
     {
-        private const float TICK_TIME = 5.0f;
+        public static float TICK_TIME = 5.0f;
 
-        // --- Dependencies ---
         private readonly ISchedulerService _schedulerService;
         private readonly IEventService _eventService;
         private readonly IMiningView _view;
         private readonly MiningModel _model;
-    
+        
         private ISchedulerHandle _currentHandle;
+        
+        
 
         // The Presenter gets its dependencies passed to it (Dependency Injection)
         public MiningPresenter()

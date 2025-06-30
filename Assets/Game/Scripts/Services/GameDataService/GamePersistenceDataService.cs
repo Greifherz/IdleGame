@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Game.Data;
-using Game.Data.GameplayData;
-using Game.Data.PersistentData;
+﻿using Game.Data.GameplayData;
 using ServiceLocator;
 using Services.EventService;
 using Services.PersistenceService;
-using UnityEngine;
+//using System.Text.Json;
 
 namespace Services.GameDataService
 {
@@ -33,19 +29,18 @@ namespace Services.GameDataService
             PersistGameplayData();
         }
 
-        public GameplayPersistentData LoadPersistentGameplayData()
+        public GameplayData LoadGameplayData()
         {
-            var Data = GameplayPersistentData.CreateDefaultPersistentData();
-            if (!_persistenceService.RetrieveBool(GameplayPersistenceKeys.GAMEPLAY_DATA_KEY)) return Data;
-            
-
-            Data = new GameplayPersistentData();
-            return Data;
+            if (!_persistenceService.RetrieveBool(GameplayPersistenceKeys.PERSISTENCE_KEY))
+                return GameplayData.CreateDefaultGameplayData();
+            var RawData = _persistenceService.RetrieveString(GameplayPersistenceKeys.PERSISTENCE_KEY);
+            // var GameData = ;
+            return GameplayData.CreateDefaultGameplayData();
         }
 
         private void PersistGameplayData()
         {
-            
+            var GameplayData = _gameplayDataService.GameplayData;
         }
     }
 }

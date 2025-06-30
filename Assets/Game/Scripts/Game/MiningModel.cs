@@ -15,6 +15,8 @@ namespace Game.Scripts.Game
         public int GoldPerMiner { get; private set; } = 1;
         public int CurrentHireCost => 45 + ActiveMiners * 5;
 
+        public DateTime LastCollectedTime = DateTime.UtcNow;
+
         public void AddAccumulatedGold()
         {
             AccumulatedGold += ActiveMiners * GoldPerMiner;
@@ -44,8 +46,13 @@ namespace Game.Scripts.Game
         public void LoadFrom(MiningData persistentData)
         {
             this.ActiveMiners = persistentData.ActiveMiners;
+            this.AccumulatedGold = persistentData.AcumulatedGold;
+            this.GoldPerMiner = persistentData.GoldPerMiner;
+            this.LastCollectedTime = persistentData.LastCollectedTime;
             
             // You would also calculate offline progress here and add it to AccumulatedGold
+            var OfflineAccumulation = (LastCollectedTime - DateTime.UtcNow).TotalSeconds / MiningPresenter.TICK_TIME * ActiveMiners * GoldPerMiner;
+            AccumulatedGold += (int)Math.Floor(OfflineAccumulation);
         }
     }
     
