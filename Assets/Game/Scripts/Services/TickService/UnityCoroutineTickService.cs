@@ -13,7 +13,6 @@ namespace Services.TickService
 
         public void Initialize()
         {
-            DontDestroyOnLoad(gameObject);
             _mainThreadProcessor = new GameObject("MainThreadProcessor").AddComponent<UnityMainThreadProcessor>();
             _running = true;
             StartCoroutine(Clock());

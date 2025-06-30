@@ -43,11 +43,6 @@
             _persistenceServiceImplementation.Persist(floatData, NewId);
         }
 
-        public void Commit()
-        {
-            _persistenceServiceImplementation.Commit();
-        }
-
         public int RetrieveInt(string id)
         {
             var NewId = IntPrefix + id;

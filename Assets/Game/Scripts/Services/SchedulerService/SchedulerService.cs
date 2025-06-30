@@ -12,8 +12,6 @@ namespace Services.Scheduler
         private ScheduleData _scheduledData = null;
         private List<ScheduleData> _conditionScheduledData = new List<ScheduleData>(10);
         
-        private static List<ScheduleData> itemsToTick = new List<ScheduleData>();
-        
         public void Initialize()
         {
             _tickService = Locator.Current.Get<ITickService>();
@@ -22,29 +20,34 @@ namespace Services.Scheduler
         
         public ISchedulerHandle Schedule(float timeInSecsFromNow)
         {
-            var data = new ScheduleData
+            var Data = new ScheduleData();
+            Data.TargetTime = Time.time + timeInSecsFromNow;
+            
+            var Handle = new ScheduleHandle();
+            Data.Handle = Handle;
+            
+            if (_scheduledData == null)
             {
-                TargetTime = Time.time + timeInSecsFromNow,
-                Handle = new ScheduleHandle()
-            };
-
-            if (_scheduledData == null || data.TargetTime < _scheduledData.TargetTime)
-            {
-                data.Next = _scheduledData;
-                _scheduledData = data;
-                return data.Handle;
+                _scheduledData = Data;
             }
-    
-            var current = _scheduledData;
-            while (current.Next != null && current.Next.TargetTime < data.TargetTime)
+            else
             {
-                current = current.Next;
+                if (timeInSecsFromNow < _scheduledData.TargetTime)
+                {
+                    Data.Next = _scheduledData;
+                    _scheduledData = Data;
+                }
+                else if(_scheduledData.Next == null)
+                {
+                    _scheduledData.Next = Data;
+                }
+                else
+                {
+                    FitInSchedule(Data);
+                }
             }
-    
-            data.Next = current.Next;
-            current.Next = data;
 
-            return data.Handle;
+            return Handle;
         }
 
         public ISchedulerHandle Schedule(DateTime time)
@@ -65,6 +68,29 @@ namespace Services.Scheduler
             return Handle;
         }
 
+        private void FitInSchedule(ScheduleData data)
+        {
+            var CurrentScheduleData = _scheduledData;
+            var Fit = false;
+            while (!Fit)
+            {
+                if (data.TargetTime < CurrentScheduleData.TargetTime)
+                {
+                    data.Next = CurrentScheduleData;
+                    Fit = true;
+                }
+                else if(CurrentScheduleData.Next == null)
+                {
+                    CurrentScheduleData.Next = data;
+                    Fit = true;
+                }
+                else
+                {
+                    CurrentScheduleData = CurrentScheduleData.Next;
+                }
+            }
+        }
+
         private void TickWrap()
         {
             _tickService.RunOnMainThread(Tick);
@@ -74,40 +100,29 @@ namespace Services.Scheduler
         {
             if (_conditionScheduledData.Count > 0)
             {
-                foreach (var data in _conditionScheduledData)
+                for (var Index = 0; Index < _conditionScheduledData.Count; Index++)
                 {
-                    if (data.ConditionCheck())
-                    {
-                        itemsToTick.Add(data);
-                    }
+                    var Data = _conditionScheduledData[Index];
+                    if (!Data.ConditionCheck()) continue;
+                    _conditionScheduledData.RemoveAt(Index);
+                    Index--;
+                    Data.Handle.Tick(this);
                 }
-
-                if (itemsToTick.Count > 0)
-                {
-                    foreach (var data in itemsToTick)
-                    {
-                        data.Handle.Tick(this);
-                        _conditionScheduledData.Remove(data);
-                    }
-                }
-                itemsToTick.Clear();
             }
-
+            
             if (_scheduledData == null)
             {
                 return;
             }
             
-            
-            while (_scheduledData != null && _scheduledData.TargetTime < Time.time)
+            if (_scheduledData.TargetTime < Time.time)
             {
-                var dataToProcess = _scheduledData;
+                var Data = _scheduledData;
                 _scheduledData = _scheduledData.Next;
-                dataToProcess.Next = null;
-        
-                dataToProcess.Handle.Tick(this);
+                Data.Next = null;
+                Data.Handle.Tick(this);
+                Tick();
             }
-            
         }
 
         internal class ScheduleData

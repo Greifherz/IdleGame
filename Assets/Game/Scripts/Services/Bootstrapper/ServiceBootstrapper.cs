@@ -1,10 +1,10 @@
 ﻿using Game.GameFlow;
-using Game.Scripts.Services.UnityHookService;
 using Game.Services.AssetLoaderService;
 using Services.EventService;
 using Services.PersistenceService;
 using Services.TickService;
 using ServiceLocator;
+using Services.GameDataService;
 using Services.Scheduler;
 using UnityEngine;
 
@@ -25,10 +25,10 @@ namespace Bootstrap
             //Create TickService
             var TickService = new GameObject("TickService").AddComponent<UnityCoroutineTickService>();
             Locator.Current.Register<ITickService>(TickService);
-
+            
             //Create Persistence Service
             IPersistenceService PersistenceService = new PlayerPrefsPersistenceService();
-            PersistenceService = new PlayerPrefsSaveDecorator(PersistenceService); //Decorating
+            PersistenceService = new NonKeyCollisionDecorator(PersistenceService);
             Locator.Current.Register<IPersistenceService>(PersistenceService);
             
             //Create EventService
@@ -48,9 +48,6 @@ namespace Bootstrap
             TickService.Initialize();
             Scheduler.Initialize();
             AssetLoader.Initialize();
-            
-            //Post-Initialization
-            TickService.gameObject.AddComponent<UnityHookService>(); //No need to register this on the locator
         }
     }
 }

@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Services.ViewProvider
+namespace Game.UI
 {
     public class IdleItem : MonoBehaviour
     {
