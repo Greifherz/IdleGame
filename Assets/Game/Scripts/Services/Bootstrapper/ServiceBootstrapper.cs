@@ -5,7 +5,6 @@ using Services.EventService;
 using Services.PersistenceService;
 using Services.TickService;
 using ServiceLocator;
-using Services.GameDataService;
 using Services.Scheduler;
 using UnityEngine;
 
@@ -29,7 +28,6 @@ namespace Bootstrap
 
             //Create Persistence Service
             IPersistenceService PersistenceService = new PlayerPrefsPersistenceService();
-            PersistenceService = new NonKeyCollisionDecorator(PersistenceService); //Decorating
             PersistenceService = new PlayerPrefsSaveDecorator(PersistenceService); //Decorating
             Locator.Current.Register<IPersistenceService>(PersistenceService);
             

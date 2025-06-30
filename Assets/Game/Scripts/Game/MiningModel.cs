@@ -40,6 +40,7 @@ namespace Game.Scripts.Game
         {
             int collectedAmount = AccumulatedGold;
             AccumulatedGold = 0;
+            LastCollectedTime = DateTime.UtcNow;
             return collectedAmount;
         }
 
@@ -51,8 +52,21 @@ namespace Game.Scripts.Game
             this.LastCollectedTime = persistentData.LastCollectedTime;
             
             // You would also calculate offline progress here and add it to AccumulatedGold
-            var OfflineAccumulation = (LastCollectedTime - DateTime.UtcNow).TotalSeconds / MiningPresenter.TICK_TIME * ActiveMiners * GoldPerMiner;
+            var OfflineAccumulation = (DateTime.UtcNow - LastCollectedTime).TotalSeconds / MiningPresenter.TICK_TIME * ActiveMiners * GoldPerMiner;
             AccumulatedGold += (int)Math.Floor(OfflineAccumulation);
+        }
+
+        public MiningData ToData()
+        {
+            var Data = new MiningData
+            {
+                ActiveMiners = ActiveMiners,
+                AcumulatedGold = AccumulatedGold,
+                GoldPerMiner = GoldPerMiner,
+                LastCollectedTime = LastCollectedTime
+            };
+
+            return Data;
         }
     }
     

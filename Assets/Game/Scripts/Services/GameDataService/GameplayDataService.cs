@@ -35,7 +35,8 @@ namespace Game.Data.GameplayData
 
         public void MinerGoldCollected(IMinerGoldCollectEvent minerEvent)
         {
-            
+            GameplayData.OverallGold += minerEvent.GoldQuantity;
+            _eventService.Raise(new GameplayDataPersistenceEvent(),EventPipelineType.ServicesPipeline);
         }
     }
 }

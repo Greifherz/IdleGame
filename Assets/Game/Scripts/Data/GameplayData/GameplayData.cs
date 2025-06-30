@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Game.Scripts.Game;
 
 namespace Game.Data.GameplayData
@@ -7,7 +6,8 @@ namespace Game.Data.GameplayData
     [Serializable]
     public class GameplayData
     {
-        public MiningData MiningData { get; private set; }
+        public int OverallGold = 0;
+        public MiningData MiningData;//TODO - do something about this being public to set
         
         //If needed turn this into a factory or something
         public static GameplayData CreateDefaultGameplayData()
@@ -18,8 +18,5 @@ namespace Game.Data.GameplayData
             
             return data;
         }
-        
-        
-        
     }
 }

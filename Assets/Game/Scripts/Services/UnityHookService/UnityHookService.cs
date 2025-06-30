@@ -16,15 +16,15 @@ namespace Game.Scripts.Services.UnityHookService
         
         private void OnApplicationFocus(bool hasFocus)
         {
-            _eventService?.Raise(new ApplicationFocusUnityEvent(hasFocus),EventPipelineType.UnityPipeline);
+            //Best to subscribe directly to UnityEngine.Application.focusChanged
         }
 
         private void OnApplicationQuit()
         {
-            _eventService?.Raise(new ApplicationQuitUnityEvent(),EventPipelineType.UnityPipeline);
+            //Best to subscribe directly to UnityEngine.Application.quitting
         }
 
-        private void OnApplicationPause(bool pauseStatus)
+        private void OnApplicationPause(bool pauseStatus)//REVIEW - might not need this as I think this is only relevant to the editor
         {
             _eventService?.Raise(new ApplicationPauseUnityEvent(pauseStatus),EventPipelineType.UnityPipeline);
         }

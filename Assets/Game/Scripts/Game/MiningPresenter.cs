@@ -20,8 +20,6 @@ namespace Game.Scripts.Game
         private readonly MiningModel _model;
         
         private ISchedulerHandle _currentHandle;
-        
-        
 
         // The Presenter gets its dependencies passed to it (Dependency Injection)
         public MiningPresenter(GameplayData gameplayData)

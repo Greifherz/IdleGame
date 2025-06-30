@@ -1,5 +1,6 @@
 ﻿using ServiceLocator;
 using Services.EventService;
+using UnityEngine;
 
 namespace Services.PersistenceService
 {
@@ -15,21 +16,18 @@ namespace Services.PersistenceService
         private IEventService _eventService;
 
         private ApplicationPauseUnityEventHandler _applicationPauseUnityEventHandler;
-        private ApplicationFocusUnityEventHandler _applicationFocusUnityEventHandler;
-        private ApplicationQuitUnityEventHandler _applicationQuitUnityEventHandler;
         
         public void Initialize()
         {
             _eventService = Locator.Current.Get<IEventService>();
             
             _applicationPauseUnityEventHandler = new ApplicationPauseUnityEventHandler((pauseStatusEvent) => { Commit(); });
-            _applicationFocusUnityEventHandler = new ApplicationFocusUnityEventHandler((hasFocusEvent) => { Commit(); });
-            _applicationQuitUnityEventHandler = new ApplicationQuitUnityEventHandler((quitEvent) => { Commit(); });
             
             _eventService.RegisterListener(_applicationPauseUnityEventHandler,EventPipelineType.UnityPipeline);
-            _eventService.RegisterListener(_applicationFocusUnityEventHandler,EventPipelineType.UnityPipeline);
-            _eventService.RegisterListener(_applicationQuitUnityEventHandler,EventPipelineType.UnityPipeline);
             
+            Application.focusChanged += (hasFocus) => { if(!hasFocus) Commit(); };
+            Application.quitting += () => { Commit(); };
+
             _persistenceServiceImplementation.Initialize();
         }
 
