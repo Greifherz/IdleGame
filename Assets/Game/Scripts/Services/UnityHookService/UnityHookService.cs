@@ -16,17 +16,17 @@ namespace Game.Scripts.Services.UnityHookService
         
         private void OnApplicationFocus(bool hasFocus)
         {
-            _eventService.Raise(new ApplicationFocusUnityEvent(hasFocus),EventPipelineType.UnityPipeline);
+            _eventService?.Raise(new ApplicationFocusUnityEvent(hasFocus),EventPipelineType.UnityPipeline);
         }
 
         private void OnApplicationQuit()
         {
-            _eventService.Raise(new ApplicationQuitUnityEvent(),EventPipelineType.UnityPipeline);
+            _eventService?.Raise(new ApplicationQuitUnityEvent(),EventPipelineType.UnityPipeline);
         }
 
         private void OnApplicationPause(bool pauseStatus)
         {
-            _eventService.Raise(new ApplicationPauseUnityEvent(pauseStatus),EventPipelineType.UnityPipeline);
+            _eventService?.Raise(new ApplicationPauseUnityEvent(pauseStatus),EventPipelineType.UnityPipeline);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Data.GameplayData;
 using Services.ViewProvider;
 using Services.ViewProvider.View;
 using ServiceLocator;
@@ -11,7 +12,7 @@ namespace Game.Scripts.Game
 {
     public class MiningPresenter : IDisposable
     {
-        public static float TICK_TIME = 5.0f;
+        public static float TICK_TIME = 1.0f;
 
         private readonly ISchedulerService _schedulerService;
         private readonly IEventService _eventService;
@@ -23,11 +24,10 @@ namespace Game.Scripts.Game
         
 
         // The Presenter gets its dependencies passed to it (Dependency Injection)
-        public MiningPresenter()
+        public MiningPresenter(GameplayData gameplayData)
         {
-            //TODO - instead of creating new one, load from persistence
             _model = new MiningModel();
-            _model.LoadFrom(new MiningData());
+            _model.LoadFrom(gameplayData.MiningData);
 
             _schedulerService = Locator.Current.Get<ISchedulerService>();
             _eventService = Locator.Current.Get<IEventService>();
@@ -45,7 +45,7 @@ namespace Game.Scripts.Game
         private void OnTick()
         {
             _model.AddAccumulatedGold();
-            _eventService.Raise(new MinerGoldAccumulatedEvent(_model.AccumulatedGold)); // Fire event with new total
+            _eventService.Raise(new MinerGoldAccumulatedEvent(_model.AccumulatedGold),EventPipelineType.GameplayPipeline); // Fire event with new total
             UpdateView();
         
             ScheduleForNextTick(); // Re-schedule for the next tick
@@ -65,7 +65,7 @@ namespace Game.Scripts.Game
             int collectedGold = _model.CollectAllGold();
             if (collectedGold > 0)
             {
-                _eventService.Raise(new MinerGoldCollectEvent(collectedGold));
+                _eventService.Raise(new MinerGoldCollectEvent(collectedGold),EventPipelineType.GameplayPipeline);
                 UpdateView();
             }
         }

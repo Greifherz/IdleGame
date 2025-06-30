@@ -15,7 +15,7 @@ namespace Game.Data.GameplayData
         private IGamePersistenceDataService _gamePersistenceDataService;
         private IEventService _eventService;
 
-        private IEventHandler _playerDataUpdatedEventHandler;
+        private IEventHandler _minerGoldCollectedEventHandler;
 
         private MiningPresenter _miningPresenter;
 
@@ -23,10 +23,19 @@ namespace Game.Data.GameplayData
         {
             _eventService = Locator.Current.Get<IEventService>();
             _gamePersistenceDataService = Locator.Current.Get<IGamePersistenceDataService>();
+            GameplayData = _gamePersistenceDataService.LoadGameplayData();
+
+            _miningPresenter = new MiningPresenter(GameplayData);
             
-            _miningPresenter = new MiningPresenter();
+            _minerGoldCollectedEventHandler = new MinerGoldCollectEventHandler(MinerGoldCollected);
+            _eventService.RegisterListener(_minerGoldCollectedEventHandler,EventPipelineType.GameplayPipeline);
 
             IsInit = true;
+        }
+
+        public void MinerGoldCollected(IMinerGoldCollectEvent minerEvent)
+        {
+            
         }
     }
 }

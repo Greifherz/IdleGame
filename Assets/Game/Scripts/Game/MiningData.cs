@@ -5,7 +5,7 @@ namespace Game.Scripts.Game
     [Serializable]
     public class MiningData
     {
-        public DateTime LastCollectedTime;//TODO
+        public DateTime LastCollectedTime = DateTime.UtcNow;
         
         public int AcumulatedGold;
         public int ActiveMiners = 1;

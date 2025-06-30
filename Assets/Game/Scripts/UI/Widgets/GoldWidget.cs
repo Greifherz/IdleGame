@@ -20,7 +20,7 @@ namespace Game.Widgets
         
             _goldCollectedHandler = new MinerGoldCollectEventHandler(UpdateValues);
             var EventService = Locator.Current.Get<IEventService>();
-            EventService.RegisterListener(_goldCollectedHandler);
+            EventService.RegisterListener(_goldCollectedHandler,EventPipelineType.GameplayPipeline);
         }
 
         //TODO - Change the gold change event to be unique, not 1 per source

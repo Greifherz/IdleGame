@@ -2,7 +2,7 @@
 using ServiceLocator;
 using Services.EventService;
 using Services.PersistenceService;
-//using System.Text.Json;
+using UnityEngine;
 
 namespace Services.GameDataService
 {
@@ -34,13 +34,15 @@ namespace Services.GameDataService
             if (!_persistenceService.RetrieveBool(GameplayPersistenceKeys.PERSISTENCE_KEY))
                 return GameplayData.CreateDefaultGameplayData();
             var RawData = _persistenceService.RetrieveString(GameplayPersistenceKeys.PERSISTENCE_KEY);
-            // var GameData = ;
-            return GameplayData.CreateDefaultGameplayData();
+            var GameData = JsonUtility.FromJson<GameplayData>(RawData);
+            return GameData;
         }
 
         private void PersistGameplayData()
         {
             var GameplayData = _gameplayDataService.GameplayData;
+            var SerializedGameplayData = JsonUtility.ToJson(GameplayData);
+            _persistenceService.Persist(SerializedGameplayData,GameplayPersistenceKeys.PERSISTENCE_KEY);
         }
     }
 }
