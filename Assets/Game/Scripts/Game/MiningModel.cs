@@ -10,63 +10,54 @@ namespace Game.Scripts.Game
     /// </summary>
     public class MiningModel
     {
-        public int ActiveMiners { get; private set; } = 1;
-        public int AccumulatedGold { get; private set; } = 0;
-        public int GoldPerMiner { get; private set; } = 1;
-        public int CurrentHireCost => 45 + ActiveMiners * 5;
+        public MiningData MiningData;
+        public int ActiveMiners => MiningData.ActiveMiners;
+        public int AcumulatedGold => MiningData.AcumulatedGold;
+        public int GoldPerMiner => MiningData.GoldPerMiner;
+        
+        public int CurrentHireCost => 45 + MiningData.ActiveMiners * 5;
 
-        public DateTime LastCollectedTime = DateTime.UtcNow;
+        public DateTime LastCollectedTime => MiningData.LastCollectedTime;
 
         public void AddAccumulatedGold()
         {
-            AccumulatedGold += ActiveMiners * GoldPerMiner;
+            MiningData.AcumulatedGold += MiningData.ActiveMiners * MiningData.GoldPerMiner;
         }
 
         public bool CanAffordToHire()
         {
             // For now, we'll assume we are spending from the accumulated pool.
-            return AccumulatedGold >= CurrentHireCost;
+            return MiningData.AcumulatedGold >= CurrentHireCost;
         }
 
         public void HireMiner()
         {
             if (!CanAffordToHire()) return;
 
-            AccumulatedGold -= CurrentHireCost;
-            ActiveMiners++;
+            MiningData.AcumulatedGold -= CurrentHireCost;
+            MiningData.ActiveMiners++;
         }
 
         public int CollectAllGold()
         {
-            int collectedAmount = AccumulatedGold;
-            AccumulatedGold = 0;
-            LastCollectedTime = DateTime.UtcNow;
+            int collectedAmount = MiningData.AcumulatedGold;
+            MiningData.AcumulatedGold = 0;
+            MiningData.LastCollectedTime = DateTime.UtcNow;
             return collectedAmount;
         }
 
         public void LoadFrom(MiningData persistentData)
         {
-            this.ActiveMiners = persistentData.ActiveMiners;
-            this.AccumulatedGold = persistentData.AcumulatedGold;
-            this.GoldPerMiner = persistentData.GoldPerMiner;
-            this.LastCollectedTime = persistentData.LastCollectedTime;
+            MiningData = persistentData;
             
             // You would also calculate offline progress here and add it to AccumulatedGold
-            var OfflineAccumulation = (DateTime.UtcNow - LastCollectedTime).TotalSeconds / MiningPresenter.TICK_TIME * ActiveMiners * GoldPerMiner;
-            AccumulatedGold += (int)Math.Floor(OfflineAccumulation);
+            var OfflineAccumulation = (DateTime.UtcNow - LastCollectedTime).TotalSeconds / MiningPresenter.TICK_TIME * MiningData.ActiveMiners * MiningData.GoldPerMiner;
+            MiningData.AcumulatedGold += (int)Math.Floor(OfflineAccumulation);
         }
 
         public MiningData ToData()
         {
-            var Data = new MiningData
-            {
-                ActiveMiners = ActiveMiners,
-                AcumulatedGold = AccumulatedGold,
-                GoldPerMiner = GoldPerMiner,
-                LastCollectedTime = LastCollectedTime
-            };
-
-            return Data;
+            return MiningData;
         }
     }
     

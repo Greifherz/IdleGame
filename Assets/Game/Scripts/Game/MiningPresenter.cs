@@ -43,7 +43,7 @@ namespace Game.Scripts.Game
         private void OnTick()
         {
             _model.AddAccumulatedGold();
-            _eventService.Raise(new MinerGoldAccumulatedEvent(_model.AccumulatedGold),EventPipelineType.GameplayPipeline); // Fire event with new total
+            _eventService.Raise(new MinerGoldAccumulatedEvent(_model.AcumulatedGold),EventPipelineType.GameplayPipeline); // Fire event with new total
             UpdateView();
         
             ScheduleForNextTick(); // Re-schedule for the next tick
@@ -73,7 +73,7 @@ namespace Game.Scripts.Game
         /// </summary>
         private void UpdateView()
         {
-            _view.SetAccumulatedGold(_model.AccumulatedGold.ToString());
+            _view.SetAccumulatedGold(_model.AcumulatedGold.ToString());
             _view.SetMinerCount(_model.ActiveMiners.ToString());
             _view.SetHireButtonInteractable(_model.CanAffordToHire());
         }
