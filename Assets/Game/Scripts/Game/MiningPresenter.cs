@@ -19,13 +19,16 @@ namespace Game.Scripts.Game
         private readonly IMiningView _view;
         private readonly MiningModel _model;
         
+        private GameplayData _gameplayData;
+        
         private ISchedulerHandle _currentHandle;
 
         // The Presenter gets its dependencies passed to it (Dependency Injection)
         public MiningPresenter(GameplayData gameplayData)
         {
+            _gameplayData = gameplayData;
             _model = new MiningModel();
-            _model.LoadFrom(gameplayData.MiningData);
+            _model.LoadFrom(gameplayData);
 
             _schedulerService = Locator.Current.Get<ISchedulerService>();
             _eventService = Locator.Current.Get<IEventService>();
@@ -53,7 +56,9 @@ namespace Game.Scripts.Game
         {
             if (_model.CanAffordToHire())
             {
+                var HireCost = _model.CurrentHireCost;
                 _model.HireMiner();
+                _eventService.Raise(new GoldChangeEvent(-HireCost),EventPipelineType.GameplayPipeline);
                 UpdateView();
             }
         }

@@ -25,6 +25,7 @@ namespace Services.EventService
         ApplicationFocusUnity = 65536,
         ApplicationPauseUnity = 131072,
         ApplicationQuitUnity = 262144,
-        //##262144##//
+        GoldChange = 524288,
+        //##524288##//
     }
 }

@@ -1,7 +1,7 @@
 namespace Services.EventService
 {
-    public interface IMinerGoldCollectEvent : IEvent
+    public interface IMinerGoldCollectEvent : IGoldChangeEvent
     {
-        int GoldQuantity { get; }
+        
     }
 }
