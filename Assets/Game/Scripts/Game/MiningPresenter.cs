@@ -12,7 +12,7 @@ namespace Game.Scripts.Game
 {
     public class MiningPresenter : IDisposable
     {
-        public static float TICK_TIME = 1.0f;
+        public static float TICK_TIME = 10.0f;
 
         private readonly ISchedulerService _schedulerService;
         private readonly IEventService _eventService;
