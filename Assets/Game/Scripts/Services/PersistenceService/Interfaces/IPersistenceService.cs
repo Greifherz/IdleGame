@@ -10,6 +10,7 @@ namespace Services.PersistenceService
         void Persist(string stringData,string id);
         void Persist(bool boolData, string id);
         void Persist(float floatData, string id);
+        void Commit();
 
         int RetrieveInt(string id);
         string RetrieveString(string id);

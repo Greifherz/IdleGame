@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      IdleGameArchitecture.drawio_0: -3355816245064834524
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

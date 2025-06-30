@@ -1,11 +1,12 @@
 using Game.GameFlow;
-using Game.UI.Aggregators;
 using ServiceLocator;
 using Services.EventService;
+using Services.ViewProvider.Aggregators;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.UI
+namespace Services.ViewProvider
 {
     //Mono context classes are classes that don't do much. They hold references to the scene gameObjects and other view-related scripts and helpers.
     //They are the touching point between logic and view
@@ -17,11 +18,18 @@ namespace Game.UI
 
         [SerializeField] private Button BackButton;
         [SerializeField] private GameObject GameplayPanel;
-        
-        
+
+        [SerializeField] private Button CollectButton;
+        [SerializeField] private Button HireButton;
+        [SerializeField] private TextMeshProUGUI AccumulatedGoldText;
+        [SerializeField] private TextMeshProUGUI MinersText;
+
         void Start()
         {
             _eventService = Locator.Current.Get<IEventService>();
+            var UiRefService = Locator.Current.Get<IViewProviderService>();
+            UiRefService.SetMiningView(this,new GameplayAggregatorContext(CollectButton,HireButton,AccumulatedGoldText,MinersText));
+            
             _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
             _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
             _eventService.RegisterListener(_gameFlowEventHandler);
