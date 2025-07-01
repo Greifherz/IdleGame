@@ -634,7 +634,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8510414114548271923, guid: 3fa1f5abaffbc8b4aba703ca41e55d15, type: 3}
       propertyPath: m_Name
-      value: GameplayPanel
+      value: MinerPanel
       objectReference: {fileID: 0}
     - target: {fileID: 8629162947858975064, guid: 3fa1f5abaffbc8b4aba703ca41e55d15, type: 3}
       propertyPath: m_AnchorMax.y

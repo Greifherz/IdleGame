@@ -10,7 +10,7 @@ namespace Services.ViewProvider
 {
     //Mono context classes are classes that don't do much. They hold references to the scene gameObjects and other view-related scripts and helpers.
     //They are the touching point between logic and view
-    public class GameplayStateMonoContext : MonoBehaviour
+    public class MinerStateMonoContext : MonoBehaviour
     {
         private IEventService _eventService;
         private IEventHandler _gameFlowEventHandler;

@@ -14,7 +14,7 @@ namespace Services.ViewProvider
         }
 
         //Signature asks for the mono context only for "bureaucracy", meaning this is a method only the GameplayStateMonoContext should be cleared to call
-        public void SetMiningView(GameplayStateMonoContext holder, IMiningView miningView)
+        public void SetMiningView(MinerStateMonoContext holder, IMiningView miningView)
         {
             MiningView = miningView;
         }
