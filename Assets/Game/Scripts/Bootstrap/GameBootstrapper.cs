@@ -1,7 +1,6 @@
 ﻿using Game.Data.GameplayData;
 using Game.GameFlow;
 using Game.Scripts.Services.GameDataService;
-using Services.ViewProvider;
 using ServiceLocator;
 using Services.GameDataService;
 using UnityEngine;
@@ -19,7 +18,7 @@ namespace Bootstrap
             var DatabaseProvider = new DatabaseProviderService();
             DatabaseProvider.Initialize();
             
-            Locator.Current.Register<IDatabaseProviderService>(new DatabaseProviderService());
+            Locator.Current.Register<IDatabaseProviderService>(DatabaseProvider);
 
             _GameFlowObject = new GameFlow(); //I don't want to hold references to it but rather communicate with it only through events.
             

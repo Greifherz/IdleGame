@@ -1,5 +1,4 @@
 ﻿using Game.Scripts.Army;
-using ServiceLocator;
 using UnityEngine;
 
 namespace Game.Scripts.Services.GameDataService
@@ -11,10 +10,11 @@ namespace Game.Scripts.Services.GameDataService
     public class DatabaseProviderService : IDatabaseProviderService
     {
         private const string DATABASE_ROOT = "Databases/";
+        private const string ARMY_UNIT_DATABASE = "ArmyUnitDatabase";
         public ArmyUnitDatabase ArmyUnitDatabase { get; private set; }
         public void Initialize()
         {
-            ArmyUnitDatabase = Resources.Load<ArmyUnitDatabase>(DATABASE_ROOT);
+            ArmyUnitDatabase = Resources.Load<ArmyUnitDatabase>(DATABASE_ROOT + ARMY_UNIT_DATABASE);
         }
     }
 }
