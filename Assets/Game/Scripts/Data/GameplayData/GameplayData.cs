@@ -1,5 +1,5 @@
 ﻿using System;
-using Game.Scripts.Game;
+using Game.Scripts.Mining;
 
 namespace Game.Data.GameplayData
 {

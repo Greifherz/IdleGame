@@ -1,4 +1,4 @@
-﻿using Game.Scripts.Game;
+﻿using Game.Scripts.Mining;
 using ServiceLocator;
 using Services.EventService;
 using Services.GameDataService;

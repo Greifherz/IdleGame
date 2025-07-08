@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Game.Scripts.Game
+namespace Game.Scripts.Mining
 {
     [Serializable]
     public class MiningData : ISerializationCallbackReceiver

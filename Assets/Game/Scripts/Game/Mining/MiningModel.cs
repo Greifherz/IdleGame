@@ -1,7 +1,7 @@
 ﻿using System;
 using Game.Data.GameplayData;
 
-namespace Game.Scripts.Game
+namespace Game.Scripts.Mining
 {
     /// <summary>
     /// The "Model" in MVP.

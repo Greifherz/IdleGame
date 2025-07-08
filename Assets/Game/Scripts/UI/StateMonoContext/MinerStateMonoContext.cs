@@ -28,7 +28,7 @@ namespace Services.ViewProvider
         {
             _eventService = Locator.Current.Get<IEventService>();
             var UiRefService = Locator.Current.Get<IViewProviderService>();
-            UiRefService.SetMiningView(this,new GameplayAggregatorContext(CollectButton,HireButton,AccumulatedGoldText,MinersText));
+            UiRefService.SetMiningView(this,new MiningAggregatorContext(CollectButton,HireButton,AccumulatedGoldText,MinersText));
             
             _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
             _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);

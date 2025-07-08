@@ -8,7 +8,7 @@ using Services.PersistenceService;
 using Services.Scheduler;
 
 // Renamed from MinerLogic
-namespace Game.Scripts.Game
+namespace Game.Scripts.Mining
 {
     public class MiningPresenter : IDisposable
     {
@@ -19,14 +19,10 @@ namespace Game.Scripts.Game
         private readonly IMiningView _view;
         private readonly MiningModel _model;
         
-        private GameplayData _gameplayData;
-        
         private ISchedulerHandle _currentHandle;
 
-        // The Presenter gets its dependencies passed to it (Dependency Injection)
         public MiningPresenter(GameplayData gameplayData)
         {
-            _gameplayData = gameplayData;
             _model = new MiningModel();
             _model.LoadFrom(gameplayData);
 

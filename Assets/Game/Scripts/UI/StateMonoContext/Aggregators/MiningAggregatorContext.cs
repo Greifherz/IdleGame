@@ -7,14 +7,14 @@ using UnityEngine.UI;
 namespace Services.ViewProvider.Aggregators
 {
     [Serializable]
-    public class GameplayAggregatorContext : IMiningView
+    public class MiningAggregatorContext : IMiningView
     {
         public Button CollectButton { get; private set; }
         public Button HireButton { get; private set; }
         public TextMeshProUGUI AccumulatedGoldText { get; private set; }
         public TextMeshProUGUI MinersText { get; private set; }
         
-        public GameplayAggregatorContext(Button collectButton, Button hireButton,TextMeshProUGUI accumulatedGoldText, TextMeshProUGUI minersText)
+        public MiningAggregatorContext(Button collectButton, Button hireButton,TextMeshProUGUI accumulatedGoldText, TextMeshProUGUI minersText)
         {
             CollectButton = collectButton;
             HireButton = hireButton;
