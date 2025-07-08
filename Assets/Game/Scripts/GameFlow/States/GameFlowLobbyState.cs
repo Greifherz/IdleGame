@@ -16,7 +16,7 @@ namespace Game.GameFlow
 
         public bool CanTransitionTo(GameFlowStateType type)
         {
-            return type == GameFlowStateType.Gameplay;
+            return type == GameFlowStateType.Miner;
         }
 
         public IGameFlowState TransitionTo(GameFlowStateType type)

@@ -11,45 +11,26 @@ using UnityEngine.UI;
 
 public class ArmyStateMonoContext : MonoBehaviour
 {
-    private IEventService _eventService;
-    private IEventHandler _gameFlowEventHandler;
-    private IEventHandler _gameplayViewEventHandler;
-    
-    [SerializeField] private Button BackButton;
     [SerializeField] private Button HireButton;
 
     [SerializeField] private TextMeshProUGUI SoldierQuantityText;
     [SerializeField] private TextMeshProUGUI SoldierHealthText;
     [SerializeField] private TextMeshProUGUI SoldierAttackText;
+    [SerializeField] private TextMeshProUGUI SoldierCostText;
 
     void Start()
     {
-        _eventService = Locator.Current.Get<IEventService>();
-        var UiRefService = Locator.Current.Get<IViewProviderService>();
-        UiRefService.SetArmyView(this,new ArmyAggregatorContext(HireButton,SoldierQuantityText,SoldierHealthText,SoldierAttackText));
-            
-        _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
-        _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
-        _eventService.RegisterListener(_gameFlowEventHandler);
-        _eventService.RegisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
         gameObject.SetActive(false);
-            
-        SetupButtons();
     }
 
-    private void SetupButtons()
+    public ArmyAggregatorContext CreateArmyView()
     {
-        BackButton.onClick.AddListener(TransitionBack);
+        return new ArmyAggregatorContext(gameObject,HireButton, SoldierQuantityText, SoldierHealthText, SoldierAttackText, SoldierCostText);
     }
 
     private void OnGameplayViewUpdated(IViewEvent viewEvent)
     {
             
-    }
-
-    private void TransitionBack()
-    {
-        _eventService.Raise(new TransitionEvent(TransitionTarget.Back));
     }
 
     private void OnGameFlowStateEvent(IGameFlowStateEvent gameFlowStateEvent)

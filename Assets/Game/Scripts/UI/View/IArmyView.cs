@@ -10,7 +10,8 @@ namespace Services.ViewProvider.View
     public interface IArmyView //This is dummy, only for 1 army unit. TODO - make it for n army units
     {
         event Action OnHireClicked;
-        
+
+        void SetVisibility(bool visible);
         // Properties the Presenter can set
         void SetUnitAttack(string amount);
         void SetUnitHealth(string amount);

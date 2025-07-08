@@ -14,6 +14,7 @@ namespace Services.ViewProvider.View
         event Action OnHireClicked;
 
         // Properties the Presenter can set
+        void SetVisibility(bool visible);
         void SetAccumulatedGold(string amount);
         void SetMinerCount(string count);
         void SetHireButtonInteractable(bool isInteractable);

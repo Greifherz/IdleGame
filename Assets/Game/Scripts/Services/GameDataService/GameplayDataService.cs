@@ -1,4 +1,5 @@
-﻿using Game.Scripts.Mining;
+﻿using Game.Scripts.Army;
+using Game.Scripts.Mining;
 using ServiceLocator;
 using Services.EventService;
 using Services.GameDataService;
@@ -18,6 +19,7 @@ namespace Game.Data.GameplayData
         private IEventHandler _minerGoldCollectedEventHandler;
 
         private MiningPresenter _miningPresenter;
+        private ArmyPresenter _armyPresenter;
 
         public void Initialize()
         {
@@ -26,6 +28,7 @@ namespace Game.Data.GameplayData
             GameplayData = _gamePersistenceDataService.LoadGameplayData();
 
             _miningPresenter = new MiningPresenter(GameplayData);
+            _armyPresenter = new ArmyPresenter(GameplayData);
             
             _minerGoldCollectedEventHandler = new MinerGoldCollectEventHandler(MinerGoldCollected);
             _eventService.RegisterListener(_minerGoldCollectedEventHandler,EventPipelineType.GameplayPipeline);

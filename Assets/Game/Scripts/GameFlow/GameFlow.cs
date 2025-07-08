@@ -50,7 +50,7 @@ namespace Game.GameFlow
                 case TransitionTarget.Lobby:
                     return GameFlowStateType.Lobby;
                 case TransitionTarget.Gameplay:
-                    return GameFlowStateType.Gameplay;
+                    return GameFlowStateType.Miner;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(transitionEventTarget), transitionEventTarget, null);
             }

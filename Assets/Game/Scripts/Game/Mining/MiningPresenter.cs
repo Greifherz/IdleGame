@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Data.GameplayData;
+using Game.GameFlow;
 using Services.ViewProvider;
 using Services.ViewProvider.View;
 using ServiceLocator;
@@ -16,6 +17,10 @@ namespace Game.Scripts.Mining
 
         private readonly ISchedulerService _schedulerService;
         private readonly IEventService _eventService;
+        
+        private IEventHandler _gameFlowEventHandler;
+        private IEventHandler _gameplayViewEventHandler;
+        
         private readonly IMiningView _view;
         private readonly MiningModel _model;
         
@@ -33,9 +38,20 @@ namespace Game.Scripts.Mining
         
             _view.OnCollectClicked += Collect;
             _view.OnHireClicked += Hire;
+            
+            
+            _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
+            _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
+            _eventService.RegisterListener(_gameFlowEventHandler);
+            _eventService.RegisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
 
             // Start the logic loop
             ScheduleForNextTick();
+            UpdateView();
+        }
+
+        private void OnGameplayViewUpdated(IViewEvent ev)
+        {
             UpdateView();
         }
 
@@ -92,12 +108,19 @@ namespace Game.Scripts.Mining
             }
             _view.OnCollectClicked -= Collect;
             _view.OnHireClicked -= Hire;
+            _eventService.UnregisterListener(_gameFlowEventHandler);
+            _eventService.UnregisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
         }
 
         private void ScheduleForNextTick()
         {
             _currentHandle = _schedulerService.Schedule(TICK_TIME);
             _currentHandle.OnScheduleTick += OnTick;
+        }
+        
+        private void OnGameFlowStateEvent(IGameFlowStateEvent gameFlowStateEvent)
+        {
+            _view.SetVisibility(gameFlowStateEvent.GameFlowStateType == GameFlowStateType.Miner);
         }
     }
 }

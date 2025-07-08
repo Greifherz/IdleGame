@@ -9,7 +9,7 @@ namespace Game.GameFlow
 {
     public class GameFlowGameplayState : IGameFlowState
     {
-        public GameFlowStateType Type => GameFlowStateType.Gameplay;
+        public GameFlowStateType Type => GameFlowStateType.Miner;
         private IEventService _eventService;
         private ISchedulerService _schedulerService;
         private IGameplayDataService _gameplayDataService;
@@ -50,7 +50,7 @@ namespace Game.GameFlow
         {
             if (_statsShown)
             {
-                return GameFlowStateType.Gameplay;
+                return GameFlowStateType.Miner;
             }
             return GameFlowStateType.Lobby;
         } 
@@ -60,7 +60,7 @@ namespace Game.GameFlow
             var Handle = _schedulerService.Schedule(() => _gameplayDataService.IsReady);
             Handle.OnScheduleTick += () =>
             {
-                _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Gameplay));
+                _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Miner));
             };
         }
     }

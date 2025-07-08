@@ -1,10 +1,9 @@
-﻿using Services.ViewProvider.Aggregators;
-using ServiceLocator;
+﻿
 using Services.ViewProvider.View;
 
 namespace Services.ViewProvider
 {
-    public class ViewProviderService : IViewProviderService
+    public class ViewProviderService : IViewProviderService //Deprecated but here in case I want another layer of distance from Unity
     {
         public IMiningView MiningView { get; private set; }
         public IArmyView ArmyView { get; private set; }

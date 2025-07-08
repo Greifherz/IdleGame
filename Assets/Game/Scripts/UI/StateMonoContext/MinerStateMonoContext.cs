@@ -12,13 +12,6 @@ namespace Services.ViewProvider
     //They are the touching point between logic and view
     public class MinerStateMonoContext : MonoBehaviour
     {
-        private IEventService _eventService;
-        private IEventHandler _gameFlowEventHandler;
-        private IEventHandler _gameplayViewEventHandler;
-
-        [SerializeField] private Button BackButton;
-        [SerializeField] private GameObject GameplayPanel;
-
         [SerializeField] private Button CollectButton;
         [SerializeField] private Button HireButton;
         [SerializeField] private TextMeshProUGUI AccumulatedGoldText;
@@ -26,38 +19,12 @@ namespace Services.ViewProvider
 
         void Start()
         {
-            _eventService = Locator.Current.Get<IEventService>();
-            var UiRefService = Locator.Current.Get<IViewProviderService>();
-            UiRefService.SetMiningView(this,new MiningAggregatorContext(CollectButton,HireButton,AccumulatedGoldText,MinersText));
-            
-            _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
-            _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
-            _eventService.RegisterListener(_gameFlowEventHandler);
-            _eventService.RegisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
             gameObject.SetActive(false);
-            
-            SetupButtons();
         }
 
-        private void SetupButtons()
+        public MiningAggregatorContext CreateMiningView()
         {
-            BackButton.onClick.AddListener(TransitionBack);
-        }
-
-        private void OnGameplayViewUpdated(IViewEvent viewEvent)
-        {
-            
-        }
-
-        private void TransitionBack()
-        {
-            _eventService.Raise(new TransitionEvent(TransitionTarget.Back));
-        }
-
-        private void OnGameFlowStateEvent(IGameFlowStateEvent gameFlowStateEvent)
-        {
-            gameObject.SetActive(gameFlowStateEvent.GameFlowStateType == GameFlowStateType.Gameplay);
+            return new MiningAggregatorContext(gameObject,CollectButton, HireButton, AccumulatedGoldText, MinersText);
         }
     }
-    
 }

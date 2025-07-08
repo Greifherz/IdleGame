@@ -1,29 +1,39 @@
 ﻿using System;
 using Services.ViewProvider.View;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Services.ViewProvider.Aggregators
 {
     public class ArmyAggregatorContext : IArmyView
     {
-        public Button HireButton { get; private set; }
-        public TextMeshProUGUI SoldierQuantityText{ get; private set; }
-        public TextMeshProUGUI SoldierAttackText { get; private set; }
-        public TextMeshProUGUI SoldierHealthText { get; private set; }
+        public GameObject Holder { get; }
+        public Button HireButton { get; }
+        public TextMeshProUGUI SoldierQuantityText{ get; }
+        public TextMeshProUGUI SoldierAttackText { get; }
+        public TextMeshProUGUI SoldierHealthText { get; }
+        public TextMeshProUGUI SoldierCostText { get; }
         
         public event Action OnHireClicked;
 
-        public ArmyAggregatorContext(Button hireButton,TextMeshProUGUI soldierQuantityText, TextMeshProUGUI soldierHealthText, TextMeshProUGUI soldierAttackText)
+        public ArmyAggregatorContext(GameObject holder,Button hireButton,TextMeshProUGUI soldierQuantityText, TextMeshProUGUI soldierHealthText, TextMeshProUGUI soldierAttackText, TextMeshProUGUI soldierCostText)
         {
+            Holder = holder;
             HireButton = hireButton;
             SoldierQuantityText = soldierQuantityText;
             SoldierHealthText = soldierHealthText;
             SoldierAttackText = soldierAttackText;
+            SoldierCostText = soldierCostText;
             
             HireButton.onClick.AddListener(() => OnHireClicked?.Invoke());
         }
-        
+
+        public void SetVisibility(bool visible)
+        {
+            Holder.SetActive(visible);
+        }
+
         public void SetUnitAttack(string amount)
         {
             SoldierAttackText.text = amount;
@@ -36,7 +46,7 @@ namespace Services.ViewProvider.Aggregators
 
         public void SetUnitCost(string amount)
         {
-            SoldierAttackText.text = amount;
+            SoldierCostText.text = amount;
         }
 
         public void SetUnitCount(string count)

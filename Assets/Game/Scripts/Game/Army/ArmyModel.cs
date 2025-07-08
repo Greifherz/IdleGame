@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Data.GameplayData;
+using Game.Scripts.Services.GameDataService;
+using ServiceLocator;
 
 namespace Game.Scripts.Army
 {
@@ -9,23 +11,36 @@ namespace Game.Scripts.Army
         private List<ArmyData> _armiesData; //The armies the player actually have
         private ArmyUnitDatabase _armyUnitDatabase;
 
-        public ArmyModel(GameplayData gameplayData, ArmyUnitDatabase database)
+        public ArmyModel(GameplayData gameplayData)
         {
+            var DatabaseProviderService = Locator.Current.Get<IDatabaseProviderService>();
+            _armyUnitDatabase = DatabaseProviderService.ArmyUnitDatabase;
+            
             _gameplayData = gameplayData;
-            _armyUnitDatabase = database;
+            _armiesData= new List<ArmyData>(4); //The idea is to only have 4 different armies at a time, review in the future
         }
         
-        public int Hire(ArmyUnitType type)
+        public int Hire(ArmyUnitType armyUnitType)
         {
-            var UnitData = _armyUnitDatabase.Get(type);
+            var UnitData = _armyUnitDatabase.Get(armyUnitType);
             _gameplayData.OverallGold -= UnitData.CostPerUnit;
+            bool found = false;
             foreach (var ArmyData in _armiesData)
             {
-                if (ArmyData.UnitType != type) continue;
+                if (ArmyData.UnitType != armyUnitType) continue;
                 ArmyData.Amount++;
+                found = true;
                 break;
             }
 
+            if (!found)
+            {
+                var NewArmy = new ArmyData();
+                NewArmy.UnitType = armyUnitType;
+                NewArmy.Amount = 1;
+                _armiesData.Add(NewArmy);
+            }
+            
             return UnitData.CostPerUnit;
         }
 
@@ -39,6 +54,11 @@ namespace Game.Scripts.Army
         {
             if (index < 0 || index >= _armiesData.Count) return null;
             return _armiesData[index];
+        }
+
+        public ArmyUnitData GetArmyUnitData(ArmyUnitType armyUnitType)
+        {
+            return _armyUnitDatabase.Get(armyUnitType);
         }
     }
 }
