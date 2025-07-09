@@ -4,7 +4,7 @@
     {
         Start,
         Lobby,
-        Miner,
+        Mining,
         ArmyView,
     }
 }

@@ -9,6 +9,7 @@
     {
         Back,
         Lobby,
-        Gameplay,
+        Mining,
+        ArmyView,
     }
 }

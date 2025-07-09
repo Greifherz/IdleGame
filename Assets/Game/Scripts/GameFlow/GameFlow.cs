@@ -1,9 +1,6 @@
 ﻿using System;
 using ServiceLocator;
 using Services.EventService;
-using Services.Scheduler;
-using Services.TickService;
-using UnityEngine;
 
 namespace Game.GameFlow
 {
@@ -32,7 +29,6 @@ namespace Game.GameFlow
         {
             _currentState = _currentState.TransitionTo(type);
             _currentState.StateEnter();
-            //System.GC.Collect(); //Not a bad thing to have it here, but it's slowing down things a lot
         }
 
         private void OnTransition(ITransitionEvent transitionEvent)
@@ -49,8 +45,10 @@ namespace Game.GameFlow
                     return _currentState.GetBackState();
                 case TransitionTarget.Lobby:
                     return GameFlowStateType.Lobby;
-                case TransitionTarget.Gameplay:
-                    return GameFlowStateType.Miner;
+                case TransitionTarget.Mining:
+                    return GameFlowStateType.Mining;
+                case TransitionTarget.ArmyView:
+                    return GameFlowStateType.ArmyView;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(transitionEventTarget), transitionEventTarget, null);
             }

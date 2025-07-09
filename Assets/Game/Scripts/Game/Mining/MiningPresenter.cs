@@ -5,7 +5,6 @@ using Services.ViewProvider;
 using Services.ViewProvider.View;
 using ServiceLocator;
 using Services.EventService;
-using Services.PersistenceService;
 using Services.Scheduler;
 
 // Renamed from MinerLogic
@@ -120,7 +119,7 @@ namespace Game.Scripts.Mining
         
         private void OnGameFlowStateEvent(IGameFlowStateEvent gameFlowStateEvent)
         {
-            _view.SetVisibility(gameFlowStateEvent.GameFlowStateType == GameFlowStateType.Miner);
+            _view.SetVisibility(gameFlowStateEvent.GameFlowStateType == GameFlowStateType.Mining);
         }
     }
 }

@@ -1,10 +1,8 @@
 ﻿using System;
 using Game.Data.GameplayData;
 using Game.GameFlow;
-using Game.Scripts.Services.GameDataService;
 using ServiceLocator;
 using Services.EventService;
-using Services.Scheduler;
 using Services.ViewProvider;
 using Services.ViewProvider.View;
 

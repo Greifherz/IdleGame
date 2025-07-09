@@ -7,31 +7,39 @@ using UnityEngine;
 
 namespace Game.GameFlow
 {
-    public class GameFlowGameplayState : IGameFlowState
+    public class GameFlowArmyState : IGameFlowState
     {
-        public GameFlowStateType Type => GameFlowStateType.Miner;
+        public GameFlowStateType Type => GameFlowStateType.ArmyView;
+
         private IEventService _eventService;
         private ISchedulerService _schedulerService;
         private IGameplayDataService _gameplayDataService;
-        private IGamePersistenceDataService _gamePersistenceDataService;
         
-
-
-        private bool _statsShown = false;
-
-        public GameFlowGameplayState(IEventService eventService)
+        public GameFlowArmyState(IEventService eventService)
         {
             _eventService = eventService;
+            
             _schedulerService = Locator.Current.Get<ISchedulerService>();
             _gameplayDataService = Locator.Current.Get<IGameplayDataService>();
-            _gamePersistenceDataService = Locator.Current.Get<IGamePersistenceDataService>();
-            
-            _gameplayDataService.Initialize();
+        }
+
+        public void StateEnter()
+        {
+            var Handle = _schedulerService.Schedule(() => _gameplayDataService.IsReady);
+            Handle.OnScheduleTick += () =>
+            {
+                _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Mining));
+            };
         }
         
+        public GameFlowStateType GetBackState()
+        {
+            return GameFlowStateType.Mining;
+        } 
+
         public bool CanTransitionTo(GameFlowStateType type)
         {
-            return type == GameFlowStateType.Lobby;
+            return type != Type && type != GameFlowStateType.Lobby;
         }
 
         public IGameFlowState TransitionTo(GameFlowStateType type)
@@ -44,24 +52,6 @@ namespace Game.GameFlow
 
             Debug.LogError($"Tried to transition from {Type} to {type} and it's not allowed");
             return this;
-        }
-
-        public GameFlowStateType GetBackState()
-        {
-            if (_statsShown)
-            {
-                return GameFlowStateType.Miner;
-            }
-            return GameFlowStateType.Lobby;
-        } 
-        
-        public void StateEnter()
-        {
-            var Handle = _schedulerService.Schedule(() => _gameplayDataService.IsReady);
-            Handle.OnScheduleTick += () =>
-            {
-                _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Miner));
-            };
         }
     }
 }

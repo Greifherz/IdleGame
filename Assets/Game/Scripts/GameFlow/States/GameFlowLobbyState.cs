@@ -16,14 +16,14 @@ namespace Game.GameFlow
 
         public bool CanTransitionTo(GameFlowStateType type)
         {
-            return type == GameFlowStateType.Miner;
+            return type == GameFlowStateType.Mining;
         }
 
         public IGameFlowState TransitionTo(GameFlowStateType type)
         {
             if (CanTransitionTo(type))
             {
-                return new GameFlowGameplayState(_eventService);
+                return new GameFlowMiningState(_eventService);
             }
             
             Debug.LogError($"Tried to transition from {Type} to {type} and it's not allowed");

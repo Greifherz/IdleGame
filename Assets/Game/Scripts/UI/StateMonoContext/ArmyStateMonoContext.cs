@@ -1,5 +1,3 @@
-using Game.GameFlow;
-using Services.EventService;
 using Services.ViewProvider.Aggregators;
 using TMPro;
 using UnityEngine;
