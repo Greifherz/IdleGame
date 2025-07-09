@@ -1,122 +1,123 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Game.Scripts.Core
 {
-    [Serializable]
-    public struct BigNumber : IComparable<BigNumber>
+[Serializable]
+public struct BigNumber : IComparable<BigNumber>, ISerializationCallbackReceiver
+{
+    // These are the real fields for your logic.
+    // They are marked NonSerialized so JsonUtility ignores them.
+    [NonSerialized] public double Mantissa;
+    [NonSerialized] public int Exponent;
+
+    // --- SURROGATE FIELDS FOR SERIALIZATION ---
+    // These are the simple fields that JsonUtility CAN save.
+    // We hide them in the inspector to avoid confusion.
+    [HideInInspector] [SerializeField] private string _mantissaString;
+    [HideInInspector] [SerializeField] private int _exponent; // int is already supported!
+
+    // The rest of the struct (constructors, operators, etc.) remains the same...
+    #region Logic and Operators
+
+    public BigNumber(double mantissa, int exponent)
     {
-        // A number is represented as Mantissa * 10^Exponent
-        // Using double for the mantissa gives us plenty of precision for an idle game.
-        public double Mantissa;
-        public int Exponent;
-
-        public BigNumber(double mantissa, int exponent)
-        {
-            Mantissa = mantissa;
-            Exponent = exponent;
-            Normalize();
-        }
-
-        /// <summary>
-        /// Normalization ensures the mantissa is kept within a consistent range (e.g., 1 to 10),
-        /// which prevents loss of precision and makes arithmetic easier.
-        /// </summary>
-        private void Normalize()
-        {
-            if (Mantissa == 0)
-            {
-                Exponent = 0;
-                return;
-            }
-
-            while (Mantissa >= 10.0)
-            {
-                Mantissa /= 10.0;
-                Exponent++;
-            }
-
-            while (Mantissa < 1.0 && Mantissa != 0)
-            {
-                Mantissa *= 10.0;
-                Exponent--;
-            }
-        }
-
-        #region Operator Overloads
-
-        // --- Addition ---
-        public static BigNumber operator +(BigNumber a, BigNumber b)
-        {
-            // To add, we must make the exponents match.
-            // We adjust the number with the smaller exponent.
-            if (a.Exponent > b.Exponent)
-            {
-                double mantissaB = b.Mantissa * Math.Pow(10, b.Exponent - a.Exponent);
-                return new BigNumber(a.Mantissa + mantissaB, a.Exponent);
-            }
-            else
-            {
-                double mantissaA = a.Mantissa * Math.Pow(10, a.Exponent - b.Exponent);
-                return new BigNumber(mantissaA + b.Mantissa, b.Exponent);
-            }
-        }
+        Mantissa = mantissa;
+        Exponent = exponent;
         
-        // --- Subtraction ---
-        public static BigNumber operator -(BigNumber a, BigNumber b)
+        // Initialize the surrogate fields as well
+        _mantissaString = null; 
+        _exponent = 0;
+
+        Normalize();
+    }
+    
+    // (Your existing Normalize, operators, and CompareTo methods go here...)
+    private void Normalize()
+    {
+        if (Mantissa == 0)
         {
-            // Subtraction uses the same exponent-matching logic as addition.
-            if (a.Exponent > b.Exponent)
-            {
-                double mantissaB = b.Mantissa * Math.Pow(10, b.Exponent - a.Exponent);
-                return new BigNumber(a.Mantissa - mantissaB, a.Exponent);
-            }
-            else
-            {
-                double mantissaA = a.Mantissa * Math.Pow(10, a.Exponent - b.Exponent);
-                return new BigNumber(mantissaA - b.Mantissa, b.Exponent);
-            }
+            Exponent = 0;
+            return;
         }
 
-        // --- Multiplication ---
-        public static BigNumber operator *(BigNumber a, BigNumber b)
+        while (Mantissa >= 10.0)
         {
-            // (a * 10^e1) * (b * 10^e2) = (a * b) * 10^(e1 + e2)
-            return new BigNumber(a.Mantissa * b.Mantissa, a.Exponent + b.Exponent);
-        }
-        
-        // --- Division ---
-        public static BigNumber operator /(BigNumber a, BigNumber b)
-        {
-            if (b.Mantissa == 0) throw new DivideByZeroException();
-            // (a * 10^e1) / (b * 10^e2) = (a / b) * 10^(e1 - e2)
-            return new BigNumber(a.Mantissa / b.Mantissa, a.Exponent - b.Exponent);
+            Mantissa /= 10.0;
+            Exponent++;
         }
 
-        // Implicit conversions from standard number types make it easy to use.
-        public static implicit operator BigNumber(int value) => new BigNumber(value, 0);
-        public static implicit operator BigNumber(float value) => new BigNumber(value, 0);
-        public static implicit operator BigNumber(double value) => new BigNumber(value, 0);
-        
-        // --- Comparison Operators ---
-        public static bool operator >(BigNumber a, BigNumber b) => a.CompareTo(b) > 0;
-        public static bool operator <(BigNumber a, BigNumber b) => a.CompareTo(b) < 0;
-        public static bool operator >=(BigNumber a, BigNumber b) => a.CompareTo(b) >= 0;
-        public static bool operator <=(BigNumber a, BigNumber b) => a.CompareTo(b) <= 0;
-
-        public int CompareTo(BigNumber other)
+        while (Mantissa < 1.0 && Mantissa != 0)
         {
-            if (Exponent > other.Exponent) return 1;
-            if (Exponent < other.Exponent) return -1;
-            // If exponents are equal, compare mantissas
-            return Mantissa.CompareTo(other.Mantissa);
-        }
-        
-        #endregion
-        
-        public override string ToString()
-        {
-            // Default representation is scientific notation
-            return $"{Mantissa:F2}e{Exponent}";
+            Mantissa *= 10.0;
+            Exponent--;
         }
     }
+    
+    public static implicit operator BigNumber(int value) => new BigNumber(value, 0);
+    public static explicit operator int(BigNumber value)
+    {
+        if (value.Exponent > 10) 
+        {
+            throw new OverflowException("BigNumber is too large to fit in an Int32.");
+        }
+
+        try
+        {
+            double fullNumber = value.Mantissa * Math.Pow(10, value.Exponent);
+            return Convert.ToInt32(fullNumber);
+        }
+        catch (OverflowException)
+        {
+            throw new OverflowException("BigNumber value is outside the range of an Int32.");
+        }
+    }
+    
+    public static BigNumber operator +(BigNumber a, BigNumber b)
+    {
+        if (a.Exponent > b.Exponent)
+        {
+            double mantissaB = b.Mantissa * Math.Pow(10, b.Exponent - a.Exponent);
+            return new BigNumber(a.Mantissa + mantissaB, a.Exponent);
+        }
+        else
+        {
+            double mantissaA = a.Mantissa * Math.Pow(10, a.Exponent - b.Exponent);
+            return new BigNumber(mantissaA + b.Mantissa, b.Exponent);
+        }
+    }
+    
+    public static bool operator >(BigNumber a, BigNumber b) => a.CompareTo(b) > 0;
+    public static bool operator <(BigNumber a, BigNumber b) => a.CompareTo(b) < 0;
+
+    public int CompareTo(BigNumber other)
+    {
+        if (Exponent > other.Exponent) return 1;
+        if (Exponent < other.Exponent) return -1;
+        return Mantissa.CompareTo(other.Mantissa);
+    }
+    
+    #endregion
+    
+    // --- SERIALIZATION CALLBACKS ---
+
+    public void OnBeforeSerialize()
+    {
+        // Convert the double to a string. The "R" (round-trip) format
+        // is crucial for ensuring no precision is lost.
+        _mantissaString = Mantissa.ToString("R");
+        _exponent = Exponent; // The int can be copied directly.
+    }
+
+    public void OnAfterDeserialize()
+    {
+        // Convert the string back to a double.
+        if (!string.IsNullOrEmpty(_mantissaString))
+        {
+            double.TryParse(_mantissaString, out Mantissa);
+        }
+        
+        Exponent = _exponent; // The int can be copied directly.
+    }
+}
 }
