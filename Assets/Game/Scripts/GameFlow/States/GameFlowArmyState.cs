@@ -7,51 +7,36 @@ using UnityEngine;
 
 namespace Game.GameFlow
 {
-    public class GameFlowArmyState : IGameFlowState
+    public class GameFlowArmyState : AbstractGameFlowState
     {
-        public GameFlowStateType Type => GameFlowStateType.ArmyView;
+        public override GameFlowStateType Type => GameFlowStateType.ArmyView;
 
-        private IEventService _eventService;
         private ISchedulerService _schedulerService;
         private IGameplayDataService _gameplayDataService;
         
-        public GameFlowArmyState(IEventService eventService)
+        public GameFlowArmyState(IEventService eventService) : base(eventService)
         {
-            _eventService = eventService;
-            
             _schedulerService = Locator.Current.Get<ISchedulerService>();
             _gameplayDataService = Locator.Current.Get<IGameplayDataService>();
         }
 
-        public void StateEnter()
+        public override void StateEnter()
         {
             var Handle = _schedulerService.Schedule(() => _gameplayDataService.IsReady);
             Handle.OnScheduleTick += () =>
             {
-                _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Mining));
+                _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.ArmyView));
             };
         }
         
-        public GameFlowStateType GetBackState()
+        public override GameFlowStateType GetBackState()
         {
             return GameFlowStateType.Mining;
         } 
 
-        public bool CanTransitionTo(GameFlowStateType type)
+        public override bool CanTransitionTo(GameFlowStateType type)
         {
             return type != Type && type != GameFlowStateType.Lobby;
-        }
-
-        public IGameFlowState TransitionTo(GameFlowStateType type)
-        {
-            if (CanTransitionTo(type))
-            {
-                _eventService.Raise(new GameplayDataPersistenceEvent(),EventPipelineType.ServicesPipeline);
-                return new GameFlowLobbyState(_eventService);
-            }
-
-            Debug.LogError($"Tried to transition from {Type} to {type} and it's not allowed");
-            return this;
         }
     }
 }

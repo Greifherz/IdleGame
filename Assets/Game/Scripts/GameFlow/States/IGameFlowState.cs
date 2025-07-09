@@ -8,9 +8,6 @@
         bool CanTransitionTo(GameFlowStateType type);
         IGameFlowState TransitionTo(GameFlowStateType type);
 
-        GameFlowStateType GetBackState()
-        {
-            return Type;
-        }
+        GameFlowStateType GetBackState();
     }
 }

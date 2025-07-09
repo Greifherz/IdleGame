@@ -3,39 +3,26 @@ using UnityEngine;
 
 namespace Game.GameFlow
 {
-    public class GameFlowLobbyState : IGameFlowState
+    public class GameFlowLobbyState : AbstractGameFlowState
     {
-        public GameFlowStateType Type => GameFlowStateType.Lobby;
-        private IEventService _eventService;
-        
-        public GameFlowLobbyState(IEventService eventService)
+        public override GameFlowStateType Type => GameFlowStateType.Lobby;
+
+        public GameFlowLobbyState(IEventService eventService) : base(eventService)
         {
-            _eventService = eventService;
+            
         }
 
-
-        public bool CanTransitionTo(GameFlowStateType type)
+        public override bool CanTransitionTo(GameFlowStateType type)
         {
             return type == GameFlowStateType.Mining;
         }
 
-        public IGameFlowState TransitionTo(GameFlowStateType type)
-        {
-            if (CanTransitionTo(type))
-            {
-                return new GameFlowMiningState(_eventService);
-            }
-            
-            Debug.LogError($"Tried to transition from {Type} to {type} and it's not allowed");
-            return this;
-        }
-
-        public GameFlowStateType GetBackState()
+        public override GameFlowStateType GetBackState()
         {
             return GameFlowStateType.Lobby;
         }
         
-        public void StateEnter()
+        public override void StateEnter()
         {
             _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Lobby));
         }
