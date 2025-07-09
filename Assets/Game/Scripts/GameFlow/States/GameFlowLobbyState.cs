@@ -17,6 +17,11 @@ namespace Game.GameFlow
             return type == GameFlowStateType.Mining;
         }
 
+        protected override void StateExit()
+        {
+            
+        }
+
         public override GameFlowStateType GetBackState()
         {
             return GameFlowStateType.Lobby;

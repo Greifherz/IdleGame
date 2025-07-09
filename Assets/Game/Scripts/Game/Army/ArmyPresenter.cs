@@ -30,6 +30,15 @@ namespace Game.Scripts.Army
             _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
             _eventService.RegisterListener(_gameFlowEventHandler);
             _eventService.RegisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
+
+            _view.OnHireClicked += OnHireClicked;
+            
+            UpdateView();
+        }
+
+        private void OnHireClicked()
+        {
+            Hire(0);
         }
 
         private void OnGameplayViewUpdated(IViewEvent ev)
@@ -42,7 +51,6 @@ namespace Game.Scripts.Army
             var cost = _armyModel.Hire((ArmyUnitType)armyUnitType);
             _eventService.Raise(new GoldChangeEvent(-cost),EventPipelineType.GameplayPipeline);
             UpdateView();
-            
         }
 
         private void UpdateView()
@@ -63,6 +71,7 @@ namespace Game.Scripts.Army
 
         public void Dispose()
         {
+            _view.OnHireClicked -= OnHireClicked;
             _eventService.UnregisterListener(_gameFlowEventHandler);
             _eventService.UnregisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
         }

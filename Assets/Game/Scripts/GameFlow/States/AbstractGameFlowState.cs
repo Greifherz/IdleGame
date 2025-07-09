@@ -21,10 +21,11 @@ namespace Game.GameFlow
         {
             if (CanTransitionTo(type))
             {
+                StateExit();
                 switch (type)
                 {
                     case GameFlowStateType.Start:
-                        break;
+                        return new GameStartState(_eventService);
                     case GameFlowStateType.Lobby:
                         return new GameFlowLobbyState(_eventService);
                     case GameFlowStateType.Mining:
@@ -39,6 +40,8 @@ namespace Game.GameFlow
             Debug.LogError($"Tried to transition from {Type} to {type} and it's not allowed");
             return this;
         }
+
+        protected abstract void StateExit();
 
         public abstract GameFlowStateType GetBackState();
     }

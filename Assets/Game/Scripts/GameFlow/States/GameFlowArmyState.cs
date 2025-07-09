@@ -1,4 +1,5 @@
 ﻿using Game.Data.GameplayData;
+using Game.Scripts.Army;
 using ServiceLocator;
 using Services.EventService;
 using Services.GameDataService;
@@ -13,6 +14,8 @@ namespace Game.GameFlow
 
         private ISchedulerService _schedulerService;
         private IGameplayDataService _gameplayDataService;
+
+        private ArmyPresenter _armyPresenter;
         
         public GameFlowArmyState(IEventService eventService) : base(eventService)
         {
@@ -25,10 +28,16 @@ namespace Game.GameFlow
             var Handle = _schedulerService.Schedule(() => _gameplayDataService.IsReady);
             Handle.OnScheduleTick += () =>
             {
+                _armyPresenter = new ArmyPresenter(_gameplayDataService.GameplayData);
                 _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.ArmyView));
             };
         }
-        
+
+        protected override void StateExit()
+        {
+            _armyPresenter = null;
+        }
+
         public override GameFlowStateType GetBackState()
         {
             return GameFlowStateType.Mining;

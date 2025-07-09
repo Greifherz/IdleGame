@@ -1,4 +1,5 @@
 ﻿using System;
+using ServiceLocator;
 using Services.EventService;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ namespace Game.Widgets
 
         private void Start()
         {
+            _eventService = Locator.Current.Get<IEventService>();
             Setup();
         }
         

@@ -1,4 +1,5 @@
 ﻿using Game.Data.GameplayData;
+using Game.Scripts.Mining;
 using ServiceLocator;
 using Services.EventService;
 using Services.GameDataService;
@@ -14,6 +15,7 @@ namespace Game.GameFlow
         private IGameplayDataService _gameplayDataService;
 
         private bool _statsShown = false;
+        private MiningPresenter _miningPresenter;
 
         public GameFlowMiningState(IEventService eventService) : base(eventService)
         {
@@ -26,6 +28,11 @@ namespace Game.GameFlow
         public override bool CanTransitionTo(GameFlowStateType type)
         {
             return type != Type && type != GameFlowStateType.Lobby;
+        }
+
+        protected override void StateExit()
+        {
+            _miningPresenter = null;
         }
 
         public override GameFlowStateType GetBackState()
@@ -42,6 +49,7 @@ namespace Game.GameFlow
             var Handle = _schedulerService.Schedule(() => _gameplayDataService.IsReady);
             Handle.OnScheduleTick += () =>
             {
+                _miningPresenter = new MiningPresenter(_gameplayDataService.GameplayData);
                 _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Mining));
             };
         }

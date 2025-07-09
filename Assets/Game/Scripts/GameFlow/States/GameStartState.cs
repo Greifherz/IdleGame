@@ -17,6 +17,11 @@ namespace Game.GameFlow
             return type == GameFlowStateType.Lobby;
         }
 
+        protected override void StateExit()
+        {
+            
+        }
+
         public override GameFlowStateType GetBackState()
         {
             //Should quit the game?

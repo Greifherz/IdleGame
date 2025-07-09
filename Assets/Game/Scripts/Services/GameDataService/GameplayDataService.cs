@@ -18,17 +18,11 @@ namespace Game.Data.GameplayData
 
         private IEventHandler _minerGoldCollectedEventHandler;
 
-        private MiningPresenter _miningPresenter;
-        private ArmyPresenter _armyPresenter;
-
         public void Initialize()
         {
             _eventService = Locator.Current.Get<IEventService>();
             _gamePersistenceDataService = Locator.Current.Get<IGamePersistenceDataService>();
             GameplayData = _gamePersistenceDataService.LoadGameplayData();
-
-            _miningPresenter = new MiningPresenter(GameplayData);
-            _armyPresenter = new ArmyPresenter(GameplayData);
             
             _minerGoldCollectedEventHandler = new MinerGoldCollectEventHandler(MinerGoldCollected);
             _eventService.RegisterListener(_minerGoldCollectedEventHandler,EventPipelineType.GameplayPipeline);
