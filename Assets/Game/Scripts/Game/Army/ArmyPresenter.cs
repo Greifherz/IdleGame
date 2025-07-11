@@ -49,8 +49,10 @@ namespace Game.Scripts.Army
 
         public void Hire(int armyUnitType)
         {
-            var cost = _armyModel.Hire((ArmyUnitType)armyUnitType);
+            var type = (ArmyUnitType) armyUnitType;
+            var cost = _armyModel.Hire(type);
             _eventService.Raise(new GoldChangeEvent(-cost),EventPipelineType.GameplayPipeline);
+            _eventService.Raise(new ArmyHireEvent(type),EventPipelineType.GameplayPipeline);
             UpdateView();
         }
 
