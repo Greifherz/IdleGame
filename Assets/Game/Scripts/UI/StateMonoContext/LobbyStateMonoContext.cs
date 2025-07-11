@@ -32,7 +32,7 @@ namespace Services.ViewProvider
 
         public void TransitionToGameplay()
         {
-            _eventService.Raise(new TransitionEvent(TransitionTarget.Gameplay));
+            _eventService.Raise(new TransitionEvent(TransitionTarget.Mining));
         }
 
         private void OnGameFlowStateEvent(IGameFlowStateEvent gameFlowStateEvent)

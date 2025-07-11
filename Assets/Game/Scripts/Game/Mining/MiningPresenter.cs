@@ -1,32 +1,32 @@
 ﻿using System;
 using Game.Data.GameplayData;
+using Game.GameFlow;
 using Services.ViewProvider;
 using Services.ViewProvider.View;
 using ServiceLocator;
 using Services.EventService;
-using Services.PersistenceService;
 using Services.Scheduler;
 
 // Renamed from MinerLogic
-namespace Game.Scripts.Game
+namespace Game.Scripts.Mining
 {
     public class MiningPresenter : IDisposable
     {
-        public static float TICK_TIME = 10.0f;
+        public static float TICK_TIME = 0.5f; //10.0f;
 
         private readonly ISchedulerService _schedulerService;
         private readonly IEventService _eventService;
+        
+        private IEventHandler _gameFlowEventHandler;
+        private IEventHandler _gameplayViewEventHandler;
+        
         private readonly IMiningView _view;
         private readonly MiningModel _model;
         
-        private GameplayData _gameplayData;
-        
         private ISchedulerHandle _currentHandle;
 
-        // The Presenter gets its dependencies passed to it (Dependency Injection)
         public MiningPresenter(GameplayData gameplayData)
         {
-            _gameplayData = gameplayData;
             _model = new MiningModel();
             _model.LoadFrom(gameplayData);
 
@@ -38,8 +38,18 @@ namespace Game.Scripts.Game
             _view.OnCollectClicked += Collect;
             _view.OnHireClicked += Hire;
 
+            _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
+            _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
+            _eventService.RegisterListener(_gameFlowEventHandler);
+            _eventService.RegisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
+
             // Start the logic loop
             ScheduleForNextTick();
+            UpdateView();
+        }
+
+        private void OnGameplayViewUpdated(IViewEvent ev)
+        {
             UpdateView();
         }
 
@@ -96,12 +106,19 @@ namespace Game.Scripts.Game
             }
             _view.OnCollectClicked -= Collect;
             _view.OnHireClicked -= Hire;
+            _eventService.UnregisterListener(_gameFlowEventHandler);
+            _eventService.UnregisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
         }
 
         private void ScheduleForNextTick()
         {
             _currentHandle = _schedulerService.Schedule(TICK_TIME);
             _currentHandle.OnScheduleTick += OnTick;
+        }
+        
+        private void OnGameFlowStateEvent(IGameFlowStateEvent gameFlowStateEvent)
+        {
+            _view.SetVisibility(gameFlowStateEvent.GameFlowStateType == GameFlowStateType.Mining);
         }
     }
 }

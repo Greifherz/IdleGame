@@ -7,15 +7,17 @@ using UnityEngine.UI;
 namespace Services.ViewProvider.Aggregators
 {
     [Serializable]
-    public class GameplayAggregatorContext : IMiningView
+    public class MiningAggregatorContext : IMiningView
     {
+        public GameObject Holder { get; private set; }
         public Button CollectButton { get; private set; }
         public Button HireButton { get; private set; }
         public TextMeshProUGUI AccumulatedGoldText { get; private set; }
         public TextMeshProUGUI MinersText { get; private set; }
         
-        public GameplayAggregatorContext(Button collectButton, Button hireButton,TextMeshProUGUI accumulatedGoldText, TextMeshProUGUI minersText)
+        public MiningAggregatorContext(GameObject holder,Button collectButton, Button hireButton,TextMeshProUGUI accumulatedGoldText, TextMeshProUGUI minersText)
         {
+            Holder = holder;
             CollectButton = collectButton;
             HireButton = hireButton;
             AccumulatedGoldText = accumulatedGoldText;
@@ -23,6 +25,11 @@ namespace Services.ViewProvider.Aggregators
             
             collectButton.onClick.AddListener(() => OnCollectClicked?.Invoke());
             hireButton.onClick.AddListener(() => OnHireClicked?.Invoke());
+        }
+
+        public void SetVisibility(bool visible)
+        {
+            Holder.SetActive(visible);
         }
 
         public event Action OnCollectClicked;

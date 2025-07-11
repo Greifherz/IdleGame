@@ -3,33 +3,32 @@ using UnityEngine;
 
 namespace Game.GameFlow
 {
-    public class GameStartState : IGameFlowState
+    public class GameStartState : AbstractGameFlowState
     {
-        public GameFlowStateType Type => GameFlowStateType.Start;
-        private IEventService _eventService;
+        public override GameFlowStateType Type => GameFlowStateType.Start;
 
-        public GameStartState(IEventService eventService)
+        public GameStartState (GameFlowStateFactory stateFactory,IEventService eventService) : base(stateFactory,eventService)
         {
-            _eventService = eventService;
+            
         }
 
-        public bool CanTransitionTo(GameFlowStateType type)
+        public override bool CanTransitionTo(GameFlowStateType type)
         {
             return type == GameFlowStateType.Lobby;
         }
 
-        public IGameFlowState TransitionTo(GameFlowStateType type)
+        public override void StateExit()
         {
-            if (CanTransitionTo(type))
-            {
-                return new GameFlowLobbyState(_eventService);
-            }
             
-            Debug.LogError($"Tried to transition from {Type} to {type} and it's not allowed");
-            return this;
         }
 
-        public void StateEnter()
+        public override GameFlowStateType GetBackState()
+        {
+            //Should quit the game?
+            return GameFlowStateType.Lobby;
+        }
+
+        public override void StateEnter()
         {
             _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Start));
         }

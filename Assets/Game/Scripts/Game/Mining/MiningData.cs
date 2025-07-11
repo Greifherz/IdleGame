@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Game.Scripts.Game
+namespace Game.Scripts.Mining
 {
     [Serializable]
     public class MiningData : ISerializationCallbackReceiver
@@ -14,6 +14,16 @@ namespace Game.Scripts.Game
         public int ActiveMiners = 1;
         public int GoldPerMiner = 1;
 
+        public static MiningData CreateDefaultMiningData()
+        {
+            return new MiningData
+            {
+                ActiveMiners = 1,
+                AcumulatedGold = 0,
+                GoldPerMiner = 1,
+                LastCollectedTime = DateTime.UtcNow
+            };
+        }
 
         public void OnBeforeSerialize()
         {

@@ -515,7 +515,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 500, y: -0.00018310547}
-  m_SizeDelta: {x: 0, y: 15}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &5712456126080693413
 MonoBehaviour:
@@ -780,7 +780,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <-
+  m_text: Army View
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -807,7 +807,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50.65
+  m_fontSize: 24.95
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1781,8 +1781,9 @@ GameObject:
   - component: {fileID: 1462853312246125532}
   - component: {fileID: 616093593021213556}
   - component: {fileID: 4305281582433087286}
+  - component: {fileID: 6110739025915353669}
   m_Layer: 5
-  m_Name: BackButton
+  m_Name: ArmyViewButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1910,6 +1911,20 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &6110739025915353669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7925621826870198502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a79596fb0f24a32bff23aeed4a855ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StateToTransitionTo: 3
+  ButtonComponent: {fileID: 616093593021213556}
 --- !u!1 &8169466142797228247
 GameObject:
   m_ObjectHideFlags: 0
@@ -1958,7 +1973,7 @@ GameObject:
   - component: {fileID: 2568087255238783419}
   - component: {fileID: 853228207604278972}
   m_Layer: 5
-  m_Name: GameplayPanel
+  m_Name: MinerPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1998,8 +2013,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb1af53f5f4bb774ba27129b3b739c53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BackButton: {fileID: 616093593021213556}
-  GameplayPanel: {fileID: 2120619482219992890}
   CollectButton: {fileID: 5650577964795833563}
   HireButton: {fileID: 8084003589398557940}
   AccumulatedGoldText: {fileID: 1866114136116165035}

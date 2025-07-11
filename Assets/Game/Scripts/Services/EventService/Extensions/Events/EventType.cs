@@ -26,6 +26,7 @@ namespace Services.EventService
         ApplicationPauseUnity = 131072,
         ApplicationQuitUnity = 262144,
         GoldChange = 524288,
-        //##524288##//
+        ArmyHire = 1048576,
+        //##1048576##//
     }
 }

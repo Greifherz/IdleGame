@@ -40,6 +40,7 @@ namespace Services.GameDataService
 
         private void PersistGameplayData()
         {
+            Debug.Log("PersistGameplayData");
             var GameplayData = _gameplayDataService.GameplayData;
             var SerializedGameplayData = JsonUtility.ToJson(GameplayData);
             _persistenceService.Persist(SerializedGameplayData,GameplayPersistenceKeys.PERSISTENCE_KEY);

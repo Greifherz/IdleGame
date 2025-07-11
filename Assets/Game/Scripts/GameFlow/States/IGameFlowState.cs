@@ -4,13 +4,11 @@
     {
         GameFlowStateType Type { get; }
 
+        void StateExit();
         void StateEnter();
         bool CanTransitionTo(GameFlowStateType type);
         IGameFlowState TransitionTo(GameFlowStateType type);
 
-        GameFlowStateType GetBackState()
-        {
-            return Type;
-        }
+        GameFlowStateType GetBackState();
     }
 }
