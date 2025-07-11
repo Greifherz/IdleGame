@@ -17,7 +17,7 @@ namespace Game.Scripts.Army
             _armyUnitDatabase = DatabaseProviderService.ArmyUnitDatabase;
             
             _gameplayData = gameplayData;
-            _armiesData= new List<ArmyData>(4); //The idea is to only have 4 different armies at a time, review in the future
+            _armiesData = gameplayData.ArmyDatas;
         }
         
         public int Hire(ArmyUnitType armyUnitType)

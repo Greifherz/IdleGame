@@ -18,7 +18,8 @@ namespace Game.GameFlow
 
         public void Initialize()
         {
-            _currentState = new GameStartState(_eventService);
+            var Factory = new GameFlowStateFactory(_eventService);
+            _currentState = Factory.GetState(GameFlowStateType.Start);
             _currentState.StateEnter();
             
             _transitionEventHandler = new TransitionEventHandler(OnTransition);
@@ -27,6 +28,7 @@ namespace Game.GameFlow
 
         private void TransitionStateTo(GameFlowStateType type)
         {
+            _currentState.StateExit();
             _currentState = _currentState.TransitionTo(type);
             _currentState.StateEnter();
         }

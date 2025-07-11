@@ -7,7 +7,7 @@ namespace Game.GameFlow
     {
         public override GameFlowStateType Type => GameFlowStateType.Start;
 
-        public GameStartState(IEventService eventService) : base(eventService)
+        public GameStartState (GameFlowStateFactory stateFactory,IEventService eventService) : base(stateFactory,eventService)
         {
             
         }
@@ -17,7 +17,7 @@ namespace Game.GameFlow
             return type == GameFlowStateType.Lobby;
         }
 
-        protected override void StateExit()
+        public override void StateExit()
         {
             
         }

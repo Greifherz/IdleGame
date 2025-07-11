@@ -52,16 +52,9 @@ namespace Game.Scripts.Mining
         {
             _gameplayData = persistentData;
             _miningData = _gameplayData.MiningData;
-            
-            // You would also calculate offline progress here and add it to AccumulatedGold
+
             var OfflineAccumulation = (DateTime.UtcNow - LastCollectedTime).TotalSeconds / MiningPresenter.TICK_TIME * _miningData.ActiveMiners * _miningData.GoldPerMiner;
             _miningData.AcumulatedGold += (int)Math.Floor(OfflineAccumulation);
         }
-
-        public MiningData ToData()
-        {
-            return _miningData;
-        }
     }
-    
 }

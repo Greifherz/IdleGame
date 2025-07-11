@@ -784,7 +784,7 @@ MonoBehaviour:
   SoldierQuantityText: {fileID: 6635876804642011588}
   SoldierHealthText: {fileID: 336724162353328}
   SoldierAttackText: {fileID: 5629780496251675328}
-  SoldierCostText: {fileID: 0}
+  SoldierCostText: {fileID: 2572558857494845194}
 --- !u!1 &2583534587740452959
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,10 +9,13 @@ namespace Game.GameFlow
         public virtual GameFlowStateType Type { get; }
         protected IEventService _eventService;
         public abstract void StateEnter();
+        public abstract void StateExit();
+        private GameFlowStateFactory _gameFlowStateFactory;
 
-        public AbstractGameFlowState(IEventService eventService)
+        public AbstractGameFlowState(GameFlowStateFactory gameFlowStateFactory,IEventService eventService)
         {
             _eventService = eventService;
+            _gameFlowStateFactory = gameFlowStateFactory;
         }
 
         public abstract bool CanTransitionTo(GameFlowStateType type);
@@ -21,27 +24,13 @@ namespace Game.GameFlow
         {
             if (CanTransitionTo(type))
             {
-                StateExit();
-                switch (type)
-                {
-                    case GameFlowStateType.Start:
-                        return new GameStartState(_eventService);
-                    case GameFlowStateType.Lobby:
-                        return new GameFlowLobbyState(_eventService);
-                    case GameFlowStateType.Mining:
-                        return new GameFlowMiningState(_eventService);
-                    case GameFlowStateType.ArmyView:
-                        return new GameFlowArmyState(_eventService);
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                }
+                return _gameFlowStateFactory.GetState(type);
             }
             
             Debug.LogError($"Tried to transition from {Type} to {type} and it's not allowed");
             return this;
         }
 
-        protected abstract void StateExit();
 
         public abstract GameFlowStateType GetBackState();
     }

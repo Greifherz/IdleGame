@@ -7,5 +7,14 @@ namespace Game.Scripts.Army
     {
         public ArmyUnitType UnitType;
         public int Amount;
+        
+        public static ArmyData CreateDefaultArmyData()
+        {
+            return new ArmyData
+            {
+                UnitType = ArmyUnitType.Soldier,
+                Amount = 0
+            };
+        }
     }
 }

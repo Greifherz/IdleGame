@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Game.Scripts.Army;
 using Game.Scripts.Mining;
 
 namespace Game.Data.GameplayData
@@ -8,15 +10,16 @@ namespace Game.Data.GameplayData
     {
         public int OverallGold = 0;
         public MiningData MiningData;//TODO - do something about this being public to set
+        public List<ArmyData> ArmyDatas;
         
         //If needed turn this into a factory or something
         public static GameplayData CreateDefaultGameplayData()
         {
-            var data = new GameplayData();
-            
-            data.MiningData = new MiningData();
-            
-            return data;
+            return new GameplayData
+            {
+                MiningData = MiningData.CreateDefaultMiningData(),
+                ArmyDatas = new List<ArmyData>{ArmyData.CreateDefaultArmyData()}
+            };
         }
     }
 }

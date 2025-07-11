@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using Game.Data.GameplayData;
 using Game.GameFlow;
 using ServiceLocator;
@@ -62,8 +63,10 @@ namespace Game.Scripts.Army
             _view.SetUnitCost(armyUnitData.CostPerUnit.ToString());
             _view.SetUnitAttack(armyUnitData.Attack.ToString());
             _view.SetUnitHealth(armyUnitData.Health.ToString());
+            
+            _view.SetHireButtonInteractable(_armyModel.CanHire(army.UnitType));
         }
-        
+
         private void OnGameFlowStateEvent(IGameFlowStateEvent gameFlowStateEvent)
         {
             _view.SetVisibility(gameFlowStateEvent.GameFlowStateType == GameFlowStateType.ArmyView);

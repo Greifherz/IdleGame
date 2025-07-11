@@ -17,7 +17,7 @@ namespace Game.GameFlow
 
         private ArmyPresenter _armyPresenter;
         
-        public GameFlowArmyState(IEventService eventService) : base(eventService)
+        public GameFlowArmyState(GameFlowStateFactory stateFactory,IEventService eventService) : base(stateFactory,eventService)
         {
             _schedulerService = Locator.Current.Get<ISchedulerService>();
             _gameplayDataService = Locator.Current.Get<IGameplayDataService>();
@@ -33,9 +33,9 @@ namespace Game.GameFlow
             };
         }
 
-        protected override void StateExit()
+        public override void StateExit()
         {
-            _armyPresenter = null;
+            
         }
 
         public override GameFlowStateType GetBackState()

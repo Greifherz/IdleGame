@@ -17,7 +17,7 @@ namespace Game.GameFlow
         private bool _statsShown = false;
         private MiningPresenter _miningPresenter;
 
-        public GameFlowMiningState(IEventService eventService) : base(eventService)
+        public GameFlowMiningState (GameFlowStateFactory stateFactory,IEventService eventService) : base(stateFactory,eventService)
         {
             _schedulerService = Locator.Current.Get<ISchedulerService>();
             _gameplayDataService = Locator.Current.Get<IGameplayDataService>();
@@ -30,9 +30,9 @@ namespace Game.GameFlow
             return type != Type && type != GameFlowStateType.Lobby;
         }
 
-        protected override void StateExit()
+        public override void StateExit()
         {
-            _miningPresenter = null;
+            
         }
 
         public override GameFlowStateType GetBackState()

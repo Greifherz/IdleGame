@@ -2,8 +2,8 @@
 {
     public enum ArmyUnitType
     {
-        Soldier = 1,
-        Archer = 2,
-        Mage = 3,
+        Soldier = 0,
+        Archer = 1,
+        Mage = 2,
     }
 }
