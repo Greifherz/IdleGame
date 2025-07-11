@@ -46,12 +46,19 @@ namespace Game.GameFlow
         
         public override void StateEnter()
         {
-            var Handle = _schedulerService.Schedule(() => _gameplayDataService.IsReady);
-            Handle.OnScheduleTick += () =>
+            if (_miningPresenter == null)
             {
-                _miningPresenter = new MiningPresenter(_gameplayDataService.GameplayData);
+                var Handle = _schedulerService.Schedule(() => _gameplayDataService.IsReady);
+                Handle.OnScheduleTick += () =>
+                {
+                    _miningPresenter = new MiningPresenter(_gameplayDataService.GameplayData);
+                    _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Mining));
+                };
+            }
+            else
+            {
                 _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.Mining));
-            };
+            }
         }
     }
 }

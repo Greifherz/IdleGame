@@ -25,12 +25,19 @@ namespace Game.GameFlow
 
         public override void StateEnter()
         {
-            var Handle = _schedulerService.Schedule(() => _gameplayDataService.IsReady);
-            Handle.OnScheduleTick += () =>
+            if (_armyPresenter == null)
             {
-                _armyPresenter = new ArmyPresenter(_gameplayDataService.GameplayData);
+                var Handle = _schedulerService.Schedule(() => _gameplayDataService.IsReady);
+                Handle.OnScheduleTick += () =>
+                {
+                    _armyPresenter = new ArmyPresenter(_gameplayDataService.GameplayData);
+                    _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.ArmyView));
+                };
+            }
+            else
+            {
                 _eventService.Raise(new GameFlowStateEvent(GameFlowStateType.ArmyView));
-            };
+            }
         }
 
         public override void StateExit()

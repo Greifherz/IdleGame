@@ -37,8 +37,7 @@ namespace Game.Scripts.Mining
         
             _view.OnCollectClicked += Collect;
             _view.OnHireClicked += Hire;
-            
-            
+
             _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
             _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
             _eventService.RegisterListener(_gameFlowEventHandler);
