@@ -5,20 +5,20 @@ using UnityEngine.UI;
 
 public class ArmyStateMonoContext : MonoBehaviour
 {
-    [SerializeField] private Button HireButton;
-
-    [SerializeField] private TextMeshProUGUI SoldierQuantityText;
-    [SerializeField] private TextMeshProUGUI SoldierHealthText;
-    [SerializeField] private TextMeshProUGUI SoldierAttackText;
-    [SerializeField] private TextMeshProUGUI SoldierCostText;
+    [SerializeField] private Button[] HireButtons;
+    
+    [SerializeField] private TextMeshProUGUI[] QuantityTexts;
+    [SerializeField] private TextMeshProUGUI[] HealthTexts;
+    [SerializeField] private TextMeshProUGUI[] AttackTexts;
+    [SerializeField] private TextMeshProUGUI[] CostTexts;
 
     void Start()
     {
         gameObject.SetActive(false);
     }
 
-    public ArmyAggregatorContext CreateArmyView()
+    public MultiArmyAggregatorContext CreateArmyMultiView()
     {
-        return new ArmyAggregatorContext(gameObject,HireButton, SoldierQuantityText, SoldierHealthText, SoldierAttackText, SoldierCostText);
+        return new MultiArmyAggregatorContext(gameObject,HireButtons,QuantityTexts,HealthTexts,AttackTexts,CostTexts);
     }
 }

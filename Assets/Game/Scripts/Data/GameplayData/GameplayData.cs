@@ -18,7 +18,7 @@ namespace Game.Data.GameplayData
             return new GameplayData
             {
                 MiningData = MiningData.CreateDefaultMiningData(),
-                ArmyDatas = new List<ArmyData>{ArmyData.CreateDefaultArmyData()}
+                ArmyDatas = ArmyData.CreateDefaultArmiesData()
             };
         }
     }

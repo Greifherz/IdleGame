@@ -8,7 +8,7 @@ namespace Game.Scripts.Army
     public class ArmyModel
     {
         private GameplayData _gameplayData;
-        private List<ArmyData> _armiesData; //The armies the player actually have
+        public List<ArmyData> _armiesData; //The armies the player actually have
         private ArmyUnitDatabase _armyUnitDatabase;
 
         public ArmyModel(GameplayData gameplayData)

@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Data.Common;
 using Game.Data.GameplayData;
 using Game.GameFlow;
 using ServiceLocator;
 using Services.EventService;
 using Services.ViewProvider;
 using Services.ViewProvider.View;
+using UnityEngine;
 
 namespace Game.Scripts.Army
 {
     public class ArmyPresenter : IDisposable
     {
         private readonly IEventService _eventService;
-        private readonly IArmyView _view;
+        private readonly IMultiArmyView _multiView;
         
         private IEventHandler _gameFlowEventHandler;
         private IEventHandler _gameplayViewEventHandler;
@@ -25,21 +25,21 @@ namespace Game.Scripts.Army
             
             _eventService = Locator.Current.Get<IEventService>();
             var ViewProviderService = Locator.Current.Get<IViewProviderService>();
-            _view = ViewProviderService.ArmyView;
+            _multiView = ViewProviderService.MultiArmyView;
             
             _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
             _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
             _eventService.RegisterListener(_gameFlowEventHandler);
             _eventService.RegisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
 
-            _view.OnHireClicked += OnHireClicked;
+            _multiView.OnHireClicked += OnHireClicked;
             
             UpdateView();
         }
 
-        private void OnHireClicked()
+        private void OnHireClicked(int index)
         {
-            Hire(0);
+            Hire(index);
         }
 
         private void OnGameplayViewUpdated(IViewEvent ev)
@@ -56,25 +56,30 @@ namespace Game.Scripts.Army
 
         private void UpdateView()
         {
-            var army = _armyModel.GetArmyDataOfIndex(0); //For now only works with 1 army
-            var armyUnitData = _armyModel.GetArmyUnitData(army.UnitType);
+            var armiesData = _armyModel._armiesData;
+            for (var Index = 0; Index < armiesData.Count; Index++)
+            {
+                var data = armiesData[Index];
+                var unitData = _armyModel.GetArmyUnitData(data.UnitType);
                 
-            _view.SetUnitCount(army.Amount.ToString());
-            _view.SetUnitCost(armyUnitData.CostPerUnit.ToString());
-            _view.SetUnitAttack(armyUnitData.Attack.ToString());
-            _view.SetUnitHealth(armyUnitData.Health.ToString());
-            
-            _view.SetHireButtonInteractable(_armyModel.CanHire(army.UnitType));
+                _multiView.SetUnitCount(Index,data.Amount.ToString());
+                _multiView.SetUnitCost(Index,unitData.CostPerUnit.ToString());
+                _multiView.SetUnitAttack(Index,unitData.Attack.ToString());
+                _multiView.SetUnitHealth(Index,unitData.Health.ToString());
+                
+                _multiView.SetHireButtonInteractable(Index,_armyModel.CanHire(data.UnitType));
+            }
         }
 
         private void OnGameFlowStateEvent(IGameFlowStateEvent gameFlowStateEvent)
         {
-            _view.SetVisibility(gameFlowStateEvent.GameFlowStateType == GameFlowStateType.ArmyView);
+            _multiView.SetVisibility(gameFlowStateEvent.GameFlowStateType == GameFlowStateType.ArmyView);
+            UpdateView();
         }
 
         public void Dispose()
         {
-            _view.OnHireClicked -= OnHireClicked;
+            _multiView.OnHireClicked -= OnHireClicked;
             _eventService.UnregisterListener(_gameFlowEventHandler);
             _eventService.UnregisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
         }

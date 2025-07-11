@@ -13,7 +13,15 @@ MonoBehaviour:
   m_Name: ArmyUnitDatabase
   m_EditorClassIdentifier: 
   Database:
+  - UnitType: 0
+    Health: 10
+    Attack: 2
+    CostPerUnit: 50
   - UnitType: 1
     Health: 5
     Attack: 2
-    CostPerUnit: 50
+    CostPerUnit: 100
+  - UnitType: 2
+    Health: 2
+    Attack: 10
+    CostPerUnit: 500

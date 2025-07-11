@@ -7,6 +7,6 @@ namespace Services.ViewProvider
     public interface IViewProviderService : IGameService
     {
         IMiningView MiningView { get; }
-        IArmyView ArmyView { get; }
+        IMultiArmyView MultiArmyView { get; }
     }
 }
