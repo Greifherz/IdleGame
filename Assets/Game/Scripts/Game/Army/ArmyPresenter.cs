@@ -12,7 +12,7 @@ namespace Game.Scripts.Army
     public class ArmyPresenter : IDisposable
     {
         private readonly IEventService _eventService;
-        private readonly IMultiArmyView _multiView;
+        private readonly IArmyView _view;
         
         private IEventHandler _gameFlowEventHandler;
         private IEventHandler _gameplayViewEventHandler;
@@ -25,14 +25,14 @@ namespace Game.Scripts.Army
             
             _eventService = Locator.Current.Get<IEventService>();
             var ViewProviderService = Locator.Current.Get<IViewProviderService>();
-            _multiView = ViewProviderService.MultiArmyView;
+            _view = ViewProviderService.ArmyView;
             
             _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);
             _gameplayViewEventHandler = new ViewEventHandler(OnGameplayViewUpdated);
             _eventService.RegisterListener(_gameFlowEventHandler);
             _eventService.RegisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
 
-            _multiView.OnHireClicked += OnHireClicked;
+            _view.OnHireClicked += OnHireClicked;
             
             UpdateView();
         }
@@ -64,24 +64,24 @@ namespace Game.Scripts.Army
                 var data = armiesData[Index];
                 var unitData = _armyModel.GetArmyUnitData(data.UnitType);
                 
-                _multiView.SetUnitCount(Index,data.Amount.ToString());
-                _multiView.SetUnitCost(Index,unitData.CostPerUnit.ToString());
-                _multiView.SetUnitAttack(Index,unitData.Attack.ToString());
-                _multiView.SetUnitHealth(Index,unitData.Health.ToString());
+                _view.SetUnitCount(Index,data.Amount.ToString());
+                _view.SetUnitCost(Index,unitData.CostPerUnit.ToString());
+                _view.SetUnitAttack(Index,unitData.Attack.ToString());
+                _view.SetUnitHealth(Index,unitData.Health.ToString());
                 
-                _multiView.SetHireButtonInteractable(Index,_armyModel.CanHire(data.UnitType));
+                _view.SetHireButtonInteractable(Index,_armyModel.CanHire(data.UnitType));
             }
         }
 
         private void OnGameFlowStateEvent(IGameFlowStateEvent gameFlowStateEvent)
         {
-            _multiView.SetVisibility(gameFlowStateEvent.GameFlowStateType == GameFlowStateType.ArmyView);
+            _view.SetVisibility(gameFlowStateEvent.GameFlowStateType == GameFlowStateType.ArmyView);
             UpdateView();
         }
 
         public void Dispose()
         {
-            _multiView.OnHireClicked -= OnHireClicked;
+            _view.OnHireClicked -= OnHireClicked;
             _eventService.UnregisterListener(_gameFlowEventHandler);
             _eventService.UnregisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
         }

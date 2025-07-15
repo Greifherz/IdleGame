@@ -17,8 +17,8 @@ public class ArmyStateMonoContext : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public MultiArmyAggregatorContext CreateArmyMultiView()
+    public ArmyAggregatorContext CreateArmyView()
     {
-        return new MultiArmyAggregatorContext(gameObject,HireButtons,QuantityTexts,HealthTexts,AttackTexts,CostTexts);
+        return new ArmyAggregatorContext(gameObject,HireButtons,QuantityTexts,HealthTexts,AttackTexts,CostTexts);
     }
 }

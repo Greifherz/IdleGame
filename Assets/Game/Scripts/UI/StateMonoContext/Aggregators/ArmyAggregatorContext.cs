@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Services.ViewProvider.Aggregators
 {
-    public class MultiArmyAggregatorContext : IMultiArmyView
+    public class ArmyAggregatorContext : IArmyView
     {
         public GameObject Holder { get; }
         public Button[] HireButtons { get; }
@@ -17,7 +17,7 @@ namespace Services.ViewProvider.Aggregators
         
         public event Action<int> OnHireClicked;
         
-        public MultiArmyAggregatorContext(GameObject holder,Button[] hireButtons,TextMeshProUGUI[] quantityTexts, TextMeshProUGUI[] healthTexts, TextMeshProUGUI[] attackTexts, TextMeshProUGUI[] costTexts)
+        public ArmyAggregatorContext(GameObject holder,Button[] hireButtons,TextMeshProUGUI[] quantityTexts, TextMeshProUGUI[] healthTexts, TextMeshProUGUI[] attackTexts, TextMeshProUGUI[] costTexts)
         {
             Holder = holder;
             HireButtons = hireButtons;

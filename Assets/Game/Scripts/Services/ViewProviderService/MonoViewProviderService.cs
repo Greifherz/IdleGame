@@ -10,7 +10,7 @@ namespace Services.ViewProvider
         [SerializeField] private ArmyStateMonoContext _armyStateContext;
 
         public IMiningView MiningView => _minerStateContext.CreateMiningView();
-        public IMultiArmyView MultiArmyView => _armyStateContext.CreateArmyMultiView();
+        public IArmyView ArmyView => _armyStateContext.CreateArmyView();
 
         public void Initialize()
         {

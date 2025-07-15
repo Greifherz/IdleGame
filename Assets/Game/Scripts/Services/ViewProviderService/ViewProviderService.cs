@@ -6,7 +6,7 @@ namespace Services.ViewProvider
     public class ViewProviderService : IViewProviderService //Deprecated but here in case I want another layer of distance from Unity
     {
         public IMiningView MiningView { get; private set; }
-        public IMultiArmyView MultiArmyView { get; private set; }
+        public IArmyView ArmyView { get; private set; }
 
         public void Initialize()
         {
