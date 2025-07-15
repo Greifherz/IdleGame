@@ -1,4 +1,5 @@
-﻿using Game.Scripts.Army;
+﻿using Game.Gameplay;
+using Game.Scripts.Army;
 using ServiceLocator;
 
 namespace Game.Scripts.Services.GameDataService
@@ -6,5 +7,6 @@ namespace Game.Scripts.Services.GameDataService
     public interface IDatabaseProviderService : IGameService
     {
         ArmyUnitDatabase ArmyUnitDatabase { get; }
+        AnimationDatabase AnimationDatabase { get; }
     }
 }

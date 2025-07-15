@@ -22,7 +22,7 @@ namespace Game.Gameplay.Tests
         public bool InputTest = false;
 
         // --- NEW: State Machine Variables for InputTest ---
-        internal enum TestAnimationState { Idle, Move, Attack, Block }
+        enum TestAnimationState { Idle, Move, Attack, Block }
         private TestAnimationState _currentState = TestAnimationState.Idle;
 
         void Start()
