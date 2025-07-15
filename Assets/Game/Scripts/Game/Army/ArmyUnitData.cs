@@ -10,6 +10,8 @@ namespace Game.Scripts.Army
         public int Health;
         public int Attack;
         public int CostPerUnit;
+        public int MoveSpeed;
+        public float AtkSpeed;
 
         //TODO - Expand as the game needs more complexity.
     }

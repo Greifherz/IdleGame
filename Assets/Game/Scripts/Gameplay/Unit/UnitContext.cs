@@ -13,7 +13,8 @@ namespace Game.Gameplay
             return new UnitAggregatorContext
             {
                 QuantityText = UnitAmount,
-                SpriteRenderer = UnitRenderer
+                SpriteRenderer = UnitRenderer,
+                UnitTransform = transform
             };
         }
     }

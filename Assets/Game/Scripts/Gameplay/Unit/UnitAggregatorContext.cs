@@ -7,6 +7,7 @@ namespace Game.Gameplay
     {
         public TextMeshPro QuantityText;
         public SpriteRenderer SpriteRenderer;
+        public Transform UnitTransform;
 
         public void SetAmount(string amount)
         {
@@ -16,6 +17,11 @@ namespace Game.Gameplay
         public SpriteRenderer GetSpriteRenderer()
         {
             return SpriteRenderer;
+        }
+
+        public void MoveTo(Vector3 direction)
+        {
+            UnitTransform.position += direction;
         }
     }
 }
