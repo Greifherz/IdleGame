@@ -12,6 +12,7 @@ namespace Game.Scripts.Army
         public int CostPerUnit;
         public int MoveSpeed;
         public float AtkSpeed;
+        public float AttackRange;
 
         //TODO - Expand as the game needs more complexity.
     }

@@ -24,7 +24,7 @@ namespace Game.Scripts.Army
             _armyModel = new ArmyModel(gameplayData);
             
             _eventService = Locator.Current.Get<IEventService>();
-            var ViewProviderService = Locator.Current.Get<IViewProviderService>();
+            var ViewProviderService = Locator.Current.Get<ILobbyViewProviderService>();
             _view = ViewProviderService.ArmyView;
             
             _gameFlowEventHandler = new GameFlowStateEventHandle(OnGameFlowStateEvent);

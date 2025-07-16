@@ -1,10 +1,11 @@
-﻿using ServiceLocator;
+﻿using System;
+using ServiceLocator;
 using Services.ViewProvider.View;
 using UnityEngine;
 
 namespace Services.ViewProvider
 {
-    public class MonoViewProviderService : MonoBehaviour, IViewProviderService
+    public class LobbyMonoViewProviderService : MonoBehaviour, ILobbyViewProviderService
     {
         [SerializeField] private MinerStateMonoContext _minerStateContext;
         [SerializeField] private ArmyStateMonoContext _armyStateContext;
@@ -19,7 +20,12 @@ namespace Services.ViewProvider
 
         private void Awake()
         {
-            Locator.Current.Register<IViewProviderService>(this);
+            Locator.Current.Register<ILobbyViewProviderService>(this);
+        }
+
+        private void OnDestroy()
+        {
+            Locator.Current.Unregister<ILobbyViewProviderService>();
         }
     }
 }

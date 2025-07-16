@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class UnitContext : MonoBehaviour
+    public class UnitMonoContext : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer UnitRenderer;
         [SerializeField] private TextMeshPro UnitAmount;

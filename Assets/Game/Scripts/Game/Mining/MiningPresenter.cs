@@ -32,7 +32,7 @@ namespace Game.Scripts.Mining
 
             _schedulerService = Locator.Current.Get<ISchedulerService>();
             _eventService = Locator.Current.Get<IEventService>();
-            var ViewProviderService = Locator.Current.Get<IViewProviderService>();
+            var ViewProviderService = Locator.Current.Get<ILobbyViewProviderService>();
             _view = ViewProviderService.MiningView;
         
             _view.OnCollectClicked += Collect;

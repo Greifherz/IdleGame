@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Scripts.Army;
 using Game.Scripts.Services.GameDataService;
 using ServiceLocator;
 using Services.TickService;
@@ -18,27 +19,27 @@ namespace Game.Gameplay
         private readonly UnitMovementHandler _movement;
         private readonly UnitAttackHandler _attackHandler;
         private readonly UnitAnimationController _animationController;
-
-        // --- State ---
+        
         private IUnitView _currentTarget;
+        private ArmyUnitData _unitData;
         private bool _isActive = true;
-        private float _attackRange = 50f;
 
-        public UnitBehavior(IUnitView view)
+        public UnitBehavior(ArmyUnitData unitData,IUnitView view)
         {
+            _unitData = unitData;
             _view = view;
             _tickService = Locator.Current.Get<ITickService>();
             _targeter = new DistanceUnitTargeter(); // Or get from a service
 
             // Create the specialized components
-            _movement = new UnitMovementHandler(_view, 15);
-            _attackHandler = new UnitAttackHandler(1.5f);
+            _movement = new UnitMovementHandler(_view, _unitData.MoveSpeed);
+            _attackHandler = new UnitAttackHandler(_unitData.AtkSpeed);
 
-            var tickService = Locator.Current.Get<ITickService>();
-            var databaseProvider = Locator.Current.Get<IDatabaseProviderService>();
+            var TickService = Locator.Current.Get<ITickService>();
+            var DatabaseProvider = Locator.Current.Get<IDatabaseProviderService>();
             
             // The animation controller would also be created and passed the SpriteAnimationPlayer
-            _animationController = new UnitAnimationController(new SpriteAnimationPlayer(tickService),databaseProvider.AnimationDatabase );
+            _animationController = new UnitAnimationController(new SpriteAnimationPlayer(TickService),DatabaseProvider.AnimationDatabase );
 
             _tickService.RegisterTick(OnTick);
         }
@@ -61,7 +62,7 @@ namespace Game.Gameplay
 
             float distanceToTarget = Vector3.Distance(_view.GetPosition(), _currentTarget.GetPosition());
 
-            if (distanceToTarget <= _attackRange)
+            if (distanceToTarget <= _unitData.AttackRange)
             {
                 // In range: try to attack
                 if (_attackHandler.CanAttack())
