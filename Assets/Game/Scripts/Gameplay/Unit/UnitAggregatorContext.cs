@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    public class UnitAggregatorContext
+    public class UnitAggregatorContext : IUnitView
     {
         public TextMeshPro QuantityText;
         public SpriteRenderer SpriteRenderer;
@@ -22,6 +22,11 @@ namespace Game.Gameplay
         public void MoveTo(Vector3 direction)
         {
             UnitTransform.position += direction;
+        }
+
+        public Vector3 GetPosition()
+        {
+            return UnitTransform.position;
         }
     }
 }

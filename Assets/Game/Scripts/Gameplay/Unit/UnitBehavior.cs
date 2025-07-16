@@ -1,3 +1,4 @@
+﻿using System;
 using Game.Scripts.Services.GameDataService;
 using ServiceLocator;
 using Services.TickService;
@@ -5,97 +6,88 @@ using UnityEngine;
 
 namespace Game.Gameplay
 {
-    //This class was created as deprecated. It was created to create the logic that will eventually be ported to other scripts, non-monobehaviour as a prototype.
-    public class UnitBehavior : MonoBehaviour
+    public class UnitBehavior : IDisposable
     {
-        [SerializeField] private Transform Self;
-        [SerializeField] private SpriteRenderer Renderer;
-        [SerializeField] private Transform Target;
-        [SerializeField] private int MoveSpeed = 15;
+        // --- Dependencies (Injected) ---
+        private readonly IUnitView _view;
+        private readonly ITickService _tickService;
+        private readonly IUnitTargeter _targeter;
+        private readonly IUnitView[] _possibleTargets;
 
-        // private float _lastDistance = 1000;
-        [SerializeField] private bool _active = false;
+        // --- Owned Components ---
+        private readonly UnitMovementHandler _movement;
+        private readonly UnitAttackHandler _attackHandler;
+        private readonly UnitAnimationController _animationController;
 
-        [SerializeField] private float AtkCooldown = 1.5f;
+        // --- State ---
+        private IUnitView _currentTarget;
+        private bool _isActive = true;
+        private float _attackRange = 50f;
 
-        private float _cooldown = 0;
-
-        private SpriteAnimationPlayer _animationPlayer;
-        private AnimationDatabase _animationDatabase;
-
-        enum AnimationState { Idle, Move, Attack, Block }
-        private AnimationState _currentState = AnimationState.Idle;
-        
-        private void Start()
+        public UnitBehavior(IUnitView view)
         {
+            _view = view;
+            _tickService = Locator.Current.Get<ITickService>();
+            _targeter = new DistanceUnitTargeter(); // Or get from a service
+
+            // Create the specialized components
+            _movement = new UnitMovementHandler(_view, 15);
+            _attackHandler = new UnitAttackHandler(1.5f);
+
+            var tickService = Locator.Current.Get<ITickService>();
             var databaseProvider = Locator.Current.Get<IDatabaseProviderService>();
-            _animationDatabase = databaseProvider.AnimationDatabase;
             
-            _animationPlayer = new SpriteAnimationPlayer(Locator.Current.Get<ITickService>());
-            _animationPlayer.SetRenderer(Renderer);
-            _animationPlayer.SetAnimation(_animationDatabase.GetAnimationData(AnimationType.Idle));
-            _animationPlayer.PlayAnimation();
+            // The animation controller would also be created and passed the SpriteAnimationPlayer
+            _animationController = new UnitAnimationController(new SpriteAnimationPlayer(tickService),databaseProvider.AnimationDatabase );
+
+            _tickService.RegisterTick(OnTick);
         }
 
-        private void Update()
+        private void OnTick()
         {
-            if(!_active) return;
-            
-            if (_cooldown > 0)
+            if (!_isActive) return;
+
+            // Update components that need a tick
+            _attackHandler.Tick(Time.deltaTime);
+
+            // --- Core AI Logic ---
+            if (_currentTarget == null)
             {
-                _cooldown -= Time.deltaTime;
+                // Find a target if we don't have one
+                _currentTarget = _targeter.GetTarget(_view, _possibleTargets);
+                _animationController.SetState(UnitAnimationController.UnitAnimationState.Idle);
+                return;
             }
 
-            var Dir = Target.position - Self.position;
-            if (Dir.magnitude < 50) //In range
+            float distanceToTarget = Vector3.Distance(_view.GetPosition(), _currentTarget.GetPosition());
+
+            if (distanceToTarget <= _attackRange)
             {
-                //Don't move
-                if (_cooldown <= 0)
+                // In range: try to attack
+                if (_attackHandler.CanAttack())
                 {
-                    Attack();
+                    _attackHandler.PerformAttack(() => {
+                        // This callback happens when the attack animation starts
+                        _animationController.SetState(UnitAnimationController.UnitAnimationState.Attack);
+                    });
                 }
                 else
                 {
-                    Idle();
+                    // In range but on cooldown: idle
+                    _animationController.SetState(UnitAnimationController.UnitAnimationState.Idle);
                 }
             }
             else
             {
-                Move(Dir);
+                // Out of range: move
+                _movement.MoveTowards(_currentTarget.GetPosition());
+                _animationController.SetState(UnitAnimationController.UnitAnimationState.Move);
             }
         }
 
-        private void Move(Vector3 Dir)
+        public void Dispose()
         {
-            var moveAmount = Dir.normalized * (MoveSpeed * Time.deltaTime);
-            transform.position = transform.position + moveAmount;
-            if (_currentState != AnimationState.Move)
-            {
-                _currentState = AnimationState.Move;
-                _animationPlayer.SetAnimation(_animationDatabase.GetAnimationData(AnimationType.Move));
-                _animationPlayer.PlayAnimation();
-            }
-        }
-
-        private void Idle()
-        {
-            if (_currentState != AnimationState.Idle)
-            {
-                _currentState = AnimationState.Idle;
-                _animationPlayer.SetAnimation(_animationDatabase.GetAnimationData(AnimationType.Idle));
-                _animationPlayer.PlayAnimation();
-            }
-        }
-
-        private void Attack()
-        {
-            if (_currentState != AnimationState.Attack)
-            {
-                _currentState = AnimationState.Attack;
-                _animationPlayer.SetAnimation(_animationDatabase.GetAnimationData(AnimationType.Attack));
-                _animationPlayer.PlayAnimation();
-                _animationPlayer.SetCallback(() => { _cooldown = AtkCooldown + UnityEngine.Random.Range(-0.2f,0.2f); });
-            }
+            _tickService.UnregisterTick(OnTick);
         }
     }
 }
