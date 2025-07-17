@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Game.Gameplay;
 
-namespace Game.Scripts.Gameplay.BattleOrchestrator
+namespace Game.Gameplay
 {
     public class BattleAggregatorContext : IBattleView
     {

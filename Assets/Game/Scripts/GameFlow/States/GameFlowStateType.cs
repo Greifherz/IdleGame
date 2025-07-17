@@ -6,5 +6,6 @@
         Lobby,
         Mining,
         ArmyView,
+        Battle
     }
 }

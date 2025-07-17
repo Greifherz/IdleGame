@@ -17,11 +17,20 @@ MonoBehaviour:
     Health: 10
     Attack: 2
     CostPerUnit: 50
+    MoveSpeed: 15
+    AtkSpeed: 1.5
+    AttackRange: 50
   - UnitType: 1
     Health: 5
     Attack: 2
     CostPerUnit: 100
+    MoveSpeed: 10
+    AtkSpeed: 2
+    AttackRange: 300
   - UnitType: 2
     Health: 2
     Attack: 10
     CostPerUnit: 500
+    MoveSpeed: 20
+    AtkSpeed: 2
+    AttackRange: 250

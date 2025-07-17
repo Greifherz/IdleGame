@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Game.Scripts.Army;
 using Game.Scripts.Services.GameDataService;
 using ServiceLocator;
@@ -13,7 +14,7 @@ namespace Game.Gameplay
         private readonly IUnitView _view;
         private readonly ITickService _tickService;
         private readonly IUnitTargeter _targeter;
-        private readonly IUnitView[] _possibleTargets;
+        private readonly List<IUnitView> _possibleTargets;
 
         // --- Owned Components ---
         private readonly UnitMovementHandler _movement;
@@ -23,23 +24,23 @@ namespace Game.Gameplay
         private IUnitView _currentTarget;
         private ArmyUnitData _unitData;
         private bool _isActive = true;
+        private int _amount = 1;
 
-        public UnitBehavior(ArmyUnitData unitData,IUnitView view)
+        public UnitBehavior(ITickService tickService,AnimationDatabase animationDatabase, ArmyUnitData unitData,int amount,IUnitView view,List<IUnitView> possibleTargets)
         {
+            _amount = amount;
             _unitData = unitData;
             _view = view;
-            _tickService = Locator.Current.Get<ITickService>();
+            _tickService = tickService;
+            _possibleTargets = possibleTargets;
             _targeter = new DistanceUnitTargeter(); // Or get from a service
 
             // Create the specialized components
             _movement = new UnitMovementHandler(_view, _unitData.MoveSpeed);
             _attackHandler = new UnitAttackHandler(_unitData.AtkSpeed);
-
-            var TickService = Locator.Current.Get<ITickService>();
-            var DatabaseProvider = Locator.Current.Get<IDatabaseProviderService>();
             
             // The animation controller would also be created and passed the SpriteAnimationPlayer
-            _animationController = new UnitAnimationController(new SpriteAnimationPlayer(TickService),DatabaseProvider.AnimationDatabase );
+            _animationController = new UnitAnimationController(new SpriteAnimationPlayer(_tickService),animationDatabase );
 
             _tickService.RegisterTick(OnTick);
         }

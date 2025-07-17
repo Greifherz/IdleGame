@@ -1,9 +1,12 @@
 ﻿using Game.Data.GameplayData;
 using Game.GameFlow;
 using Game.Scripts.Services.GameDataService;
+using Game.Services.SceneTransition;
 using ServiceLocator;
 using Services.GameDataService;
+using Services.TickService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Bootstrap
 {
@@ -17,6 +20,7 @@ namespace Bootstrap
             //Initialize Game-related services, controllers and objects
             var DatabaseProvider = new DatabaseProviderService();
             DatabaseProvider.Initialize();
+            var TickService = Locator.Current.Get<ITickService>();
             
             Locator.Current.Register<IDatabaseProviderService>(DatabaseProvider);
 
@@ -24,13 +28,18 @@ namespace Bootstrap
             
             _GameFlowObject.Initialize();
             
-            var GameDataService = new GamePersistenceDataService();
-            Locator.Current.Register<IGamePersistenceDataService>(GameDataService);
+            var PersistentGameDataService = new GamePersistenceDataService();
+            Locator.Current.Register<IGamePersistenceDataService>(PersistentGameDataService);
             
             var GameplayDataService = new GameplayDataService();
             Locator.Current.Register<IGameplayDataService>(GameplayDataService);
-            
-            GameDataService.Initialize();
+
+            var TransitionView = Locator.Current.Get<TransitionView>();
+            Locator.Current.Unregister<TransitionView>();
+            var SceneTransitionService = new SceneTransitionService(TickService,TransitionView);
+            Locator.Current.Register<ISceneTransitionService>(SceneTransitionService);
+
+            PersistentGameDataService.Initialize();
         }
     }
 }

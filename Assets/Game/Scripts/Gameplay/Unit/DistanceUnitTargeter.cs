@@ -1,18 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Game.Gameplay
 {
     public interface IUnitTargeter
     {
-        IUnitView GetTarget(IUnitView unit, IUnitView[] possibleTargets);
+        IUnitView GetTarget(IUnitView unit, List<IUnitView> possibleTargets);
     }
 
     public class DistanceUnitTargeter : IUnitTargeter
     {
-        public IUnitView GetTarget(IUnitView unit, IUnitView[] possibleTargets)
+        public IUnitView GetTarget(IUnitView unit, List<IUnitView> possibleTargets)
         {
             // No targets to choose from
-            if (possibleTargets == null || possibleTargets.Length == 0)
+            if (possibleTargets == null || possibleTargets.Count == 0)
             {
                 return null; 
             }

@@ -5,6 +5,7 @@ using Services.EventService;
 using Services.PersistenceService;
 using Services.TickService;
 using ServiceLocator;
+using Services.SceneDataService;
 using Services.Scheduler;
 using UnityEngine;
 
@@ -43,11 +44,16 @@ namespace Bootstrap
             var AssetLoader = new AssetLoaderService();
             Locator.Current.Register<IAssetLoaderService>(AssetLoader);
             
+            //Create SceneDataService
+            var SceneDataService = new SceneDataService();
+            Locator.Current.Register<ISceneDataService>(SceneDataService);
+            
             //Initialize Services
             EventService.Initialize();
             TickService.Initialize();
             Scheduler.Initialize();
             AssetLoader.Initialize();
+            SceneDataService.Initialize();
             
             //Post-Initialization
             TickService.gameObject.AddComponent<UnityHookService>(); //No need to register this on the locator
