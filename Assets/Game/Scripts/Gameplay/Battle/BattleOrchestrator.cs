@@ -7,9 +7,9 @@ using Services.TickService;
 
 namespace Game.Gameplay
 {
+    public delegate List<IUnitView> TargetProviderDelegate();
     public class BattleOrchestrator : IDisposable
     {
-        public delegate List<IUnitView> TargetProviderDelegate();
         
         // --- Dependencies (Injected) ---
         private readonly IBattleView _view;
@@ -17,17 +17,21 @@ namespace Game.Gameplay
         private readonly IDatabaseProviderService _databaseProvider;
         private readonly ITickService _tickService;
 
+        private readonly int _battleId;
+
         // --- Owned Objects ---
         private List<UnitBehavior> _friendlyBehaviors;
         private List<UnitBehavior> _enemyBehaviors;
-
+        
         public BattleOrchestrator(
             IBattleView view, 
             IGameplayDataService gameplayDataService, 
             IDatabaseProviderService databaseProvider, 
-            ITickService tickService)
+            ITickService tickService,
+            BattleStateData battleStateData)
         {
             _view = view;
+            _battleId = battleStateData.BattleId;
             _gameplayDataService = gameplayDataService;
             _databaseProvider = databaseProvider;
             _tickService = tickService;
@@ -36,11 +40,13 @@ namespace Game.Gameplay
         // The setup logic is moved to a dedicated method.
         public void StartBattle()
         {
-            var ArmyData = _gameplayDataService.GameplayData.ArmyDatas;
-            List<ArmyData> EnemyArmyData = new List<ArmyData>();// TODO: Get EnemyArmy data later from a level database or similar.
-            
             var UnitDatabase = _databaseProvider.ArmyUnitDatabase;
             var AnimationDatabase = _databaseProvider.AnimationDatabase;
+            var BattleDatabase = _databaseProvider.BattleDatabase;
+            
+            var ArmyData = _gameplayDataService.GameplayData.ArmyDatas;
+            var BattleData = BattleDatabase.GetBattleData(_battleId);
+            var EnemyArmyData = BattleData.Armies;
 
             // Get the lists of unit views from the IBattleView.
             var EnemyUnitViews = _view.EnemyUnits;
@@ -55,39 +61,53 @@ namespace Game.Gameplay
             for (var I = 0; I < FriendlyUnitViews.Count; I++)
             {
                 var UnitView = FriendlyUnitViews[I];
-                var UnitArmyData = ArmyData[I];
-                var UnitStaticData = UnitDatabase.Get(UnitArmyData.UnitType);
+                if (I < ArmyData.Count)
+                {
+                    var UnitArmyData = ArmyData[I];
+                    var UnitStaticData = UnitDatabase.Get(UnitArmyData.UnitType);
                 
-                // Pass all necessary dependencies to the UnitBehavior.
-                var Behavior = new UnitBehavior(
-                    _tickService,
-                    AnimationDatabase,
-                    UnitStaticData,
-                    UnitArmyData.Amount,
-                    UnitView,
-                    EnemyUnitViews
-                );
+                    // Pass all necessary dependencies to the UnitBehavior.
+                    var Behavior = new UnitBehavior(
+                        _tickService,
+                        AnimationDatabase,
+                        UnitStaticData,
+                        UnitArmyData.Amount,
+                        UnitView,
+                        enemyProvider
+                    );
                 
-                _friendlyBehaviors.Add(Behavior);
+                    _friendlyBehaviors.Add(Behavior);
+                }
+                else
+                {
+                    UnitView.Dismiss();
+                }
             }
             
             for (var I = 0; I < EnemyUnitViews.Count; I++)
             {
                 var UnitView = EnemyUnitViews[I];
-                var UnitArmyData = EnemyArmyData[I];
-                var UnitStaticData = UnitDatabase.Get(UnitArmyData.UnitType);
-                
-                // Pass all necessary dependencies to the UnitBehavior.
-                var Behavior = new UnitBehavior(
-                    _tickService,
-                    AnimationDatabase,
-                    UnitStaticData,
-                    UnitArmyData.Amount,
-                    UnitView,
-                    FriendlyUnitViews
-                );
-                
-                _enemyBehaviors.Add(Behavior);
+                if (I < EnemyArmyData.Count)
+                {
+                    var UnitArmyData = EnemyArmyData[I];
+                    var UnitStaticData = UnitDatabase.Get(UnitArmyData.UnitType);
+
+                    // Pass all necessary dependencies to the UnitBehavior.
+                    var Behavior = new UnitBehavior(
+                        _tickService,
+                        AnimationDatabase,
+                        UnitStaticData,
+                        UnitArmyData.Amount,
+                        UnitView,
+                        friendlyProvider
+                    );
+
+                    _enemyBehaviors.Add(Behavior);
+                }
+                else
+                {
+                    UnitView.Dismiss();
+                }
             }
         }
 

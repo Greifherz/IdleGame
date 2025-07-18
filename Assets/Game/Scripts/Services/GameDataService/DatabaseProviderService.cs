@@ -13,12 +13,16 @@ namespace Game.Scripts.Services.GameDataService
         private const string DATABASE_ROOT = "Databases/";
         private const string ARMY_UNIT_DATABASE = "ArmyUnitDatabase";
         private const string ANIMATION_DATABASE = "AnimationDatabase";
+        private const string BATTLE_DATABASE = "BattleDatabase";
         public ArmyUnitDatabase ArmyUnitDatabase { get; private set; }
         public AnimationDatabase AnimationDatabase { get; private set; }
+        public BattleDatabase BattleDatabase { get; private set; }
+
         public void Initialize()
         {
             ArmyUnitDatabase = Resources.Load<ArmyUnitDatabase>(DATABASE_ROOT + ARMY_UNIT_DATABASE);
             AnimationDatabase = Resources.Load<AnimationDatabase>(DATABASE_ROOT + ANIMATION_DATABASE);
+            BattleDatabase = Resources.Load<BattleDatabase>(DATABASE_ROOT + BATTLE_DATABASE);
         }
     }
 }

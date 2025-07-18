@@ -1,8 +1,11 @@
 ﻿using Game.Data.GameplayData;
 using Game.Gameplay;
+using Game.Scripts.Services.GameDataService;
 using ServiceLocator;
 using Services.EventService;
 using Services.Scheduler;
+using Services.TickService;
+using Services.ViewProvider;
 
 namespace Game.GameFlow
 {
@@ -23,7 +26,14 @@ namespace Game.GameFlow
 
         public override void StateEnter()
         {
+            var BattleViewProviderService = Locator.Current.Get<IBattleViewProviderService>();
+            var DatabaseProviderService = Locator.Current.Get<IDatabaseProviderService>();
+            var TickService = Locator.Current.Get<ITickService>();
+            var SceneStateDataService = Locator.Current.Get<ISceneDataService>();
+
+            var BattleStateData = SceneStateDataService.GetData<BattleStateData>();
             
+            _battleOrchestrator = new BattleOrchestrator(BattleViewProviderService.BattleView,_gameplayDataService,DatabaseProviderService,TickService,BattleStateData);
         }
 
         public override bool CanTransitionTo(GameFlowStateType type)
@@ -38,7 +48,7 @@ namespace Game.GameFlow
 
         public override void StateExit()
         {
-            
+            _battleOrchestrator.Dispose();
         }
     }
 }

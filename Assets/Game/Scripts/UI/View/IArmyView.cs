@@ -5,6 +5,7 @@ namespace Services.ViewProvider.View
     public interface IArmyView
     {
         event Action<int> OnHireClicked;
+        event Action OnGoToBattleClicked;
 
         void SetVisibility(bool visible);
         void SetListVisibility(int index,bool visible);

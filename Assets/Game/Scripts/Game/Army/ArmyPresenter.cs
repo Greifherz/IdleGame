@@ -1,8 +1,10 @@
 ﻿using System;
 using Game.Data.GameplayData;
 using Game.GameFlow;
+using Game.Gameplay;
 using ServiceLocator;
 using Services.EventService;
+using Services.SceneDataService;
 using Services.ViewProvider;
 using Services.ViewProvider.View;
 using UnityEngine;
@@ -12,6 +14,7 @@ namespace Game.Scripts.Army
     public class ArmyPresenter : IDisposable
     {
         private readonly IEventService _eventService;
+        private readonly ISceneDataService _sceneDataService;
         private readonly IArmyView _view;
         
         private IEventHandler _gameFlowEventHandler;
@@ -22,7 +25,7 @@ namespace Game.Scripts.Army
         public ArmyPresenter(GameplayData gameplayData)
         {
             _armyModel = new ArmyModel(gameplayData);
-            
+            _sceneDataService = Locator.Current.Get<SceneDataService>();
             _eventService = Locator.Current.Get<IEventService>();
             var ViewProviderService = Locator.Current.Get<ILobbyViewProviderService>();
             _view = ViewProviderService.ArmyView;
@@ -33,8 +36,14 @@ namespace Game.Scripts.Army
             _eventService.RegisterListener(_gameplayViewEventHandler,EventPipelineType.ViewPipeline);
 
             _view.OnHireClicked += OnHireClicked;
+            _view.OnGoToBattleClicked += OnGoToBattleClicked;
             
             UpdateView();
+        }
+
+        private void OnGoToBattleClicked()
+        {
+            _sceneDataService.SetData(new BattleStateData(0));
         }
 
         private void OnHireClicked(int index)

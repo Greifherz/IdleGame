@@ -26,14 +26,13 @@ namespace Game.Gameplay
         private bool _isActive = true;
         private int _amount = 1;
 
-        public UnitBehavior(ITickService tickService,AnimationDatabase animationDatabase, ArmyUnitData unitData,int amount,IUnitView view,List<IUnitView> possibleTargets)
+        public UnitBehavior(ITickService tickService,AnimationDatabase animationDatabase, ArmyUnitData unitData,int amount,IUnitView view,TargetProviderDelegate possibleTargetsProvider)
         {
             _amount = amount;
             _unitData = unitData;
             _view = view;
             _tickService = tickService;
-            _possibleTargets = possibleTargets;
-            _targeter = new DistanceUnitTargeter(); // Or get from a service
+            _targeter = new DistanceUnitTargeter(possibleTargetsProvider); 
 
             // Create the specialized components
             _movement = new UnitMovementHandler(_view, _unitData.MoveSpeed);
@@ -56,7 +55,7 @@ namespace Game.Gameplay
             if (_currentTarget == null)
             {
                 // Find a target if we don't have one
-                _currentTarget = _targeter.GetTarget(_view, _possibleTargets);
+                _currentTarget = _targeter.GetTarget(_view);
                 _animationController.SetState(UnitAnimationController.UnitAnimationState.Idle);
                 return;
             }

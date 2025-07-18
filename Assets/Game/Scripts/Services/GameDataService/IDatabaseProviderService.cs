@@ -8,5 +8,6 @@ namespace Game.Scripts.Services.GameDataService
     {
         ArmyUnitDatabase ArmyUnitDatabase { get; }
         AnimationDatabase AnimationDatabase { get; }
+        BattleDatabase BattleDatabase { get; }
     }
 }

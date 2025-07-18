@@ -28,5 +28,10 @@ namespace Game.Gameplay
         {
             return UnitTransform.position;
         }
+
+        public void Dismiss()
+        {
+            SpriteRenderer.gameObject.SetActive(false);
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace Game.Gameplay
         SpriteRenderer GetSpriteRenderer();
         void MoveTo(Vector3 direction);
         Vector3 GetPosition();
+        void Dismiss();
     }
 }

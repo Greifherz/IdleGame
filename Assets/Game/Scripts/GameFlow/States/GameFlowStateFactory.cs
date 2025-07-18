@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Game.Gameplay;
 using Services.EventService;
 
 namespace Game.GameFlow
@@ -43,6 +44,8 @@ namespace Game.GameFlow
                     return new GameFlowArmyState(this,_eventService);
                 case GameFlowStateType.Start:
                     return new GameStartState(this,_eventService);
+                case GameFlowStateType.Battle:
+                    return new GameFlowBattleState(this,_eventService);
                 default:
                     throw new System.ArgumentOutOfRangeException(nameof(stateType), stateType, "No state definition exists for this type.");
             }

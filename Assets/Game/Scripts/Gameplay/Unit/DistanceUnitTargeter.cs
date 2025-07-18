@@ -5,13 +5,21 @@ namespace Game.Gameplay
 {
     public interface IUnitTargeter
     {
-        IUnitView GetTarget(IUnitView unit, List<IUnitView> possibleTargets);
+        IUnitView GetTarget(IUnitView unit);
     }
 
     public class DistanceUnitTargeter : IUnitTargeter
     {
-        public IUnitView GetTarget(IUnitView unit, List<IUnitView> possibleTargets)
+        private TargetProviderDelegate _possibleTargetsProvider;
+        
+        public DistanceUnitTargeter(TargetProviderDelegate possibleTargetsProvider)
         {
+            _possibleTargetsProvider = possibleTargetsProvider;
+        }
+        
+        public IUnitView GetTarget(IUnitView unit)
+        {
+            var possibleTargets = _possibleTargetsProvider.Invoke();
             // No targets to choose from
             if (possibleTargets == null || possibleTargets.Count == 0)
             {

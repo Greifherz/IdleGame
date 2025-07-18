@@ -15,9 +15,12 @@ namespace Services.ViewProvider.Aggregators
         public TextMeshProUGUI[] HealthTexts { get; }
         public TextMeshProUGUI[] CostTexts { get; }
         
-        public event Action<int> OnHireClicked;
+        public Button BattleButton { get; }
         
-        public ArmyAggregatorContext(GameObject holder,Button[] hireButtons,TextMeshProUGUI[] quantityTexts, TextMeshProUGUI[] healthTexts, TextMeshProUGUI[] attackTexts, TextMeshProUGUI[] costTexts)
+        public event Action<int> OnHireClicked;
+        public event Action OnGoToBattleClicked;
+
+        public ArmyAggregatorContext(GameObject holder,Button[] hireButtons,TextMeshProUGUI[] quantityTexts, TextMeshProUGUI[] healthTexts, TextMeshProUGUI[] attackTexts, TextMeshProUGUI[] costTexts,Button battleButton)
         {
             Holder = holder;
             HireButtons = hireButtons;
@@ -25,6 +28,7 @@ namespace Services.ViewProvider.Aggregators
             AttackTexts = attackTexts;
             HealthTexts = healthTexts;
             CostTexts = costTexts;
+            BattleButton = battleButton;
 
             for (int i = 0; i < HireButtons.Length; i++)
             {
@@ -32,6 +36,8 @@ namespace Services.ViewProvider.Aggregators
                 int NonMutableIndex = i;
                 btn.onClick.AddListener(() => { OnHireClicked?.Invoke(NonMutableIndex); });
             }
+            
+            battleButton.onClick.AddListener(() => OnGoToBattleClicked?.Invoke() );
         }
         
         public void SetVisibility(bool visible)

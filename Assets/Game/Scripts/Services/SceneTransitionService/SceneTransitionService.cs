@@ -9,7 +9,12 @@ namespace Game.Services.SceneTransition
     public interface ISceneTransitionService : IGameService
     {
         bool IsTransitioning { get; }
-        void LoadScene(string sceneName, Action onTransitionMidpoint = null);
+        bool IsIntercetable { get; }
+        void LoadScene(string sceneName);
+        event Action OnTransitionFinished;
+        event Action OnFadeOutFinished;
+        event Action OnUnloadFinished;
+        event Action OnLoadFinished;
     }
     
     public class SceneTransitionService : ISceneTransitionService, IDisposable
@@ -18,13 +23,22 @@ namespace Game.Services.SceneTransition
 
         public bool IsTransitioning { get; private set; }
 
+        //What I mean by interceptable is that it could stop and go to another state instead. Might never be used, delete this if it gets used
+        public bool IsIntercetable => _currentState == TransitionState.Idle ||
+                                      _currentState == TransitionState.FadingOut ||
+                                      _currentState == TransitionState.Unloading;
+
+        public event Action OnTransitionFinished;
+        public event Action OnFadeOutFinished;
+        public event Action OnUnloadFinished;
+        public event Action OnLoadFinished;
+
         private readonly ITickService _tickService;
         private readonly TransitionView _transitionView;
 
         private TransitionState _currentState = TransitionState.Idle;
         private string _sceneToLoad;
         private string _sceneToUnload;
-        private Action _onMidpointAction;
         private AsyncOperation _asyncOperation;
         
         private float _fadeTimer;
@@ -41,14 +55,13 @@ namespace Game.Services.SceneTransition
             
         }
 
-        public void LoadScene(string sceneName, Action onMidpointAction = null)
+        public void LoadScene(string sceneName)
         {
             if (IsTransitioning) return;
             
             _sceneToUnload = SceneManager.GetActiveScene().name;
             IsTransitioning = true;
             _sceneToLoad = sceneName;
-            _onMidpointAction = onMidpointAction;
             
             _currentState = TransitionState.FadingOut;
             _fadeTimer = 0f;
@@ -71,8 +84,7 @@ namespace Game.Services.SceneTransition
                     // Check if the fade out is complete
                     if (fadeOutAlpha >= 1f)
                     {
-                        // Midpoint reached. Execute the cleanup/setup action provided by the GameFlow.
-                        _onMidpointAction?.Invoke();
+                        OnFadeOutFinished?.Invoke();
                         
                         // Start unloading the old scene asynchronously.
                         _asyncOperation = SceneManager.UnloadSceneAsync(_sceneToUnload);
@@ -85,6 +97,7 @@ namespace Game.Services.SceneTransition
                     // Wait for the async operation to finish.
                     if (_asyncOperation.isDone)
                     {
+                        OnUnloadFinished?.Invoke();
                         // Now that the old scene is gone, start loading the new one.
                         _asyncOperation = SceneManager.LoadSceneAsync(_sceneToLoad, LoadSceneMode.Additive);
                         // Move to the next state.
@@ -96,6 +109,7 @@ namespace Game.Services.SceneTransition
                     // Wait for the async operation to finish.
                     if (_asyncOperation.isDone)
                     {
+                        OnLoadFinished?.Invoke();
                         // Set the newly loaded scene as the active one. This is important for lighting and other scene settings.
                         SceneManager.SetActiveScene(SceneManager.GetSceneByName(_sceneToLoad));
                         _sceneToUnload = _sceneToLoad; // Update the "current" scene for the next transition.
@@ -120,6 +134,7 @@ namespace Game.Services.SceneTransition
                         // Transition is fully complete.
                         _currentState = TransitionState.Idle;
                         IsTransitioning = false;
+                        OnTransitionFinished?.Invoke();
                         
                         // CRUCIAL: Unregister from the TickService to stop receiving updates.
                         // This ensures the service uses zero performance when idle.
