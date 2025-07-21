@@ -4,6 +4,9 @@ This is a boilerplate game project. The game itself isn't important but the unde
 
 It could have some improvements on that at the time of writing as not all project-specific code is whithin the Game folder.
 
+I've created a Taiga to organize my thoughts and keep going with it. It's public!
+https://tree.taiga.io/project/lorthan-idle-game/kanban
+
 ## Architecture
 
 ![alt text](https://github.com/Greifherz/IdleGame/blob/master/IdleGameArchitecture.drawio.png)
